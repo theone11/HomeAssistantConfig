@@ -87,10 +87,10 @@
 {% set hvacs = [("livingroom", 53 , 92),
                 ("hallway"   , 28 , 92)] %}
 
-{% set navi_left, navi_top = 96, namespace(value=90) %}
+{% set navi_left, navi_top = 96, namespace(value=89) %}
 {% set navi_left_offset, navi_top_offset = 1, 3 %}
 {% set navi_scaleX, navi_scaleY, navi_scaleT = 0.3, 0.3, 3.5 %}
-{% set navigations = ["work_dan", "petach_tikva", "kfar_yona"] %}
+{% set navigations = ["work_dan", "work_aviva", "petach_tikva", "kfar_yona"] %}
 
 {% set statusbar_color = 'red' %}
 {% set statusbar_left, statusbar_top = namespace(value=97), 0 %}

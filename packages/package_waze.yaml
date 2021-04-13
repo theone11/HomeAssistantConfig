@@ -1,7 +1,7 @@
 sensor:
   - platform: waze_travel_time
-    origin: 31.9400632, 34.7954319
-    destination: 31.9160304, 34.8048936
+    origin: !secret waze_home_coordinates
+    destination: !secret waze_work_d_coordinates
     region: 'IL'
     name: Work Dan
     realtime: true
@@ -11,8 +11,8 @@ sensor:
     avoid_subscription_roads: true
 
   - platform: waze_travel_time
-    origin: 31.9400632, 34.7954319
-    destination: 31.9665512, 34.8476404
+    origin: !secret waze_home_coordinates
+    destination: !secret waze_work_a_coordinates
     region: 'IL'
     name: Work Aviva
     realtime: true
@@ -22,8 +22,8 @@ sensor:
     avoid_subscription_roads: true
 
   - platform: waze_travel_time
-    origin: 31.9400632, 34.7954319
-    destination: 32.3099244, 34.9341441
+    origin: !secret waze_home_coordinates
+    destination: !secret waze_ky_coordinates
     region: 'IL'
     name: Kfar Yona
     realtime: true
@@ -33,8 +33,8 @@ sensor:
     avoid_subscription_roads: true
 
   - platform: waze_travel_time
-    origin: 31.9400632, 34.7954319
-    destination: 32.0931443, 34.8830689
+    origin: !secret waze_home_coordinates
+    destination: !secret waze_pt_coordinates
     region: 'IL'
     name: Petach Tikva
     realtime: true
