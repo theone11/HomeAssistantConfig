@@ -211,9 +211,6 @@ google:
 #   logs:
 #     homeassistant.components.onvif: debug
 #     homeassistant.core: debug
-#     yeelight: debug
-#     homeassistant.components.yeelight: debug
-#     homeassistant.components.yeelight.light: debug
 
 input_number:
   roof_information_graph_hours:
