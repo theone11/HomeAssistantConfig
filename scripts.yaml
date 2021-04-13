@@ -1,0 +1,6 @@
+'1586449615879':
+  alias: HA Restart
+  icon: mdi:restart
+  sequence:
+  - data: {}
+    service: homeassistant.restart

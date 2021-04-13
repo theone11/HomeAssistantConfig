@@ -1,0 +1,59 @@
+sensor:
+  - platform: waze_travel_time
+    origin: 31.9400632, 34.7954319
+    destination: 31.9160304, 34.8048936
+    region: 'IL'
+    name: Work Dan
+    realtime: true
+    vehicle_type: car
+    avoid_ferries: true
+    avoid_toll_roads: true
+    avoid_subscription_roads: true
+
+  - platform: waze_travel_time
+    origin: 31.9400632, 34.7954319
+    destination: 31.9665512, 34.8476404
+    region: 'IL'
+    name: Work Aviva
+    realtime: true
+    vehicle_type: car
+    avoid_ferries: true
+    avoid_toll_roads: true
+    avoid_subscription_roads: true
+
+  - platform: waze_travel_time
+    origin: 31.9400632, 34.7954319
+    destination: 32.3099244, 34.9341441
+    region: 'IL'
+    name: Kfar Yona
+    realtime: true
+    vehicle_type: car
+    avoid_ferries: true
+    avoid_toll_roads: true
+    avoid_subscription_roads: true
+
+  - platform: waze_travel_time
+    origin: 31.9400632, 34.7954319
+    destination: 32.0931443, 34.8830689
+    region: 'IL'
+    name: Petach Tikva
+    realtime: true
+    vehicle_type: car
+    avoid_ferries: true
+    avoid_toll_roads: true
+    avoid_subscription_roads: true
+
+  - platform: template
+    sensors:
+      work_dan_ui:
+        unit_of_measurement: 'm'
+        value_template: "{{ states('sensor.work_dan') | round(0) }}"
+      work_aviva_ui:
+        unit_of_measurement: 'm'
+        value_template: "{{ states('sensor.work_aviva') | round(0) }}"
+      kfar_yona_ui:
+        unit_of_measurement: 'm'
+        value_template: "{{ states('sensor.kfar_yona') | round(0) }}"
+      petach_tikva_ui:
+        unit_of_measurement: 'm'
+        value_template: "{{ states('sensor.petach_tikva') | round(0) }}"

@@ -1,0 +1,11 @@
+substitutions:
+  device_name: lobby_light
+  friendly_name: "Lobby Light"
+  static_ip: 192.168.1.73
+  onoff_toggle: "on_off" # on_off / toggle
+
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+packages:
+  common: !include zzz_common_files/common.yaml
+  family: !include zzz_common_files/common_sonoff_mini_onoff.yaml

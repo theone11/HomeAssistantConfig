@@ -1,0 +1,20 @@
+switch.irrigation_sprinkler_west:
+  icon: mdi:sprinkler
+switch.irrigation_sprinkler_north:
+  icon: mdi:sprinkler
+switch.irrigation_drips:
+  icon: mdi:water
+switch.relay4:
+  icon: mdi:electric-switch
+switch.relay5:
+  icon: mdi:electric-switch
+switch.relay6:
+  icon: mdi:electric-switch
+switch.relay7:
+  icon: mdi:electric-switch
+switch.relay8:
+  icon: mdi:electric-switch
+climate.hvac_livingroom:
+  icon: mdi:air-conditioner
+climate.hvac_hallway:
+  icon: mdi:air-conditioner

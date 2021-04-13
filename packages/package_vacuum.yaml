@@ -1,0 +1,52 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+camera:
+  - platform: xiaomi_cloud_map_extractor
+    name: "Vacuum Bottom"
+    host: 192.168.1.177
+    token: !secret vacuum_bottom_token
+    username: !secret xiaomi_username
+    password: !secret xiaomi_password
+    country: !secret xiaomi_country
+    scan_interval:
+      seconds: 120
+  - platform: xiaomi_cloud_map_extractor
+    name: "Vacuum Top"
+    host: 192.168.1.178
+    token: !secret vacuum_top_token
+    username: !secret xiaomi_username
+    password: !secret xiaomi_password
+    country: !secret xiaomi_country
+    scan_interval:
+      seconds: 120
+
+sensor:
+  - platform: template
+    sensors:
+      vacuum_bottom_problem:
+        icon_template: mdi:robot-vacuum
+        value_template: >
+          {% if (states('vacuum.vacuum_bottom') == 'unknown') or (states('vacuum.vacuum_bottom') == 'unavailable') %}
+            {{ 1 }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+      vacuum_top_problem:
+        icon_template: mdi:robot-vacuum
+        value_template: >
+          {% if (states('vacuum.vacuum_top') == 'unknown') or (states('vacuum.vacuum_top') == 'unavailable') %}
+            {{ 1 }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+###################################
+########## S C R I P T S ##########
+###################################

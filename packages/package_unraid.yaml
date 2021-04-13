@@ -1,0 +1,40 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+binary_sensor:
+  - platform: ping
+    name: unRAID
+    host: 192.168.1.104
+    count: 2
+    scan_interval: 600
+
+
+sensor:
+  - platform: template
+    sensors:
+      unraid_problem:
+        icon_template: mdi:server
+        value_template: >
+          {% if (states('binary_sensor.unraid') == 'unknown') or (states('binary_sensor.unraid') == 'unavailable') %}
+            {{ 1 }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+# automation:
+
+  # Trigger    - 
+  # Conditions - 
+  # Actions    - 
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+# # ---------------------

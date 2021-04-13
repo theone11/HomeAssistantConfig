@@ -1,0 +1,28 @@
+# Example .gitignore file for your config dir.
+# An * ensures that everything will be ignored.
+*
+
+# You can whitelist files/folders with !, these will not be ignored.
+!*.yaml
+!.gitignore
+!*.md
+!esphome
+!esphome/zzz_common_files
+!esphome/zzz_resource_files
+!*.jpg
+!*.ttf
+!packages
+
+# Ignore folders.
+.storage
+.cloud
+.google.token
+.vscode
+
+# Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
+ip_bans.yaml
+secrets.yaml
+known_devices.yaml
+google_calendars.yaml
+lovelace storage mode UI original.yaml
+configMY_camera.yaml

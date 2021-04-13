@@ -1,0 +1,14 @@
+substitutions:
+  device_name: playroom_windowshutter
+  friendly_name: "Playroom Window Shutter"
+  static_ip: 192.168.1.33
+
+  # Applicable for Curtain Switches
+  duration_open: "18" # Actually 17
+  duration_close: "17" # Actually 16
+
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+packages:
+  common: !include zzz_common_files/common.yaml
+  family: !include zzz_common_files/common_shutterswitch_wfcs01.yaml

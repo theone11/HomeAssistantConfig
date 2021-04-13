@@ -1,0 +1,104 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+light:
+  - platform: group
+    name: Upstairs Lights
+    entities:
+      - light.main_bathroom_light_top
+      - light.main_bathroom_light_bottom
+      - light.master_bathroom_light_top
+      - light.master_bathroom_light_bottom
+      - light.noga_light
+      - light.ella_light
+      - light.tomer_light
+      - light.laundryroom_light
+
+  - platform: group
+    name: Downstairs Lights
+    entities:
+      - light.kitchen_light_klapa
+      - light.kitchen_light_ceiling
+      - light.kitchen_table_light
+      - light.kitchen_table_light_ambilight
+      - light.diningroom_light
+      - light.guest_bathroom_light
+      - light.playroom_light
+#      - light.pantry_light
+
+  - platform: group
+    name: Outside Lights
+    entities:
+    - light.patio_light_top
+    - light.patio_light_bottom
+    - light.garden_light_top
+    - light.garden_light_bottom
+    - light.garden_shed_light
+
+  - platform: group
+    name: Roof Lights
+    entities:
+    - light.roof_light_top
+    - light.roof_light_bottom
+
+sensor:
+  - platform: template
+    sensors:
+      upstairs_lights_problem:
+        icon_template: mdi:lightbulb-off
+        value_template: >
+          {% set devices = state_attr('light.upstairs_lights', 'entity_id') %}
+          {% set upstairs_lights_problem = namespace(count=0) %}
+          {% for entity_id in devices -%}
+            {% if (states(entity_id) == 'unknown') or (states(entity_id) == 'unavailable') %}
+              {% set upstairs_lights_problem.count = upstairs_lights_problem.count + 1 %}
+            {% endif %}
+          {% endfor %}
+          {{ upstairs_lights_problem.count }}
+      downstairs_lights_problem:
+        icon_template: mdi:lightbulb-off
+        value_template: >
+          {% set devices = state_attr('light.downstairs_lights', 'entity_id') %}
+          {% set downstairs_lights_problem = namespace(count=0) %}
+          {% for entity_id in devices -%}
+            {% if (states(entity_id) == 'unknown') or (states(entity_id) == 'unavailable') %}
+              {% set downstairs_lights_problem.count = downstairs_lights_problem.count + 1 %}
+            {% endif %}
+          {% endfor %}
+          {{ downstairs_lights_problem.count }}
+      outside_lights_problem:
+        icon_template: mdi:lightbulb-off
+        value_template: >
+          {% set devices = state_attr('light.outside_lights', 'entity_id') %}
+          {% set outside_lights_problem = namespace(count=0) %}
+          {% for entity_id in devices -%}
+            {% if (states(entity_id) == 'unknown') or (states(entity_id) == 'unavailable') %}
+              {% set outside_lights_problem.count = outside_lights_problem.count + 1 %}
+            {% endif %}
+          {% endfor %}
+          {{ outside_lights_problem.count }}
+      roof_lights_problem:
+        icon_template: mdi:lightbulb-off
+        value_template: >
+          {% set devices = state_attr('light.roof_lights', 'entity_id') %}
+          {% set roof_lights_problem = namespace(count=0) %}
+          {% for entity_id in devices -%}
+            {% if (states(entity_id) == 'unknown') or (states(entity_id) == 'unavailable') %}
+              {% set roof_lights_problem.count = roof_lights_problem.count + 1 %}
+            {% endif %}
+          {% endfor %}
+          {{ roof_lights_problem.count }}
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+# automation:
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+# # ---------------------

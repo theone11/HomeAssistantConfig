@@ -1,0 +1,78 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+input_boolean:
+  irrigation_drips_scheduler_enable1:
+    name: Enable
+    icon: mdi:power
+  irrigation_drips_day_sunday1:
+    name: Sunday
+    icon: mdi:calendar-today
+  irrigation_drips_day_monday1:
+    name: Monday
+    icon: mdi:calendar-today
+  irrigation_drips_day_tuesday1:
+    name: Tuesday
+    icon: mdi:calendar-today
+  irrigation_drips_day_wednesday1:
+    name: Wednesday
+    icon: mdi:calendar-today
+  irrigation_drips_day_thursday1:
+    name: Thursday
+    icon: mdi:calendar-today
+  irrigation_drips_day_friday1:
+    name: Friday
+    icon: mdi:calendar-today
+  irrigation_drips_day_saturday1:
+    name: Saturday
+    icon: mdi:calendar-today
+
+
+input_datetime:
+  irrigation_drips_start_time1:
+    name: Start Time
+    has_date: false
+    has_time: true
+
+
+input_number:
+  irrigation_drips_timer_duration1:
+    name: Duration
+    unit_of_measurement: "min"
+    min: 0
+    max: 60
+    step: 5
+
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+automation:
+
+  # Trigger    - Start Time 1
+  # Conditions - Enable on and day-of-week true
+  # Actions    - turn on drips, delay timer duration 1, turn of water boiler
+  - alias: irrigation_drips_timer1
+    description: Water Boiler Timer
+    trigger: 
+      platform: time
+      at: input_datetime.irrigation_drips_start_time1
+    condition:
+      - condition: state
+        entity_id: input_boolean.irrigation_drips_scheduler_enable1
+        state: 'on'
+      - condition: template
+        value_template: >
+          {% set sensor_names = [ 'monday', 'tuesday', 'wednesday','thursday','friday','saturday','sunday'] %}
+          {% set today_name = sensor_names[now().weekday()] %}
+          {% set entity_id = 'input_boolean.irrigation_drips_day_'+today_name+'1' %}
+          {{ is_state(entity_id, 'on') }}
+    action:
+      - service: switch.turn_on
+        entity_id: switch.irrigation_drips
+      - delay:
+          minutes: "{{ states('input_number.irrigation_drips_timer_duration1') | int }}"
+      - service: switch.turn_off
+        entity_id: switch.irrigation_drips

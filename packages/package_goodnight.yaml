@@ -1,0 +1,71 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+input_boolean:
+  goodnight:
+    name: Goodnight
+    icon: mdi:sleep
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+automation:
+
+###########################################
+  # Trigger    - Goodnight Button OFF -> ON (input_boolean.goodnight)
+  # Conditions - 
+  # Actions    - Run script.goodnight
+  - alias: goodnight on
+    description: Goodnight
+    trigger:
+    - entity_id: input_boolean.goodnight
+      platform: state
+      from: 'off'
+      to: 'on'
+    condition: []
+    action:
+    - service: script.turn_on
+      entity_id: script.goodnight
+
+###########################################
+  # Trigger    - Goodnight Button ON -> OFF (input_boolean.away)
+  # Conditions - 
+  # Actions    - 
+  - alias: goodnight off
+    description: Morning
+    trigger:
+    - entity_id: input_boolean.goodnight
+      platform: state
+      from: 'on'
+      to: 'off'
+    condition: []
+    action: []
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+script:
+  goodnight:
+    sequence:
+      # Turn OFF all light
+      - service: light.turn_off
+        entity_id: all
+
+      # Turn OFF all heaters
+      - service: switch.turn_off
+        entity_id: switch.main_bathroom_heater
+      - service: switch.turn_off
+        entity_id: switch.master_bathroom_heater
+
+      # Close all covers !!! EXCEPT !!! roof trapdoor - can be damaged if ladder open
+      - service: cover.close_cover
+        entity_id: cover.downstairs_shutters
+      - service: cover.close_cover
+        entity_id: cover.upstairs_shutters
+
+      # Turn OFF Livingroom HVAC
+      - service: climate.turn_off
+        entity_id: climate.hvac_livingroom

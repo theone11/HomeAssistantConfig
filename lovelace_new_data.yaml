@@ -1,0 +1,1920 @@
+# lovelace_gen
+
+# http://patorjk.com/software/taag/#p=display&f=Banner3&t=Type%20Something%20
+
+########  ######## ######## #### ##    ## #### ######## ####  #######  ##    ##  ######  
+##     ## ##       ##        ##  ###   ##  ##     ##     ##  ##     ## ###   ## ##    ## 
+##     ## ##       ##        ##  ####  ##  ##     ##     ##  ##     ## ####  ## ##       
+##     ## ######   ######    ##  ## ## ##  ##     ##     ##  ##     ## ## ## ##  ######  
+##     ## ##       ##        ##  ##  ####  ##     ##     ##  ##     ## ##  ####       ## 
+##     ## ##       ##        ##  ##   ###  ##     ##     ##  ##     ## ##   ### ##    ## 
+########  ######## ##       #### ##    ## ####    ##    ####  #######  ##    ##  ######  
+
+{% set border_radius = 12 %}
+{% set background_color = 'rgba(255, 255, 255, 0.1)' %}
+{% set background_color_alert = 'rgba(255, 0, 0, 0.2)' %}
+{% set group_scaleX, group_scaleY = 1, 1 %}
+
+{% set scheduler_left_offset, scheduler_top_offset = 1, 1 %}
+{% set scheduler_scaleX, scheduler_scaleY = 0.6, 0.6 %}
+
+{% set timer_top_offset = 2.5 %}
+
+{% set days = [("sunday"   , "1", "Sun", "ראשון"),
+               ("monday"   , "2", "Mon", "שני"),
+               ("tuesday"  , "3", "Tue", "שלישי"),
+               ("wednesday", "4", "Wed", "רביעי"),
+               ("thursday" , "5", "Thu", "חמישי"),
+               ("friday"   , "6", "Fri", "שישי"),
+               ("saturday" , "7", "Sat", "שבת")] %}
+
+# Lights - List all active areas if more than one exists - must be consecutive
+#                 entity                          , group       , left, top, scaleX, scaleY, deg)
+{% set lights = [("diningroom_light"              , "downstairs", 69  , 67  , 1.3, 2  , 0),
+                 ("kitchen_light_ceiling"         , "downstairs", 62.5, 82  , 1.1, 1.2, 0),
+                 ("kitchen_light_klapa"           , "downstairs", 59  , 84  , 0.7, 1.7, 0),
+                 ("kitchen_table_light"           , "downstairs", 63.5, 73.5, 0.6, 0.6, 0),
+                 ("garden_shed_light"             , "outside"   , 73.5, 58  , 0.7, 1.2, 0),
+                 ("garden_light_top"              , "outside"   , 89  , 24  , 2.4, 2.4, 0),
+                 ("garden_light_bottom"           , "outside"   , 69  , 20  , 8.5, 1.3, 0),
+                 ("garden_light_bottom"           , "outside"   , 85  , 56  , 1.3, 6.5, 23),
+                 ("playroom_light"                , "downstairs", 54  , 51  , 2  , 2.6, 0),
+                 ("guest_bathroom_light"          , "downstairs", 70.7, 82  , 0.7, 1.4, 0),
+                 ("patio_light_top"               , "outside"   , 65  , 32  , 2  , 2  , 0),
+                 ("patio_light_bottom"            , "outside"   , 58  , 32  , 2  , 2  , 0),
+                 ("master_bathroom_light_top"     , "upstairs"  , 44.5, 84  , 1.3, 0.7, 0),
+                 ("master_bathroom_light_bottom"  , "upstairs"  , 44.5, 79  , 1.3, 0.6, 0),
+                 ("laundryroom_light"             , "upstairs"  , 44.5, 72.5, 1.3, 1.1, 0),
+                 ("main_bathroom_light_bottom"    , "upstairs"  , 44.5, 66  , 1.3, 0.6, 0),
+                 ("main_bathroom_light_top"       , "upstairs"  , 44.5, 60.5, 1.3, 0.9, 0),
+                 ("noga_light"                    , "upstairs"  , 43.2, 48.5, 1.6, 1.6, 0),
+                 ("ella_light"                    , "upstairs"  , 36.5, 47  , 2  , 1.8, 0),
+                 ("tomer_light"                   , "upstairs"  , 29  , 50.5, 1.9, 2.7, 0),
+                 ("roof_light_top"                , "roof"      , 5.5 , 51  , 2.6, 2.2, 0),
+                 ("roof_light_bottom"             , "roof"      , 10  , 76  , 2.2, 4.2, 0)] %}
+
+#                       group       , left, top
+{% set light_groups = [("outside"   , 53, 37),
+                       ("downstairs", 53, 74),
+                       ("upstairs"  , 28, 74),
+                       ("roof"      , 3 , 74)] %}
+
+#                 entity                     , group       , left, top, scaleX, scaleY, tap_action
+{% set covers = [("diningroom_window_shutter", "downstairs", 72.9 , 68.5, 0.3 , 1.8 , "toggle"),
+                 ("livingroom_window_shutter", "downstairs", 72.9 , 50.5, 0.3 , 1.8 , "toggle"),
+                 ("livingroom_door_shutter"  , "downstairs", 62   , 42.2, 3.4 , 0.3 , "toggle"),
+                 ("playroom_window_shutter"  , "downstairs", 54.5 , 42.35, 1.8 , 0.40, "toggle"),
+                 ("noga_window_shutter_north", "upstairs"  , 47.75, 52  , 0.25, 1.4 , "toggle"),
+                 ("noga_window_shutter_west" , "upstairs"  , 44.2 , 42.3, 1.4 , 0.3, "toggle"),
+                 ("ella_window_shutter"      , "upstairs"  , 37.2 , 40.7, 1.4 , 0.3, "toggle"),
+                 ("roof_trap_door"           , "upstairs"  , 12.8 , 60.3, 1.3 , 0.8 , "none")] %}
+
+#                       group       , left, top
+{% set cover_groups = [("downstairs", 53, 68),
+                       ("upstairs"  , 28, 68)] %}
+
+#                        entity                      , type  , left, top, display_name)
+{% set miscellaneous = [("irrigation_sprinkler_west" , "switch", 78, 34, "West Sprinklers"),
+                        ("irrigation_sprinkler_north", "switch", 82, 51, "North Sprinklers"),
+                        ("irrigation_drips"          , "switch", 87, 55, "Drips"),
+                        ("boiler_switch"             , "switch", 3 , 68, "Water Boiler")] %}
+
+#                 entity   , left, top
+{% set vacuums = [("bottom", 53 , 80),
+                  ("top"   , 28 , 80)] %}
+
+#                 entity     , left, top
+{% set hvacs = [("livingroom", 53 , 92),
+                ("hallway"   , 28 , 92)] %}
+
+{% set navi_left, navi_top = 96, namespace(value=90) %}
+{% set navi_left_offset, navi_top_offset = 1, 3 %}
+{% set navi_scaleX, navi_scaleY, navi_scaleT = 0.3, 0.3, 3.5 %}
+{% set navigations = ["work_dan", "petach_tikva", "kfar_yona"] %}
+
+{% set statusbar_color = 'red' %}
+{% set statusbar_left, statusbar_top = namespace(value=97), 0 %}
+{% set statusbar_left_offset = -1.5 %}
+{% set statusbar_scaleX, statusbar_scaleY = 0.8, 0.8 %}
+#                           number,        entity                                        , state_t_f, state,      icon,             card_type
+{% set statusbar_entities = [("1", "binary_sensor.updater"                                     , "t", "on", "mdi:download"      , "more-info"),
+                             ("2", "sensor.hacs"                                               , "f", "0" , "mdi:cloud-download", "hacs"),
+                             ("3", "sensor.hp_deskjet_4620_series_ink_low"                     , "f", "0" , "mdi:printer-alert" , "entities"),
+                             ("4", "sensor.water_consumption_limit_exceeded"                   , "f", "0" , "mdi:water-alert"   , "history-graph")] %}
+
+{% set statusbar_details = [("1", "binary_sensor.updater"),
+                            ("2", "sensor.hacs"),
+                            ("3", "sensor.hp_deskjet_4620_series_black_ink"),
+                            ("3", "sensor.hp_deskjet_4620_series_yellow_ink"),
+                            ("3", "sensor.hp_deskjet_4620_series_magenta_ink"),
+                            ("3", "sensor.hp_deskjet_4620_series_cyan_ink"),
+                            ("4", "sensor.water_consumption_hourly_limit_exceeded"),
+                            ("4", "sensor.water_consumption_daily_limit_exceeded"),
+                            ("4", "sensor.water_consumption_monthly_limit_exceeded"),
+                            ("4", "sensor.water_consumption_monthly_prediction_limit_exceeded"),
+                            ("4", "sensor.water_consumption_hourly"),
+                            ("4", "sensor.water_meter_16452690_today_s_consumption"),
+                            ("4", "sensor.water_meter_16452690_monthly_consumption"),
+                            ("4", "sensor.water_consumption_monthly_prediction")] %}
+
+{% set settings_color = 'gray' %}
+{% set settings_left, settings_top = 98.5, 0 %}
+{% set settings_scaleX, settings_scaleY = 0.8, 0.8 %}
+#                             entity                                         , column, section, label, type
+{% set settings_entities = [("input_number.hp_deskjet_4620_series_ink_low_limit"       , "1", "y", "Printers"              , "slider"),
+                            ("input_number.water_consumption_hourly_limit"             , "1", "y", "Water Consumption"     , "slider"),
+                            ("input_number.water_consumption_daily_limit"              , "1", "n", "Water Consumption"     , "slider"),
+                            ("input_number.water_consumption_monthly_limit"            , "1", "n", "Water Consumption"     , "slider"),
+                            ("input_number.water_consumption_monthly_prediciton_limit" , "1", "n", "Water Consumption"     , "slider"),
+                            ("input_number.boiler_disable_schedulers_temperature"      , "2", "y", "Water Boiler"          , "slider"),
+                            ("script.1586449615879"                                    , "3", "y", "Home Assistant Control", "entity")] %}
+
+{% set actions_left, actions_top = namespace(value=60), 3 %}
+{% set actions_left_offset = 8 %}
+{% set actions_scaleX, actions_scaleY = 3, 3 %}
+#                             entity
+{% set actions_entities = [("input_boolean.away"),
+                           ("input_boolean.goodnight")] %}
+
+##     ##    ###     ######  ########   #######   ######  
+###   ###   ## ##   ##    ## ##     ## ##     ## ##    ## 
+#### ####  ##   ##  ##       ##     ## ##     ## ##       
+## ### ## ##     ## ##       ########  ##     ##  ######  
+##     ## ######### ##       ##   ##   ##     ##       ## 
+##     ## ##     ## ##    ## ##    ##  ##     ## ##    ## 
+##     ## ##     ##  ######  ##     ##  #######   ######  
+
+{% macro create_schedulers_icons(entity, left, top) -%}
+{% if (entity == "hvac_hallway") or (entity == "hvac_livingroom") %}
+{% set schedulers = ['1', '2', '3', '4'] %}
+{% else %}
+{% set schedulers = ['1', '2'] %}
+{% endif %}
+{% for s in schedulers %}
+{% if entity == "hvac_hallway" or entity == "hvac_livingroom" %}
+      - conditions:
+          - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+            state: 'on'
+{% else %}
+      - conditions:
+          - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+            state: 'on'
+{% endif %}
+        elements:
+          - icon: 'mdi:timer-outline'
+            style:
+              {% if s == '1' %}
+              left: {{ left + scheduler_left_offset }}%
+              top: {{ top - scheduler_top_offset }}%
+              {% elif s == '2' %}
+              left: {{ left + scheduler_left_offset }}%
+              top: {{ top + scheduler_top_offset }}%
+              {% elif s == '3' %}
+              left: {{ left - scheduler_left_offset }}%
+              top: {{ top - scheduler_top_offset }}%
+              {% elif s == '4' %}
+              left: {{ left - scheduler_left_offset }}%
+              top: {{ top + scheduler_top_offset }}%
+              {% endif %}
+              transform: translate(-50%, -50%) scale({{ scheduler_scaleX }}, {{ scheduler_scaleY }})
+            type: icon
+        type: conditional
+{% endfor %}
+{%- endmacro %}
+
+#########################################################
+#########################################################
+#########################################################
+
+{% macro create_warning_background(entity_problem, entity, left, top) -%}
+      - type: conditional
+        conditions:
+          - entity: sensor.{{ entity_problem }}
+            state_not: '0'
+        elements:
+          - type: state-icon
+            entity: {{ entity }}
+            style:
+              background-color: {{ background_color_alert }}
+              border-radius: {{ border_radius }}%
+              left: {{ left }}%
+              top: {{ top }}%
+              transform: translate(-50%, -50%) scale({{ group_scaleX}}, {{ group_scaleY }})
+            tap_action:
+              action: none
+            double_tap_action:
+              action: none
+            hold_action:
+              action: none
+{%- endmacro %}
+
+#########################################################
+#########################################################
+#########################################################
+# types: DSD     - Day Start Duration
+#        DS      - Day Start
+#        S_HVAC  - Start HVAC
+
+{% macro create_schedulers_popup(entity, scheduler_type) -%}
+              {% if (scheduler_type == "S_HVAC") %}
+              {% set num_schedulers = 4 %}
+              {% set schedulers = ['1', '2', '3', '4'] %}
+              {% else %}
+              {% set num_schedulers = 2 %}
+              {% set schedulers = ['1', '2'] %}
+              {% endif %}
+              type: grid
+              columns: {{ num_schedulers }}
+              square: false
+              cards:
+                {% for s in schedulers %}
+                - type: grid
+                  columns: 1
+                  square: false
+                  title: Schedule {{ s }}
+                  cards:
+                    {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
+                    - type: grid
+                      columns: 7
+                      square: false
+                      cards:
+                        {% for day, number, name, name_he in days %}
+                        - type: button
+                          entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
+                          name: {{ name_he }}
+                          icon: mdi:numeric-{{ number }}-box-outline
+                          show_name: true
+                          show_icon: true
+                        {% endfor %}
+                    {% endif %}
+                    - type: entities
+                      # icon: 'mdi:timer-outline'
+                      show_header_toggle: false
+                      state_color: false
+                      # title: Schedule {{ s }}
+                      entities:
+                        {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
+                        # - type: section
+                        - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+                        - type: 'custom:time-picker-card'
+                          entity: input_datetime.{{ entity }}_start_time{{ s }}
+                          layout:
+                            embedded: true
+                            name: inside
+                            align_controls: right
+                          {% endif %}
+                        {% if (scheduler_type == "S_HVAC") %}
+                        # - type: section
+                        - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+                        - type: 'custom:simple-thermostat'
+                          entity: climate.{{ entity }}_virtual_{{ s }}
+                          show_header: false
+                          decimals: 0
+                          step_size: 1
+                          step_layout: row
+                          hide:
+                            setpoint: false
+                            temperature: true
+                          control:
+                            _headings: false
+                            hvac: true
+                            fan: true
+                        # - type: 'custom:multiple-entity-row'
+                        #   entities:
+                        #   - entity: input_select.{{ entity }}_set_hvac_mode{{ s }}
+                        #   - entity: input_select.{{ entity }}_set_fan_mode{{ s }}
+                        #   entity: input_select.{{ entity }}_set_hvac_mode{{ s }}
+                        #   icon: 'mdi:cog'
+                        #   name: Settings
+                        #   show_state: false
+                        #   #state_header: Enable
+                        #   #toggle: true
+                        #   tap_action:
+                        #     action: none
+                        # - type: 'custom:slider-entity-row'
+                        #   entity: input_number.{{ entity }}_set_temperature{{ s }}
+                        #   hide_state: false
+                        - type: 'custom:time-picker-card'
+                          entity: input_datetime.{{ entity }}_start_time{{ s }}
+                          layout:
+                            embedded: true
+                            name: inside
+                            align_controls: right
+                        {% endif %}
+                        {% if scheduler_type == "DSD" %}
+                        - type: section
+                        - type: 'custom:slider-entity-row'
+                          entity: input_number.{{ entity }}_timer_duration{{ s }}
+                          hide_state: false
+                        {% endif %}
+                {% endfor %}
+{%- endmacro %}
+
+ ######  ########    ###    ########  ######## 
+##    ##    ##      ## ##   ##     ##    ##    
+##          ##     ##   ##  ##     ##    ##    
+ ######     ##    ##     ## ########     ##    
+      ##    ##    ######### ##   ##      ##    
+##    ##    ##    ##     ## ##    ##     ##    
+ ######     ##    ##     ## ##     ##    ##    
+
+badges: []
+icon: 'mdi:home-outline'
+panel: true
+path: floorplan
+title: FloorPlan
+cards:
+  - type: picture-elements
+    image: /local/images/floorplan/background_t.png
+    elements:
+
+########  ####  ######  ##     ## ######## ######## ########   ######  
+##     ##  ##  ##    ## ##     ##    ##    ##       ##     ## ##    ## 
+##     ##  ##  ##       ##     ##    ##    ##       ##     ## ##       
+########   ##  ##       ##     ##    ##    ######   ########   ######  
+##         ##  ##       ##     ##    ##    ##       ##   ##         ## 
+##         ##  ##    ## ##     ##    ##    ##       ##    ##  ##    ## 
+##        ####  ######   #######     ##    ######## ##     ##  ######  
+
+      {% for entity, group, left, top, scaleX, scaleY, deg in lights %}
+      {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) %}
+      - entity: light.{{ entity }}
+        state_image:
+          'unavailable': /local/images/floorplan/transparent_square.png
+          'off': /local/images/floorplan/transparent_square.png
+          'on': /local/images/floorplan/lights/{{ entity }}.png
+        style:
+          left: 50%
+          top: 50%
+          width: 100%
+        tap_action:
+          action: none
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+        type: image
+      {% endif %}
+      {% endfor %}
+
+
+##      ## ########    ###    ######## ##     ## ######## ########            ######     ###    ########  ########  
+##  ##  ## ##         ## ##      ##    ##     ## ##       ##     ##          ##    ##   ## ##   ##     ## ##     ## 
+##  ##  ## ##        ##   ##     ##    ##     ## ##       ##     ##          ##        ##   ##  ##     ## ##     ## 
+##  ##  ## ######   ##     ##    ##    ######### ######   ########           ##       ##     ## ########  ##     ## 
+##  ##  ## ##       #########    ##    ##     ## ##       ##   ##            ##       ######### ##   ##   ##     ## 
+##  ##  ## ##       ##     ##    ##    ##     ## ##       ##    ##           ##    ## ##     ## ##    ##  ##     ## 
+ ###  ###  ######## ##     ##    ##    ##     ## ######## ##     ##           ######  ##     ## ##     ## ########  
+
+      - type: custom:weather-card
+        #entity: weather.darksky_daily
+        entity: weather.accuweather
+        icons: "/local/icons/weather_icons/static/"
+        current: true
+        details: true # true false
+        number_of_forecasts: 5
+        hourly_forecast: false
+        style:
+          #border: 1px solid red
+          left: -2% #-3% 0%
+          top: -3%  #-3% 0%
+          transform: 'translate(0%, 0%) scale(0.9, 0.9)'
+
+# - type: 'custom:ha-card-weather-conditions'
+#   style:
+#     left: -3%
+#     top: -5%
+#     width: 30%
+#     transform: 'translate(0%, 0%) scale(0.8, 0.8)'
+#   language: en
+#   animation: false
+#   weather:
+#     icons_model: darksky
+#     current:
+#       current_conditions: sensor.dark_sky_icon
+#       humidity: sensor.dark_sky_humidity
+#       #pressure: sensor.dark_sky_pressure
+#       temperature: sensor.dark_sky_temperature
+#       feels_like: sensor.dark_sky_apparent_temperature
+#       #visibility: sensor.dark_sky_visibility
+#       wind_bearing: sensor.dark_sky_wind_bearing
+#       wind_speed: sensor.dark_sky_wind_speed
+#       precipitation: sensor.dark_sky_precip_probability
+#       sun: sun.sun
+#       forecast: true
+#     forecast:
+#       icons:
+#         day_1: sensor.dark_sky_icon_0d
+#         day_2: sensor.dark_sky_icon_1d
+#         day_3: sensor.dark_sky_icon_2d
+#         day_4: sensor.dark_sky_icon_3d
+#         day_5: sensor.dark_sky_icon_4d
+#         day_6: sensor.dark_sky_icon_5d
+#       temperature_high:
+#         day_1: sensor.dark_sky_daytime_high_temperature_0d
+#         day_2: sensor.dark_sky_daytime_high_temperature_1d
+#         day_3: sensor.dark_sky_daytime_high_temperature_2d
+#         day_4: sensor.dark_sky_daytime_high_temperature_3d
+#         day_5: sensor.dark_sky_daytime_high_temperature_4d
+#         day_6: sensor.dark_sky_daytime_high_temperature_5d
+#       temperature_low:
+#         day_1: sensor.dark_sky_overnight_low_temperature_0d
+#         day_2: sensor.dark_sky_overnight_low_temperature_1d
+#         day_3: sensor.dark_sky_overnight_low_temperature_2d
+#         day_4: sensor.dark_sky_overnight_low_temperature_3d
+#         day_5: sensor.dark_sky_overnight_low_temperature_4d
+#         day_6: sensor.dark_sky_overnight_low_temperature_5d
+#       precipitation_probability:
+#         day_1: sensor.dark_sky_precip_probability_0d
+#         day_2: sensor.dark_sky_precip_probability_1d
+#         day_3: sensor.dark_sky_precip_probability_2d
+#         day_4: sensor.dark_sky_precip_probability_3d
+#         day_5: sensor.dark_sky_precip_probability_4d
+#         day_6: sensor.dark_sky_precip_probability_5d
+#       precipitation_intensity:
+#         day_1: sensor.dark_sky_precip_intensity_0d
+#         day_2: sensor.dark_sky_precip_intensity_1d
+#         day_3: sensor.dark_sky_precip_intensity_2d
+#         day_4: sensor.dark_sky_precip_intensity_3d
+#         day_5: sensor.dark_sky_precip_intensity_4d
+#         day_6: sensor.dark_sky_precip_intensity_5d
+
+# - type: 'custom:lovelace-darksky-card' # CANT BE MOVED !!! #
+#   locale: en
+#   static_icons: true
+#   tooltips: false
+#   old_daily_format: false
+#   time_format: locale
+#   show_beaufort: true
+#   entity_current_conditions: sensor.dark_sky_icon
+#   entity_temperature: sensor.dark_sky_temperature
+#   entity_forecast_high_temp_1: sensor.dark_sky_daytime_high_temperature_1d
+#   entity_forecast_high_temp_2: sensor.dark_sky_daytime_high_temperature_2d
+#   entity_forecast_high_temp_3: sensor.dark_sky_daytime_high_temperature_3d
+#   entity_forecast_high_temp_4: sensor.dark_sky_daytime_high_temperature_4d
+#   entity_forecast_high_temp_5: sensor.dark_sky_daytime_high_temperature_5d
+#   entity_forecast_icon_1: sensor.dark_sky_icon_1d
+#   entity_forecast_icon_2: sensor.dark_sky_icon_2d
+#   entity_forecast_icon_3: sensor.dark_sky_icon_3d
+#   entity_forecast_icon_4: sensor.dark_sky_icon_4d
+#   entity_forecast_icon_5: sensor.dark_sky_icon_5d
+#   entity_forecast_low_temp_1: sensor.dark_sky_overnight_low_temperature_0d
+#   entity_forecast_low_temp_2: sensor.dark_sky_overnight_low_temperature_1d
+#   entity_forecast_low_temp_3: sensor.dark_sky_overnight_low_temperature_2d
+#   entity_forecast_low_temp_4: sensor.dark_sky_overnight_low_temperature_3d
+#   entity_forecast_low_temp_5: sensor.dark_sky_overnight_low_temperature_4d
+#   entity_summary_1: sensor.dark_sky_summary_1d
+#   entity_summary_2: sensor.dark_sky_summary_2d
+#   entity_summary_3: sensor.dark_sky_summary_3d
+#   entity_summary_4: sensor.dark_sky_summary_4d
+#   entity_summary_5: sensor.dark_sky_summary_5d
+#   entity_sun: sun.sun
+#   entity_visibility: sensor.dark_sky_visibility
+#   entity_daytime_high: sensor.dark_sky_daytime_high_temperature_0d
+#   entity_wind_bearing: sensor.dark_sky_wind_bearing
+#   entity_wind_speed: sensor.dark_sky_wind_speed
+#   entity_humidity: sensor.dark_sky_humidity
+#   entity_pressure: sensor.dark_sky_pressure
+#   entity_apparent_temp: sensor.dark_sky_apparent_temperature
+#   entity_daily_summary: sensor.dark_sky_daily_summary
+#   entity_pop: sensor.dark_sky_precip_probability
+#   entity_pop_intensity: sensor.dark_sky_precip_intensity
+#   entity_pop_1: sensor.dark_sky_precip_probability_1d
+#   entity_pop_2: sensor.dark_sky_precip_probability_2d
+#   entity_pop_3: sensor.dark_sky_precip_probability_3d
+#   entity_pop_4: sensor.dark_sky_precip_probability_4d
+#   entity_pop_5: sensor.dark_sky_precip_probability_5d
+
+      - type: image
+        image: /local/images/floorplan/transparent_square.png
+        entity: weather.darksky_hourly
+        style:
+          #border: 1px solid red
+          left: 0%
+          top: 0%
+          width: 27.25%
+          height: 35%
+          transform: 'translate(0%, 0%) scale(1, 1)'
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 80vw;
+              }
+            title: Hourly Weather Forecast
+            card:
+              type: 'custom:weather-card'
+              entity: weather.darksky_hourly
+              hourly_forecast: true
+              forecast: true
+              number_of_forecasts: '18'
+              details: false
+              current: false
+              icons: /local/icons/weather_icons/static/
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+
+######     ###    ##       ######## ##    ## ########     ###    ########            ######     ###    ########  ########  
+##    ##   ## ##   ##       ##       ###   ## ##     ##   ## ##   ##     ##          ##    ##   ## ##   ##     ## ##     ## 
+##        ##   ##  ##       ##       ####  ## ##     ##  ##   ##  ##     ##          ##        ##   ##  ##     ## ##     ## 
+##       ##     ## ##       ######   ## ## ## ##     ## ##     ## ########           ##       ##     ## ########  ##     ## 
+##       ######### ##       ##       ##  #### ##     ## ######### ##   ##            ##       ######### ##   ##   ##     ## 
+##    ## ##     ## ##       ##       ##   ### ##     ## ##     ## ##    ##           ##    ## ##     ## ##    ##  ##     ## 
+######  ##     ## ######## ######## ##    ## ########  ##     ## ##     ##           ######  ##     ## ##     ## ########  
+
+
+      - type: 'custom:atomic-calendar-revive'
+        entities:
+          - entity: calendar.kessler_family
+            name: calendar.kessler_family
+          - entity: calendar.holidays_in_israel
+            name: Holidays in Israel
+        maxDaysToShow: 14
+        maxEventCount: 6
+        showLocation: true
+        showMonth: true
+        showWeekDay: true
+        showDate: false
+        showDescription: true
+        showNoEventsForToday: true
+        disableEventLink: true
+        disableLocationLink: true
+        defaultMode: Event
+        refreshInterval: 60
+        showHours: true
+        showRelativeTime: true
+        europeanDate: true
+        dateFormat: 'LL'
+        hoursFormat: 24h
+        style:
+          left: 30%
+          top: -2%
+          width: 20%
+          transform: 'translate(0%, 0%) scale(1, 0.96)'
+
+      # - type: "custom:analog-clock"
+      #   style:
+      #     left: 90%
+      #     top: 2%
+      #     width: 10%
+      #     transform: 'translate(0%, 0%) scale(0.5, 0.5)'
+
+      # - type: custom:plan-coordinates
+      #   style:
+      #     left: 10%
+      #     top: 1.1%
+      #     transform: 'translate(-50%, -50%) scale(1, 1)'
+
+##       ####  ######   ##     ## ########  ######  
+##        ##  ##    ##  ##     ##    ##    ##    ## 
+##        ##  ##        ##     ##    ##    ##       
+##        ##  ##   #### #########    ##     ######  
+##        ##  ##    ##  ##     ##    ##          ## 
+##        ##  ##    ##  ##     ##    ##    ##    ## 
+######## ####  ######   ##     ##    ##     ######  
+
+      # ------------------------------
+      # Define LIGHTS active areas
+      # ------------------------------
+
+      {% for entity, group, left, top, scaleX, scaleY, deg in lights %}
+      {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) %}
+      - entity: light.{{ entity }}
+        image: /local/images/floorplan/transparent_square.png
+        style:
+          #border: 1px solid red
+          left: {{ left }}%
+          top: {{ top }}%
+          transform: rotate({{ deg }}deg) scale({{ scaleX }}, {{ scaleY }})
+        tap_action:
+          action: toggle
+        double_tap_action:
+          action: more-info
+        hold_action:
+          {% if entity == "kitchen_table_light" %}
+          action: fire-dom-event
+          browser_mod:
+            command: more_info
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 30vw;
+              }
+            entity_id: light.kitchen_table_light_ambilight
+          {% else %}
+          action: more-info
+          {% endif %}
+        type: image
+      {%- endif %}
+      {% endfor %}
+
+      # ---------------------------
+      # ---------------------------
+      # Define Light Group Controls
+      # ---------------------------
+      # ---------------------------
+
+      {% for entity_group, left, top in light_groups %}
+
+      {{ create_warning_background(entity_group ~ "_lights_problem", "light." ~ entity_group ~ "_lights", left, top) }}
+
+      - entity: light.{{ entity_group }}_lights
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: {{ left }}%
+          top: {{ top }}%
+          transform: translate(-50%, -50%) scale({{ group_scaleX}}, {{ group_scaleY }})
+        tap_action:
+          action: toggle
+        double_tap_action:
+          action: more-info
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            title: {{ entity_group.capitalize() }} Lights
+            card:
+              entities:
+                {% for entity, group, left, top, scaleX, scaleY, deg in lights %}
+                {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) and (entity_group == group) %}
+                - light.{{ entity }}
+                {% endif %}
+                {% endfor %}
+              show_header_toggle: false
+              type: entities
+        type: state-icon
+      {% endfor %}
+
+ ######   #######  ##     ## ######## ########   ######  
+##    ## ##     ## ##     ## ##       ##     ## ##    ## 
+##       ##     ## ##     ## ##       ##     ## ##       
+##       ##     ## ##     ## ######   ########   ######  
+##       ##     ##  ##   ##  ##       ##   ##         ## 
+##    ## ##     ##   ## ##   ##       ##    ##  ##    ## 
+ ######   #######     ###    ######## ##     ##  ######  
+
+      # -----------------------------------
+      # -----------------------------------
+      # Define COVERS/SHUTTERS active areas
+      # -----------------------------------
+      # -----------------------------------
+
+      {% for entity, group, left, top, scaleX, scaleY, tap_action in covers %}
+      {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) %}
+      - entity: cover.{{ entity }}
+        state_image:
+          closed: /local/images/floorplan/shutters/square_closed.png
+          closing: /local/images/floorplan/shutters/square_closing.png
+          open: /local/images/floorplan/shutters/square_open.png
+          opening: /local/images/floorplan/shutters/square_opening.png
+        style:
+          left: {{ left }}%
+          top: {{ top }}%
+          transform: scale({{ scaleX }}, {{ scaleY }})
+        tap_action:
+          action: {{ tap_action }}
+        double_tap_action:
+          action: more-info
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 25vw;
+              }
+            title: Cover
+            card:
+              type: 'custom:vertical-slider-cover-card'
+              title: not_shown
+              showSidebar: false
+              panelType: true
+              switchHeight: 150%
+              switchColor: closedColor
+              entities:
+                - entity: cover.{{ entity }}
+              # entities:
+              #   - entity: cover.{{ entity }}
+              #   - entity: cover.{{ entity }}
+              #     full_row: true
+              #     hide_state: true
+              #     type: 'custom:slider-entity-row'
+              # show_header_toggle: false
+              # type: entities
+        type: image
+      {% endif %}
+      {% endfor %}
+
+      # -------------------------------------
+      # -------------------------------------
+      # Define Covers/Shutters Group Controls
+      # -------------------------------------
+      # -------------------------------------
+
+      {% for entity_group, left, top in cover_groups %}
+
+      {{ create_warning_background(entity_group ~ "_shutters_problem", "cover." ~ entity_group ~ "_shutters", left, top) }}
+
+      {% set services = [('open_cover', 'mdi:arrow-up-bold'), ('stop_cover', 'mdi:stop'), ('close_cover', 'mdi:arrow-down-bold')] %}
+      {% for service, icon in services %}
+      - entity: cover.{{ entity_group }}_shutters
+        state_color: false
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          {% if service == "open_cover" %}
+          left: {{ left }}%
+          {% elif service == "stop_cover" %}
+          left: {{ left + 2.25 }}%
+          {% elif service == "close_cover" %}
+          left: {{ left + 4.5 }}%
+          {% endif %}
+          top: {{ top }}%
+          transform: translate(-50%, -50%) scale({{ group_scaleX }}, {{ group_scaleY }})
+        tap_action:
+          action: call-service
+          service: cover.{{ service }}
+          service_data:
+            entity_id:  cover.{{ entity_group }}_shutters
+        double_tap_action:
+          action: more-info
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 25vw;
+              }
+            title: {{ entity_group.capitalize() }} Shutters
+            card:
+              # entities:
+              type: 'custom:vertical-slider-cover-card'
+              title: not_shown
+              showSidebar: false
+              panelType: true
+              switchHeight: 150%
+              switchColor: closedColor
+              entities:
+                {% for entity, group, left, top, scaleX, scaleY, tap_action in covers %}
+                {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) and (entity_group == group) %}
+                - entity: cover.{{ entity }}
+                # - entity: cover.{{ entity }}
+                #   full_row: true
+                #   hide_state: true
+                #   type: 'custom:slider-entity-row'
+                {% endif %}
+                {% endfor %}
+              # show_header_toggle: false
+              # type: entities
+        type: state-icon
+
+      - icon: {{ icon }}
+        type: icon
+        entity: cover.{{ entity_group }}
+        style:
+          {% if service == "open_cover" %}
+          left: {{ left }}%
+          color: rgb(0, 255, 0)
+          {% elif service == "stop_cover" %}
+          left: {{ left + 2.25 }}%
+          color: yellow
+          {% elif service == "close_cover" %}
+          left: {{ left + 4.5 }}%
+          color: red
+          {% endif %}
+          top: {{ top }}%
+          transform: translate(0%, 0%) scale({{ group_scaleX * 1 }}, {{ group_scaleY * 1 }})
+        tap_action: # Tap action same as cover icons - so pressing will activate service by either the icon or the overlay
+          action: call-service
+          service: cover.{{ service }}
+          service_data:
+            entity_id:  cover.{{ entity_group }}_shutters
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+      {% endfor %}
+      {% endfor %}
+
+#### ########  ########  ####  ######      ###    ######## ####  #######  ##    ##           ######   ########   #######  ##     ## ########  
+ ##  ##     ## ##     ##  ##  ##    ##    ## ##      ##     ##  ##     ## ###   ##          ##    ##  ##     ## ##     ## ##     ## ##     ## 
+ ##  ##     ## ##     ##  ##  ##         ##   ##     ##     ##  ##     ## ####  ##          ##        ##     ## ##     ## ##     ## ##     ## 
+ ##  ########  ########   ##  ##   #### ##     ##    ##     ##  ##     ## ## ## ##          ##   #### ########  ##     ## ##     ## ########  
+ ##  ##   ##   ##   ##    ##  ##    ##  #########    ##     ##  ##     ## ##  ####          ##    ##  ##   ##   ##     ## ##     ## ##        
+ ##  ##    ##  ##    ##   ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ###          ##    ##  ##    ##  ##     ## ##     ## ##        
+#### ##     ## ##     ## ####  ######   ##     ##    ##    ####  #######  ##    ##           ######   ##     ##  #######   #######  ##        
+
+      - type: state-icon
+        entity: group.irrigation
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: 53%
+          top: 31%
+          transform: translate(-50%, -50%) scale(1, 1)
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            style: |
+              :host .content {
+                width: 30vw;
+              }
+            deviceID:
+              - this
+            title: Irrigation Valves 1-Time Cycle
+            card:
+              type: grid
+              columns: 1
+              square: false
+              cards:
+                - type: entities
+                  show_header_toggle: false
+                  entities:
+                    - label: Choose which irrigation valves to open during the cycle
+                      type: section
+                    - entity: input_boolean.irrigation_sprinkler_west
+                    - entity: input_boolean.irrigation_sprinkler_north
+                    - entity: input_boolean.irrigation_drips
+                    - label: Set cycle duration (seconds) and start
+                      type: section
+                    - entity: input_number.irrigation_set_time
+                    - entity: input_boolean.irrigration_start_stop
+                    - type: section
+                    - entity: timer.irrigation_timer_cycle_duration
+                    - type: section
+                - type: history-graph
+                  hours_to_show: 72
+                  entities:
+                    - entity: switch.irrigation_sprinkler_west
+                    - entity: switch.irrigation_sprinkler_north
+                    - entity: switch.irrigation_drips
+        double_tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            title: Irrigation Valves
+            card:
+              entities:
+                - entity: switch.irrigation_sprinkler_west
+                - entity: switch.irrigation_sprinkler_north
+                - entity: switch.irrigation_drips
+              show_header_toggle: false
+              type: entities
+        hold_action:
+          action: more-info
+
+      - type: conditional
+        conditions:
+          - entity: timer.irrigation_timer_cycle_duration
+            state_not: 'idle'
+        elements:
+          - type: state-label
+            entity: timer.irrigation_timer_cycle_duration
+            attribute: remaining
+            style:
+              color: red
+              left: 53%
+              top: 33%
+              transform: 'translate(-50%, -50%)'
+
+
+#### ########  ########  ####  ######      ###    ######## ####  #######  ##    ##                       
+ ##  ##     ## ##     ##  ##  ##    ##    ## ##      ##     ##  ##     ## ###   ##                       
+ ##  ##     ## ##     ##  ##  ##         ##   ##     ##     ##  ##     ## ####  ##                       
+ ##  ########  ########   ##  ##   #### ##     ##    ##     ##  ##     ## ## ## ##                       
+ ##  ##   ##   ##   ##    ##  ##    ##  #########    ##     ##  ##     ## ##  ####                       
+ ##  ##    ##  ##    ##   ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ###                       
+#### ##     ## ##     ## ####  ######   ##     ##    ##    ####  #######  ##    ##         
+
+##      ##    ###    ######## ######## ########     ########   #######  #### ##       ######## ########  
+##  ##  ##   ## ##      ##    ##       ##     ##    ##     ## ##     ##  ##  ##       ##       ##     ## 
+##  ##  ##  ##   ##     ##    ##       ##     ##    ##     ## ##     ##  ##  ##       ##       ##     ## 
+##  ##  ## ##     ##    ##    ######   ########     ########  ##     ##  ##  ##       ######   ########  
+##  ##  ## #########    ##    ##       ##   ##      ##     ## ##     ##  ##  ##       ##       ##   ##   
+##  ##  ## ##     ##    ##    ##       ##    ##     ##     ## ##     ##  ##  ##       ##       ##    ##  
+ ###  ###  ##     ##    ##    ######## ##     ##    ########   #######  #### ######## ######## ##     ## 
+
+      # -----------------------------------------------
+      # -----------------------------------------------
+      # Define Controls & Day_Start_Duration Schedulers
+      #
+      # Irrigation
+      # Water Boiler
+      # -----------------------------------------------
+      # -----------------------------------------------
+
+      {% for entity, type, left, top, display_name in miscellaneous %}
+
+      {{ create_warning_background(entity ~ "_problem", type ~ "." ~ entity, left, top) }}
+
+      - entity: {{ type }}.{{ entity }}
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: {{ left }}%
+          top: {{ top }}%
+          transform: translate(-50%, -50%) scale({{ group_scaleX }}, {{ group_scaleY }})
+        tap_action:
+          {% if entity == "boiler_switch" %}
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 25vw;
+              }
+            title: Water Boiler
+            card:
+              type: grid
+              columns: 1
+              square: false
+              cards:
+                - type: button
+                  entity: switch.{{ entity }}
+                  show_icon: true
+                  show_name: false
+                  hold_action:
+                    action: more-info
+                  tap_action:
+                    action: toggle
+                - type: 'custom:slider-entity-row'
+                  entity: input_number.{{ entity }}_on_duration
+                  hide_state: false
+                - type: 'custom:time-picker-card'
+                  entity: input_datetime.{{ entity }}_start_time
+                  layout:
+                    embedded: true
+                    name: inside
+                    align_controls: right
+                - type: grid
+                  columns: 2
+                  square: false
+                  cards:
+                    - type: button
+                      entity: input_boolean.{{ entity }}
+                      show_name: false
+                      icon: mdi:power
+                    - type: button
+                      entity: input_boolean.{{ entity }}_one_time
+                      show_name: false
+                      icon: mdi:timer-outline
+                - type: entities
+                  # title: 1-Time Cycle
+                  show_header_toggle: false
+                  entities:
+                    - entity: timer.{{ entity }}_on_duration_timer
+          {% else %}
+          action: toggle
+          {% endif %}
+        double_tap_action:
+          action: more-info
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                height: 45vh;
+                width: 50vw;
+              }
+            title: {{ display_name }} Scheduler
+            card:
+              {{ create_schedulers_popup(entity, "DSD") }}
+        type: state-icon
+
+      {{ create_schedulers_icons(entity, left, top) }}
+
+      {% if entity == "boiler_switch" %}
+      - type: conditional
+        conditions:
+          - entity: input_boolean.{{ entity }}_one_time
+            state: 'on'
+        elements:
+          - type: state-label
+            entity: input_datetime.boiler_switch_start_time
+            style:
+              color: red
+              left: {{ left }}%
+              top: {{ top - timer_top_offset }}%
+              transform: 'translate(-50%, -50%)'
+  
+      - type: conditional
+        conditions:
+          - entity: timer.{{ entity }}_on_duration_timer
+            state_not: 'idle'
+        elements:
+          - type: state-label
+            entity: timer.{{ entity }}_on_duration_timer
+            attribute: remaining
+            style:
+              color: red
+              left: {{ left }}%
+              top: {{ top + timer_top_offset }}%
+              transform: 'translate(-50%, -50%)'
+      {% endif %}
+      {% endfor %}
+
+##     ##    ###     ######  ##     ## ##     ## ##     ##  ######  
+##     ##   ## ##   ##    ## ##     ## ##     ## ###   ### ##    ## 
+##     ##  ##   ##  ##       ##     ## ##     ## #### #### ##       
+##     ## ##     ## ##       ##     ## ##     ## ## ### ##  ######  
+ ##   ##  ######### ##       ##     ## ##     ## ##     ##       ## 
+  ## ##   ##     ## ##    ## ##     ## ##     ## ##     ## ##    ## 
+   ###    ##     ##  ######   #######   #######  ##     ##  ######  
+
+      {% for entity, left, top in vacuums %}
+      
+      {{ create_warning_background("vacuum_" ~ entity ~ "_problem", "vacuum.vacuum_" ~ entity, left, top) }}
+
+      - entity: vacuum.vacuum_{{ entity }}
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: {{ left }}%
+          top: {{ top }}%
+          transform: translate(-50%, -50%) scale({{ group_scaleX }}, {{ group_scaleY }})
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 40vw;
+              }
+            title: Vacuum {{ entity.capitalize() }}
+            card:
+              type: grid
+              columns: 2
+              square: false
+              cards:
+                - type: 'custom:vacuum-card'
+                  compact_view: false
+                  entity: vacuum.vacuum_{{ entity }}
+                  image: default
+                  show_name: true
+                  show_toolbar: true
+                  stats:
+                    cleaning:
+                      - attribute: cleaned_area
+                        subtitle: Cleaning area
+                        unit: m2
+                      - attribute: cleaning_time
+                        subtitle: Cleaning time
+                        unit: minutes
+                    default:
+                      - attribute: filter_left
+                        subtitle: Filter
+                        unit: hours
+                      - attribute: side_brush_left
+                        subtitle: Side brush
+                        unit: hours
+                      - attribute: main_brush_left
+                        subtitle: Main brush
+                        unit: hours
+                      - attribute: sensor_dirty_left
+                        subtitle: Sensors
+                        unit: hours
+                - type: picture-glance
+                  image: ''
+                  entities: []
+                  camera_image: camera.vacuum_{{ entity }}
+                  tap_action:
+                    action: none
+                  hold_action:
+                    action: none
+        double_tap_action:
+          action: more-info
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                height: 35vh;
+                width: 50vw;
+              }
+            title: Vacuum {{ entity.capitalize() }} Scheduler
+            card:
+              {{ create_schedulers_popup("vacuum_" ~ entity, "DS") }}
+        type: state-icon
+
+      {{ create_schedulers_icons("vacuum_" ~ entity, left, top) }}
+      {% endfor %}
+
+##     ## ######## ########  ####    ###       ########  ##          ###    ##    ## ######## ########   ######  
+###   ### ##       ##     ##  ##    ## ##      ##     ## ##         ## ##    ##  ##  ##       ##     ## ##    ## 
+#### #### ##       ##     ##  ##   ##   ##     ##     ## ##        ##   ##    ####   ##       ##     ## ##       
+## ### ## ######   ##     ##  ##  ##     ##    ########  ##       ##     ##    ##    ######   ########   ######  
+##     ## ##       ##     ##  ##  #########    ##        ##       #########    ##    ##       ##   ##         ## 
+##     ## ##       ##     ##  ##  ##     ##    ##        ##       ##     ##    ##    ##       ##    ##  ##    ## 
+##     ## ######## ########  #### ##     ##    ##        ######## ##     ##    ##    ######## ##     ##  ######  
+
+      - entity: media_player.squeezebox_radio
+        icon: 'mdi:music'
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: 53%
+          top: 86%
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 30vw;
+              }
+            title: SqueezeBox Radio
+            card:
+              type: 'custom:mini-media-player'
+              sound_mode: icon
+              source: icon
+              artwork: cover
+              entity: media_player.squeezebox_radio
+              info: scroll
+              shortcuts:
+                buttons:
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s8712&partnerId=16
+                    #image: /local/images/radio_stations/ECO99FM.png
+                    cover: /local/images/radio_stations/ECO99FM.png
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s68320&partnerId=16
+                    #image: /local/images/radio_stations/GALGALTZ.jpg
+                    cover: /local/images/radio_stations/GALGALTZ.jpg
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s45475&partnerId=16
+                    #image: /local/images/radio_stations/GIMEL.png
+                    cover: /local/images/radio_stations/GIMEL.png
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s26087&partnerId=16
+                    #image: /local/images/radio_stations/RADIOS100FM.png
+                    cover: /local/images/radio_stations/RADIOS100FM.png
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s24889&partnerId=16
+                    #image: /local/images/radio_stations/BET.png
+                    cover: /local/images/radio_stations/BET.png
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s9067&partnerId=16
+                    #image: /local/images/radio_stations/SKY_RADIO_101.png
+                    cover: /local/images/radio_stations/SKY_RADIO_101.png
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s84481&partnerId=16
+                    #image: /local/images/radio_stations/FFH_Die_80er.png
+                    cover: /local/images/radio_stations/FFH_Die_80er.png
+                    type: channel
+                columns: 4
+                column_height: 100
+        double_tap_action:
+          action: more-info
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 80vw;
+                height: 85vh;
+              }
+            title: Logitech Media Server
+            card:
+              type: iframe
+              url: http://192.168.1.104:9000
+              aspect: 100%
+        type: state-icon
+
+
+##     ## ##     ##    ###     ######  
+##     ## ##     ##   ## ##   ##    ## 
+##     ## ##     ##  ##   ##  ##       
+######### ##     ## ##     ## ##       
+##     ##  ##   ##  ######### ##       
+##     ##   ## ##   ##     ## ##    ## 
+##     ##    ###    ##     ##  ######  
+
+      # --------------------------------------------
+      # --------------------------------------------
+      # Define HVAC Controls & Start_Stop Schedulers
+      # --------------------------------------------
+      # --------------------------------------------
+
+      {% for entity, left, top in hvacs %}
+
+      {{ create_warning_background("hvac_" ~ entity ~ "_problem", "climate.hvac_" ~ entity, left, top) }}
+
+      - type: state-icon
+        entity: climate.hvac_{{ entity }}
+        icon: 'mdi:air-conditioner'
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: {{ left }}%
+          top: {{ top }}%
+          transform: translate(-50%, -50%) scale({{ scaleX }}, {{ scaleY }})
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 25vw;
+              }
+            title: {{ entity.capitalize() }} Air Conditioning
+            card:
+              entity: climate.hvac_{{ entity }}
+              type: thermostat
+        double_tap_action:
+          action: more-info
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                height: 55vh;
+                width: 85vw;
+              }
+            title: {{ entity.capitalize() }} Air Conditioning
+            card:
+              {{ create_schedulers_popup("hvac_" ~ entity, "S_HVAC") }}
+
+      # Show temperature
+      - type: state-label
+        entity: sensor.{{ entity ~ '_temperature' }}
+        style:
+          left: {{ left + 1 }}%
+          top: {{ top }}%
+          transform: 'translate(0, -50%)'
+
+      # Show airconditioner state (if ON)
+      - type: conditional
+        conditions:
+          - entity: climate.hvac_{{ entity }}
+            state_not: 'off'
+        elements:
+          - type: state-label
+            entity: climate.hvac_{{ entity }}
+            style:
+              left: {{ left + 1 }}%
+              top: {{ top + 1.5 }}%
+              transform: 'translate(0, -50%)'
+          - type: state-label
+            entity: climate.hvac_{{ entity }}
+            attribute: "fan_mode"
+            style:
+              left: {{ left + 3 }}%
+              top: {{ top + 1.5 }}%
+              transform: 'translate(0, -50%)'
+          - type: state-label
+            entity: climate.hvac_{{ entity }}
+            attribute: "temperature"
+            style:
+              left: {{ left + 4.5 }}%
+              top: {{ top + 1.5 }}%
+              transform: 'translate(0, -50%)'
+
+      {{ create_schedulers_icons("hvac_" ~ entity, left, top) }}
+      {% endfor %}
+
+##    ##    ###    ##     ## ####  ######      ###    ######## ####  #######  ##    ## 
+###   ##   ## ##   ##     ##  ##  ##    ##    ## ##      ##     ##  ##     ## ###   ## 
+####  ##  ##   ##  ##     ##  ##  ##         ##   ##     ##     ##  ##     ## ####  ## 
+## ## ## ##     ## ##     ##  ##  ##   #### ##     ##    ##     ##  ##     ## ## ## ## 
+##  #### #########  ##   ##   ##  ##    ##  #########    ##     ##  ##     ## ##  #### 
+##   ### ##     ##   ## ##    ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ### 
+##    ## ##     ##    ###    ####  ######   ##     ##    ##    ####  #######  ##    ## 
+
+      {% for entity in navigations %}
+      - type: image
+        image: /local/images/floorplan/navigation/{{ entity }}.png
+        style:
+          left: {{ navi_left }}%
+          top: {{ navi_top.value }}%
+          transform: translate(-50%, -50%) scale({{ navi_scaleX }}, {{ navi_scaleY }})
+        tap_action:
+          action: none
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+
+      - type: state-label
+        entity: sensor.{{ entity }}
+        attribute: route
+        style:
+          left: {{ navi_left - navi_left_offset}}%
+          top: {{ navi_top.value }}%
+          transform: translate(-100%, -50%) scale({{ navi_scaleX * navi_scaleT }}, {{ navi_scaleY * navi_scaleT }})
+        tap_action:
+          action: none
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+
+      - type: state-label
+        entity: sensor.{{ entity }}_ui
+        style:
+          left: {{ navi_left + navi_left_offset }}%
+          top: {{ navi_top.value }}%
+          transform: translate(0%, -50%) scale({{ navi_scaleX * navi_scaleT }}, {{ navi_scaleY * navi_scaleT }})
+        tap_action:
+          action: none
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+      {% set navi_top.value = navi_top.value + navi_top_offset %}
+      {% endfor %}
+
+ ######  ########    ###    ######## ##     ##  ######        ########     ###    ########  
+##    ##    ##      ## ##      ##    ##     ## ##    ##       ##     ##   ## ##   ##     ## 
+##          ##     ##   ##     ##    ##     ## ##             ##     ##  ##   ##  ##     ## 
+ ######     ##    ##     ##    ##    ##     ##  ######        ########  ##     ## ########  
+      ##    ##    #########    ##    ##     ##       ##       ##     ## ######### ##   ##   
+##    ##    ##    ##     ##    ##    ##     ## ##    ##       ##     ## ##     ## ##    ##  
+ ######     ##    ##     ##    ##     #######   ######        ########  ##     ## ##     ## 
+
+      {% for number, entity, state_t_f, state, icon, card_type in statusbar_entities %}
+      - type: conditional
+        conditions:
+          - entity: {{ entity }}
+            {% if state_t_f == "t" %}
+            state: "{{ state }}"
+            {% else %}
+            state_not: "{{ state }}"
+            {% endif %}
+        elements:
+          - type: icon
+            icon: {{ icon }}
+            entity: {{ entity }}
+            tap_action:
+            {% if (card_type == "more-info") %}
+              action: more-info
+            {% else %}
+              action: fire-dom-event
+              browser_mod:
+                command: popup
+                deviceID:
+                  - this
+                style: |
+                  :host .content {
+                    width: 30vw;
+                    height: 45vh;
+                  }
+                title: Details
+                card:
+                {% if (card_type == "entities") %}
+                  type: entities
+                  show_header_toggle: false
+                  entities:
+                  {% for number2, entity2 in statusbar_details %}
+                  {% if number2 == number %}
+                    - entity: {{ entity2 }}
+                  {% endif %}
+                  {% endfor %}
+                {% elif (card_type == "history-graph") %}
+                  type: history-graph
+                  entities:
+                  {% for number2, entity2 in statusbar_details %}
+                  {% if number2 == number %}
+                    - entity: {{ entity2 }}
+                  {% endif %}
+                  {% endfor %}
+                {% elif (card_type == "hacs") %}
+                  type: markdown
+                  entity_id: {{ entity }}
+                  {% raw %}
+                  content: |
+                    {% for repo in state_attr('sensor.hacs', 'repositories') %}
+                    **{{ repo.display_name }}** _{{ repo["installed_version"] }}_ -> _{{ repo["available_version"] }}_
+                    {% endfor %}
+                  {% endraw %}
+                {% else %}
+                  type: markdown
+                  content: "**Card type not defined**"
+                {% endif %}
+              {% endif %}
+            style:
+              color: {{ statusbar_color }}
+              left: {{ statusbar_left.value }}%
+              top: {{ statusbar_top }}%
+              transform: translate(0%, 0%) scale({{ statusbar_scaleX }}, {{ statusbar_scaleY }})
+            {% set statusbar_left.value = statusbar_left.value + statusbar_left_offset %}
+      {% endfor %}
+
+ ######  ######## ######## ######## #### ##    ##  ######    ######  
+##    ## ##          ##       ##     ##  ###   ## ##    ##  ##    ## 
+##       ##          ##       ##     ##  ####  ## ##        ##       
+ ######  ######      ##       ##     ##  ## ## ## ##   ####  ######  
+      ## ##          ##       ##     ##  ##  #### ##    ##        ## 
+##    ## ##          ##       ##     ##  ##   ### ##    ##  ##    ## 
+ ######  ########    ##       ##    #### ##    ##  ######    ######  
+
+      - type: icon
+        icon: mdi:cog
+        style:
+          color: {{ settings_color }}
+          left: {{ settings_left }}%
+          top: {{ settings_top }}%
+          transform: translate(0%, 0%) scale({{ settings_scaleX }}, {{ settings_scaleY }})
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 85vw;
+                height: 45vh;
+              }
+            title: Settings
+            card:
+              type: grid
+              {% set num_settings_columns = 3 %}
+              columns: {{ num_settings_columns }}
+              square: false
+              cards:
+                {% for current_column in ['1', '2', '3'] %}
+                - type: entities
+                  show_header_toggle: false
+                  entities:
+                    {% for entity, column, section, label, type in settings_entities %}
+                      {% if column == current_column %}
+                        {% if section == "y" %}
+                    - type: section
+                        {% endif %}
+                        {% if label != "" %}
+                      label: {{ label }}
+                        {% endif %}
+                        {%if type == "slider" %}
+                    - type: 'custom:slider-entity-row'
+                      entity: {{ entity }}
+                      hide_state: false
+                        {% else %}
+                    - entity: {{ entity }}
+                        {% endif %}
+                      {% endif %}
+                    {% endfor %}
+                    - type: section
+                {% endfor %}
+
+##     ## ##    ## ########     ###    #### ########  
+##     ## ###   ## ##     ##   ## ##    ##  ##     ## 
+##     ## ####  ## ##     ##  ##   ##   ##  ##     ## 
+##     ## ## ## ## ########  ##     ##  ##  ##     ## 
+##     ## ##  #### ##   ##   #########  ##  ##     ## 
+##     ## ##   ### ##    ##  ##     ##  ##  ##     ## 
+ #######  ##    ## ##     ## ##     ## #### ########  
+
+      {{ create_warning_background("unraid_problem", "binary_sensor.unraid", 3, 80) }}
+
+      - type: state-icon
+        entity: binary_sensor.unraid
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: 3%
+          top: 80%
+          transform: translate(-50%, -50%) scale({{ group_scaleX }}, {{ group_scaleY }})
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 80vw;
+                height: 85vh;
+              }
+            title: UnRAID Server
+            card:
+              type: iframe
+              url: http://192.168.1.104/Dashboard
+              aspect: 100%
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+
+##      ##    ###    ######## ######## ########  
+##  ##  ##   ## ##      ##    ##       ##     ## 
+##  ##  ##  ##   ##     ##    ##       ##     ## 
+##  ##  ## ##     ##    ##    ######   ########  
+##  ##  ## #########    ##    ##       ##   ##   
+##  ##  ## ##     ##    ##    ##       ##    ##  
+ ###  ###  ##     ##    ##    ######## ##     ## 
+
+      - type: state-icon
+        entity: sensor.water_meter_16452690_last_reading
+        icon: mdi:water-pump
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: 3%
+          top: 86%
+          transform: translate(-50%, -50%) scale({{ group_scaleX }}, {{ group_scaleY }})
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 40vw;
+              }
+            title: Water Consumption
+            card:
+              type: grid
+              columns: 1
+              square: false
+              cards:
+                - type: history-graph
+                  entities:
+                    - entity: sensor.water_meter_16452690_today_s_consumption
+                    - entity: sensor.water_consumption_hourly
+                  #hours_to_show: 12
+                  refresh_interval: 0
+                - type: history-graph
+                  entities:
+                    - entity: sensor.water_meter_16452690_consumption_predication
+                    - entity: sensor.water_meter_16452690_monthly_consumption
+                    - entity: sensor.water_consumption_monthly_prediction
+                  #hours_to_show: 12
+                  refresh_interval: 0
+                - type: history-graph
+                  entities:
+                    - entity: sensor.water_meter_16452690_last_reading
+                  #hours_to_show: 12
+                  refresh_interval: 0
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+
+########   #######   #######  ########    #### ##    ## ########  #######  ########  ##     ##    ###    ######## ####  #######  ##    ## 
+##     ## ##     ## ##     ## ##           ##  ###   ## ##       ##     ## ##     ## ###   ###   ## ##      ##     ##  ##     ## ###   ## 
+##     ## ##     ## ##     ## ##           ##  ####  ## ##       ##     ## ##     ## #### ####  ##   ##     ##     ##  ##     ## ####  ## 
+########  ##     ## ##     ## ######       ##  ## ## ## ######   ##     ## ########  ## ### ## ##     ##    ##     ##  ##     ## ## ## ## 
+##   ##   ##     ## ##     ## ##           ##  ##  #### ##       ##     ## ##   ##   ##     ## #########    ##     ##  ##     ## ##  #### 
+##    ##  ##     ## ##     ## ##           ##  ##   ### ##       ##     ## ##    ##  ##     ## ##     ##    ##     ##  ##     ## ##   ### 
+##     ##  #######   #######  ##          #### ##    ## ##        #######  ##     ## ##     ## ##     ##    ##    ####  #######  ##    ## 
+
+      - type: state-label
+        entity: sensor.water_boiler_temperature_panel_out
+        style:
+          left: 3.5%
+          top: 52%
+          transform: translate(0, -50%)
+          font-size: 75%
+
+      - type: state-label
+        entity: sensor.water_boiler_temperature_in_from_panel
+        style:
+          left: 9.5%
+          top: 43%
+          transform: translate(0, -50%)
+          font-size: 75%
+
+      - type: state-label
+        entity: sensor.water_boiler_temperature_out_to_panel
+        style:
+          left: 9.5%
+          top: 47%
+          transform: translate(0, -50%)
+          font-size: 75%
+  
+      - type: conditional
+        conditions:
+          - entity: switch.roof_right_table_power_relay
+            state: 'on'
+        elements:
+          - type: icon
+            icon: mdi:power
+            entity: switch.roof_right_table_power_relay
+            style:
+              color: red
+              left: 10%
+              top: 67%
+              transform: 'translate(0, -50%)'
+            tap_action:
+              action: toggle
+            double_tap_action:
+              action: none
+            hold_tap_action:
+              action: none
+
+      - type: conditional
+        conditions:
+          - entity: binary_sensor.water_boiler_power_pump_controller_status
+            state: 'on'
+        elements:
+          - type: icon
+            icon: mdi:pump
+            style:
+              color: red
+              left: 8.5%
+              top: 47%
+              transform: 'translate(0, -50%)'
+            tap_action:
+              action: none
+            double_tap_action:
+                action: none
+            hold_tap_action:
+              action: none
+  
+      - type: icon
+        icon: mdi:information-variant
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: 9.75%
+          top: 44.75%
+          transform: 'translate(0, -50%)'
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 75vw;
+                height: 70vh;
+              }
+            title: Roof Temperature & Humidity
+            card:
+              type: grid
+              columns: 2
+              square: false
+              cards:
+                - type: grid
+                  columns: 1
+                  square: false
+                  cards:
+                    - type: grid
+                      columns: 1
+                      square: false
+                      cards:
+                        - type: 'custom:slider-entity-row'
+                          entity: input_number.roof_information_graph_hours
+                          hide_state: false
+                    - type: 'custom:config-template-card'
+                      variables:
+                        HOURS: states['input_number.roof_information_graph_hours'].state
+                      entities:
+                        - input_number.roof_information_graph_hours
+                      card:
+                        type: history-graph
+                        entities:
+                          - entity: sensor.water_boiler_temperature_panel_out
+                          - entity: sensor.water_boiler_temperature_in_from_panel
+                          - entity: sensor.water_boiler_temperature_out_to_panel
+                          - entity: sensor.water_boiler_temperature_temperature_difference
+                          - entity: binary_sensor.water_boiler_power_pump_controller_status
+                            name: Pump
+                          - entity: binary_sensor.water_boiler_power_wall_switch_status
+                            name: Switch
+                          - entity: sensor.water_boiler_power_adc
+                          - entity: sensor.water_boiler_temperature_water_level
+                          - entity: sensor.water_boiler_power_power_w
+                        hours_to_show: "${ HOURS }"
+                        refresh_interval: 0
+                - type: grid
+                  columns: 1
+                  square: false
+                  cards:
+                    - type: 'custom:config-template-card'
+                      variables:
+                        HOURS: states['input_number.roof_information_graph_hours'].state
+                      entities:
+                        - input_number.roof_information_graph_hours
+                      card:
+                        type: history-graph
+                        entities:
+                          - entity: sensor.water_boiler_power_am2302_temperature
+                          - entity: sensor.water_boiler_power_si7021_temperature
+                          - entity: sensor.water_boiler_temperature_case_temperature
+                          - entity: sensor.water_boiler_power_am2302_humidity
+                          - entity: sensor.water_boiler_power_si7021_humidity
+                          - entity: sensor.water_boiler_temperature_case_humidity
+                        hours_to_show: "${ HOURS }"
+                        refresh_interval: 0
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+
+   ###     ######  ######## ####  #######  ##    ##  ######  
+  ## ##   ##    ##    ##     ##  ##     ## ###   ## ##    ## 
+ ##   ##  ##          ##     ##  ##     ## ####  ## ##       
+##     ## ##          ##     ##  ##     ## ## ## ##  ######  
+######### ##          ##     ##  ##     ## ##  ####       ## 
+##     ## ##    ##    ##     ##  ##     ## ##   ### ##    ## 
+##     ##  ######     ##    ####  #######  ##    ##  ######  
+
+      {% for entity in actions_entities %}
+      - type: state-icon
+        entity: {{ entity }}
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: {{ actions_left.value }}%
+          top: {{ actions_top }}%
+          transform: translate(0%, 100%) scale({{ actions_scaleX }}, {{ actions_scaleY }})
+        tap_action:
+          action: toggle
+        double_tap_action:
+          action: more-info
+        hold_action:
+          action: more-info
+        {% set actions_left.value = actions_left.value + actions_left_offset %}
+      {% endfor %}
+
+########     ###    ########  ##    ## #### ##    ##  ######   
+##     ##   ## ##   ##     ## ##   ##   ##  ###   ## ##    ##  
+##     ##  ##   ##  ##     ## ##  ##    ##  ####  ## ##        
+########  ##     ## ########  #####     ##  ## ## ## ##   #### 
+##        ######### ##   ##   ##  ##    ##  ##  #### ##    ##  
+##        ##     ## ##    ##  ##   ##   ##  ##   ### ##    ##  
+##        ##     ## ##     ## ##    ## #### ##    ##  ######   
+
+      - type: state-icon
+        entity: cover.garage_door
+        style:
+          left: 93%
+          top: 80%
+          transform: 'translate(0, -50%) scale(6, 5)'
+        tap_action:
+          action: toggle
+        double_tap_action:
+            action: none
+        hold_tap_action:
+          action: none
+
+##     ## ########    ###    ######## ######## ########   ######  
+##     ## ##         ## ##      ##    ##       ##     ## ##    ## 
+##     ## ##        ##   ##     ##    ##       ##     ## ##       
+######### ######   ##     ##    ##    ######   ########   ######  
+##     ## ##       #########    ##    ##       ##   ##         ## 
+##     ## ##       ##     ##    ##    ##       ##    ##  ##    ## 
+##     ## ######## ##     ##    ##    ######## ##     ##  ######  
+
+      - type: conditional
+        conditions:
+          - entity: switch.main_bathroom_heater
+            state: 'on'
+        elements:
+          - type: icon
+            icon: mdi:radiator
+            entity: switch.main_bathroom_heater
+            style:
+              color: red
+              left: 44%
+              top: 66%
+              transform: 'translate(0, -50%)'
+            tap_action:
+              action: toggle
+            double_tap_action:
+                action: none
+            hold_tap_action:
+              action: none
+
+      - type: conditional
+        conditions:
+          - entity: switch.master_bathroom_heater
+            state: 'on'
+        elements:
+          - type: icon
+            icon: mdi:radiator
+            entity: switch.master_bathroom_heater
+            style:
+              color: red
+              left: 44%
+              top: 83%
+              transform: 'translate(0, -50%)'
+            tap_action:
+              action: toggle
+            double_tap_action:
+                action: none
+            hold_tap_action:
+              action: none
+
+########  ######## ######## ########  ########  ######  ##     ##                ########  ######## ##        #######     ###    ########  
+##     ## ##       ##       ##     ## ##       ##    ## ##     ##                ##     ## ##       ##       ##     ##   ## ##   ##     ## 
+##     ## ##       ##       ##     ## ##       ##       ##     ##                ##     ## ##       ##       ##     ##  ##   ##  ##     ## 
+########  ######   ######   ########  ######    ######  #########                ########  ######   ##       ##     ## ##     ## ##     ## 
+##   ##   ##       ##       ##   ##   ##             ## ##     ##                ##   ##   ##       ##       ##     ## ######### ##     ## 
+##    ##  ##       ##       ##    ##  ##       ##    ## ##     ##                ##    ##  ##       ##       ##     ## ##     ## ##     ## 
+##     ## ######## ##       ##     ## ########  ######  ##     ##                ##     ## ######## ########  #######  ##     ## ########  
+
+      - type: icon
+        icon: mdi:refresh
+        style:
+          color: {{ settings_color }}
+          left: {{ settings_left }}%
+          top: {{ settings_top + 2.5 }}%
+          transform: translate(0%, 0%) scale({{ settings_scaleX }}, {{ settings_scaleY }})
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: lovelace_reload
+            deviceID:
+              - this
+        double_tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: window_reload
+            deviceID:
+              - this
+        hold_action:
+          action: none
+
+########   #######   #######  ##     ##          ######## ######## ##     ## ########  ######## ########     ###    ######## ##     ## ########  ########  ######  
+##     ## ##     ## ##     ## ###   ###             ##    ##       ###   ### ##     ## ##       ##     ##   ## ##      ##    ##     ## ##     ## ##       ##    ## 
+##     ## ##     ## ##     ## #### ####             ##    ##       #### #### ##     ## ##       ##     ##  ##   ##     ##    ##     ## ##     ## ##       ##       
+########  ##     ## ##     ## ## ### ##             ##    ######   ## ### ## ########  ######   ########  ##     ##    ##    ##     ## ########  ######    ######  
+##   ##   ##     ## ##     ## ##     ##             ##    ##       ##     ## ##        ##       ##   ##   #########    ##    ##     ## ##   ##   ##             ## 
+##    ##  ##     ## ##     ## ##     ##             ##    ##       ##     ## ##        ##       ##    ##  ##     ##    ##    ##     ## ##    ##  ##       ##    ## 
+##     ##  #######   #######  ##     ##             ##    ######## ##     ## ##        ######## ##     ## ##     ##    ##     #######  ##     ## ########  ######  
+
+      - type: state-label
+        entity: sensor.master_bedroom_temperature
+        style:
+          left: 36.5%
+          top: 93%
+          transform: translate(0, -50%)
+          font-size: 75%
+
+      - type: state-label
+        entity: sensor.noga_temperature
+        style:
+          # left: 44%
+          # top: 46%
+          left: 45%
+          top: 59%
+          transform: translate(0, -50%)
+          font-size: 75%
+
+      - type: state-label
+        entity: sensor.ella_temperature
+        style:
+          # left: 38%
+          # top: 45%
+          left: 36%
+          top: 56%
+          transform: translate(0, -50%)
+          font-size: 75%
+
+      - type: state-label
+        entity: sensor.tomer_temperature
+        style:
+          # left: 30%
+          # top: 46%
+          left: 28%
+          top: 61.5%
+          transform: translate(0, -50%)
+          font-size: 75%

@@ -1,0 +1,113 @@
+substitutions:
+  hide_extra_info: "TRUE" # "TRUE" / "FALSE"
+  hide_restart_switch: "TRUE"
+  blue_led_hold_min: "5"  # Turn ON/OFF button/s BLUE LEDs timing
+  blue_led_hold_max: "10"
+  reset_hold_min: "15"    # Reset device timing
+  reset_hold_max: "60"
+  wifi_reboot_timeout: 60min
+  api_reboot_timeout: 600min
+  latitude: !secret latitude
+  longitude: !secret longitude
+  
+esphome:
+  name: ${device_name}
+  platform: ${platform}
+  board: ${board}
+  esp8266_restore_from_flash: ${esp8266_restore_from_flash}
+
+wifi:
+  networks:
+  - ssid: !secret WIFI_SSID_1
+    password: !secret WIFI_Password_1
+  - ssid: !secret WIFI_SSID_2
+    password: !secret WIFI_Password_2
+  - ssid: !secret WIFI_SSID_3
+    password: !secret WIFI_Password_3
+  use_address: ${static_ip} #192.168waterboiler_power_wemosd1mini.local #<place_previous_device_name_here_if_you_want_to_change_it>
+  reboot_timeout: ${wifi_reboot_timeout}
+  manual_ip:
+    static_ip: ${static_ip}
+    gateway: 192.168.1.1
+    subnet: 255.255.255.0
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "AP_${device_name}"
+    password: !secret AP_Password
+
+captive_portal:
+
+# Enable logging
+logger:
+  baud_rate: 0
+  level: DEBUG
+
+web_server:
+  port: 80
+
+# Enable Home Assistant API
+api:
+  reboot_timeout: ${api_reboot_timeout}
+
+#mqtt:
+#  broker: !secret MQTT_Broker_IP
+#  username: !secret MQTT_Broker_Username
+#  password: !secret MQTT_Broker_Password
+#  topic_prefix: ${MQTT_broker_topic_prefix}/${device_name}
+
+ota:
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} ESP IP Address"
+      internal: ${hide_extra_info}
+    ssid:
+      name: "${friendly_name} ESP Connected SSID"
+      internal: ${hide_extra_info}
+    bssid:
+      name: "${friendly_name} ESP Connected BSSID"
+      internal: ${hide_extra_info}
+    mac_address:
+      name: "${friendly_name} ESP Mac Wifi Address"
+      internal: ${hide_extra_info}
+
+  - platform: version
+    name: "${friendly_name} ESPHome Version"
+    internal: ${hide_extra_info}
+
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+    internal: ${hide_extra_info}
+
+sensor:
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal Sensor"
+    update_interval: 60s
+    internal: ${hide_extra_info}
+
+  - platform: uptime
+    name: "${friendly_name} Uptime Sensor"
+    internal: ${hide_extra_info}
+
+  - platform: sun
+    name: Sun Elevation
+    id: sun_elevation
+    type: elevation
+    internal: ${hide_extra_info}
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+sun:
+  latitude: ${latitude}
+  longitude: ${longitude}
+
+switch:
+  - platform: restart
+    id: restart_device
+    name: "${friendly_name} Restart"
+    internal: ${hide_restart_switch}
+    icon: mdi:restart

@@ -1,0 +1,159 @@
+substitutions:
+  platform: ESP8266
+  board: d1_mini
+  device_name: waterboiler_power
+  friendly_name: "Water Boiler Power"
+  static_ip: 192.168.1.49
+  esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
+  hide_restart_switch: "FALSE" # "TRUE" / "FALSE"
+  
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+packages:
+  common: !include zzz_common_files/common.yaml
+
+##############################################################
+#   Custom Boiler Power functionality
+##############################################################
+#
+# Status LED: GPIO02
+#
+# DHT22/AM2302 Temperature & Humidity sensor: D3 GPIO00 (FLASH)
+#
+# SI7021 Temperature & Humidity sensor I2C SDA : D2 GPIO04 (address 0x40)
+# SI7021 Temperature & Humidity sensor I2C SCL : D1 GPIO05 (address 0x40)
+#
+# Heater Power Usage [W]: A0
+#
+# Input Power from Pump Control             (1) : D5 GPIO14 (SCLK)
+# Input Power from Delay Relay              (2) : D6 GPIO12 (MISO)
+# Input Power from Wall Switch              (3) : D7 GPIO13 (MOSI)
+# Input Power from Boiler Thermostat        (4) : RX GPIO03 (RX)
+#
+# Spare : D8 GPIO15 (CS)
+# Spare : D0 GPIO16 (WAKE)
+# Spare : TX GPIO01 (TX)
+#
+##############################################################
+
+status_led:
+  pin:
+    number: GPIO02
+    inverted: True
+
+i2c:
+  id: bus_a
+  sda: GPIO04
+  scl: GPIO05
+  scan: True
+
+sensor:
+
+  - platform: dht
+    model: AM2302
+    pin: GPIO00
+    temperature:
+      name: "${friendly_name} AM2302 Temperature"
+      filters:
+      - median:
+          window_size: 7
+          send_every: 4
+          send_first_at: 3
+    humidity:
+      name: "${friendly_name} AM2302 Humidity"
+      filters:
+      - median:
+          window_size: 7
+          send_every: 4
+          send_first_at: 3
+    update_interval: 20s
+
+  - platform: htu21d
+    i2c_id: bus_a
+    address: 0x40
+    temperature:
+      name: "${friendly_name} SI7021 Temperature"
+      filters:
+      - median:
+          window_size: 7
+          send_every: 4
+          send_first_at: 3
+    humidity:
+      name: "${friendly_name} SI7021 Humidity"
+      filters:
+      - median:
+          window_size: 7
+          send_every: 4
+          send_first_at: 3
+    update_interval: 20s
+
+  - platform: adc
+    id: adc_sensor
+    pin: A0
+    name: "${friendly_name} ADC"
+    filters:
+      - median:
+          window_size: 7
+          send_every: 4
+          send_first_at: 3
+    update_interval: 1s
+    internal: FALSE # ${hide_extra_info}
+    accuracy_decimals: 3
+
+  - platform: ct_clamp
+    sensor: adc_sensor
+    name: "${friendly_name} Power [W]" #" Current [A]"
+    unit_of_measurement: "W"
+    sample_duration: 5s
+    update_interval: 60s
+    accuracy_decimals: 1
+    filters:
+      - calibrate_linear: # Using 227VAC as reference voltage to calcualte current based on bulb Wattage
+        - 0.00000 -> 0
+        - 0.00308 -> 60 #0.2643
+        - 0.00366 -> 75 #0.3304
+        #- 0.00000 -> 2500
+      - delta: 20
+
+
+binary_sensor:
+
+  - platform: gpio
+    name: "${friendly_name} Wall Switch Status"
+    device_class: power
+    pin:
+      number: GPIO13
+      inverted: TRUE
+      mode: INPUT_PULLUP
+    filters:
+      - delayed_on_off: 200ms
+
+  - platform: gpio
+    name: "${friendly_name} Pump Controller Status"
+    device_class: power
+    pin:
+      number: GPIO14
+      inverted: TRUE
+      mode: INPUT_PULLUP
+    filters:
+      - delayed_on_off: 200ms
+
+  - platform: gpio
+    name: "${friendly_name} Delay Relay Status"
+    device_class: power
+    pin:
+      number: GPIO12
+      inverted: TRUE
+      mode: INPUT_PULLUP
+    filters:
+      - delayed_on_off: 200ms
+
+  - platform: gpio
+    name: "${friendly_name} input 4"
+    device_class: power
+    pin:
+      number: GPIO03
+      inverted: TRUE
+      mode: INPUT_PULLUP
+    filters:
+      - delayed_on_off: 200ms

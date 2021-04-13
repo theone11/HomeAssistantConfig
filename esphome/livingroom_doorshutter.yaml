@@ -1,0 +1,14 @@
+substitutions:
+  device_name: livingroom_doorshutter
+  friendly_name: "Livingroom Door Shutter"
+  static_ip: 192.168.1.32
+
+  # Applicable for Curtain Switches
+  duration_open: "25" # Actually 24
+  duration_close: "23" # Actually 22
+
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+packages:
+  common: !include zzz_common_files/common.yaml
+  family: !include zzz_common_files/common_shutterswitch_wfcs01.yaml

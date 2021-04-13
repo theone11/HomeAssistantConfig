@@ -1,0 +1,15 @@
+# lovelace_gen
+
+custom_header:
+  #hide_header: true
+  hide_unused: true
+  hide_help: true
+  header_text: '{{ time }} - {{ dayNameLong }} - {{ date }}'
+  button_text:
+    #options: '{{ time }} - {{ dayNameLong }} - {{ date }}'
+  voice_hide: true
+  compact_mode: true
+  locale: he-IL
+title: Home
+views:
+  - !include lovelace_new_data.yaml

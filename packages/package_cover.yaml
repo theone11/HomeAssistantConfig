@@ -1,0 +1,62 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+cover:
+  - platform: group
+    name: Upstairs Shutters
+    entities:
+      - cover.noga_window_shutter_north
+      - cover.noga_window_shutter_west
+      - cover.ella_window_shutter
+
+  - platform: group
+    name: Downstairs Shutters
+    entities:
+      - cover.diningroom_window_shutter
+      - cover.livingroom_window_shutter
+      - cover.livingroom_door_shutter
+      - cover.playroom_window_shutter
+
+sensor:
+  - platform: template
+    sensors:
+      upstairs_shutters_problem:
+        icon_template: mdi:window-shutter-alert
+        value_template: >
+          {% set devices = state_attr('cover.upstairs_shutters', 'entity_id') %}
+          {% set upstairs_shutters_problem = namespace(count=0) %}
+          {% for entity_id in devices -%}
+            {% if (states(entity_id) == 'unknown') or (states(entity_id) == 'unavailable') %}
+              {% set upstairs_shutters_problem.count = upstairs_shutters_problem.count + 1 %}
+            {% endif %}
+          {% endfor %}
+          {{ upstairs_shutters_problem.count }}
+      downstairs_shutters_problem:
+        icon_template: mdi:window-shutter-alert
+        value_template: >
+          {% set devices = state_attr('cover.downstairs_shutters', 'entity_id') %}
+          {% set downstairs_shutters_problem = namespace(count=0) %}
+          {% for entity_id in devices -%}
+            {% if (states(entity_id) == 'unknown') or (states(entity_id) == 'unavailable') %}
+              {% set downstairs_shutters_problem.count = downstairs_shutters_problem.count + 1 %}
+            {% endif %}
+          {% endfor %}
+          {{ downstairs_shutters_problem.count }}
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+# automation:
+
+  # Trigger    - 
+  # Conditions - 
+  # Actions    - 
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+# # ---------------------

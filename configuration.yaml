@@ -1,0 +1,223 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 35
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Israel
+  # Customization file
+  customize: !include customize.yaml
+  # Packages
+  packages: !include_dir_named packages
+
+default_config: # includes several integrations by default
+                # https://www.home-assistant.io/integrations/default_config/
+recorder:
+  exclude:
+    domains:
+      - automation
+      - updater
+    entity_globs:
+      - calendar.*
+#      - input_boolean.*
+      - input_boolean.*_day_*
+      - input_boolean.*_scheduler_enable*
+      - input_boolean.*_start_stop*
+#      - input_number.*
+      - input_number.*_timer_duration*
+      - input_number.*_on_duration*
+#      - input_select.*
+      - input_select.hvac_*
+      - input_select.*_start_hour*
+      - input_select.*_stop_hour*
+      - input_select.*_start_minute*
+      - input_select.*_stop_minute*
+      - sensor.dark_sky*
+      - sensor.date*
+      - sensor.time*
+      - sensor.nut_ups*
+      - sensor.sagem_*
+      - sensor.seventeentrack_*
+      - sensor.accuweather_*
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+
+camera: !include configMY_camera.yaml
+
+lovelace_gen:
+
+lovelace:
+  mode: storage
+  dashboards:
+    lovelace-yaml-optimized:
+      mode: yaml
+      title: FloorPlan
+      icon: mdi:home
+      show_in_sidebar: true
+      filename: lovelace_new.yaml
+
+
+notify:
+  - name: file_debug
+    platform: file
+    filename: debug.txt
+    timestamp: true
+  
+  - name: email
+    platform: smtp
+    server: smtp.gmail.com
+    port: 587
+    timeout: 15
+    sender: !secret email_username
+    encryption: starttls
+    username: !secret email_username
+    password: !secret email_password
+    recipient:
+      - !secret email_recipient
+    sender_name: My Home Assistant
+
+
+frontend:
+  themes: !include_dir_merge_named themes
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+ffmpeg:
+
+stream:
+
+panel_iframe:
+  squeezebox:
+    title: SqueezeBox
+    icon: mdi:music
+    url: !secret squeezebox_url
+    require_admin: false
+  unraid:
+    title: unRAID
+    icon: mdi:server
+    url: !secret unraid_url
+    require_admin: true
+  # unraid_dhcpserver:
+  #   title: DHCP Server
+  #   icon: mdi:server-network
+  #   url: !secret dhcp_url
+  #   require_admin: true
+  # octoprint:
+  #   title: OctoPrint Ender3v2
+  #   icon: mdi:printer-3d
+  #   url: !secret octoprint_url
+  #   require_admin: true
+  
+weather:
+
+  # Dark Sky Dialy
+  - platform: darksky
+    api_key: !secret darksky_api_key
+    name: 'DarkSky Daily'
+    mode: daily
+
+  # Dark Sky Hourly
+  - platform: darksky
+    api_key: !secret darksky_api_key
+    name: 'DarkSky Hourly'
+    mode: hourly
+
+
+sensor:
+
+# Time & Date
+  - platform: time_date
+    display_options:
+      - 'time'
+      - 'date'
+#     - 'date_time'
+#     - 'time_date'
+#     - 'time_utc'
+#     - 'beat'
+
+  - platform: darksky
+    api_key: !secret darksky_api_key
+    forecast:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+    monitored_conditions:
+      - icon
+      - summary
+      # - nearest_storm_distance
+      # - nearest_storm_bearing
+      - humidity
+      - temperature
+      - temperature_high
+      - temperature_low
+      - apparent_temperature
+      # - apparent_temperature_high
+      # - apparent_temperature_low
+      - wind_speed
+      - wind_bearing
+      - precip_type
+      - precip_probability
+      # - precip_accumulation
+      - precip_intensity
+      # - precip_intensity_max
+      # - uv_index
+      - daily_summary
+      # - pressure
+      - visibility
+    scan_interval:
+      minutes: 120
+
+
+# Text to speech
+tts:
+  - platform: google_translate
+    service_name: google_say
+
+smartir:
+  check_updates: false
+
+browser_mod:
+  prefix: "browser_"
+  # disable:
+  #   - all
+  disable:
+    - light
+    - media_player
+
+google:
+  client_id: !secret google_client_id
+  client_secret: !secret google_client_secret
+
+#tuya:
+#  username: !secret tuya_username
+#  password: !secret password
+#  country_code: !secret tuya_country_code
+
+# logger:
+#   default: warn
+#   logs:
+#     homeassistant.components.onvif: debug
+#     homeassistant.core: debug
+#     yeelight: debug
+#     homeassistant.components.yeelight: debug
+#     homeassistant.components.yeelight.light: debug
+
+input_number:
+  roof_information_graph_hours:
+    name: Hours to Show
+    min: 1
+    max: 72
+    step: 1

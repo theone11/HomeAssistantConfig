@@ -1,0 +1,64 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+input_boolean:
+  vacuum_bottom_scheduler_enable2:
+    name: Enable
+    icon: mdi:power
+  vacuum_bottom_day_sunday2:
+    name: Sunday
+    icon: mdi:calendar-today
+  vacuum_bottom_day_monday2:
+    name: Monday
+    icon: mdi:calendar-today
+  vacuum_bottom_day_tuesday2:
+    name: Tuesday
+    icon: mdi:calendar-today
+  vacuum_bottom_day_wednesday2:
+    name: Wednesday
+    icon: mdi:calendar-today
+  vacuum_bottom_day_thursday2:
+    name: Thursday
+    icon: mdi:calendar-today
+  vacuum_bottom_day_friday2:
+    name: Friday
+    icon: mdi:calendar-today
+  vacuum_bottom_day_saturday2:
+    name: Saturday
+    icon: mdi:calendar-today
+
+
+input_datetime:
+  vacuum_bottom_start_time2:
+    name: Start Time
+    has_date: false
+    has_time: true
+
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+automation:
+
+  # Trigger    - Start Time 2
+  # Conditions - 
+  # Actions    - turn on Vacuum Bottom
+  - alias: vacuum_bottom_start2
+    description: Vacuum Bottom Start 2
+    trigger: 
+      platform: time
+      at: input_datetime.vacuum_bottom_start_time2
+    condition:
+      - condition: state
+        entity_id: input_boolean.vacuum_bottom_scheduler_enable2
+        state: 'on'
+    action:
+      - service: vacuum.start
+        entity_id: vacuum.vacuum_bottom
+
+
+###################################
+########## S C R I P T S ##########
+###################################

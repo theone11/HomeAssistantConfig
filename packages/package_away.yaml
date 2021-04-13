@@ -1,0 +1,127 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+input_boolean:
+  away:
+    name: Away
+    icon: mdi:home-export-outline
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+automation:
+
+###########################################
+  # Trigger    - Away Button OFF -> ON (input_boolean.away)
+  # Conditions - 
+  # Actions    - Run script.away
+  - alias: leave home
+    description: Leave Home
+    trigger:
+    - entity_id: input_boolean.away
+      platform: state
+      from: 'off'
+      to: 'on'
+    condition: []
+    action:
+    - service: script.turn_on
+      entity_id: script.away
+
+###########################################
+  # Trigger    - Sunset
+  # Conditions - Away button ON
+  # Actions    - Set away lights ON
+  - alias: away sunset
+    description: Turn away lights ON if away and SUNSET
+    trigger:
+    - platform: sun
+      event: sunset
+    condition:
+      - condition: state
+        entity_id: input_boolean.away
+        state: 'on'
+    action:
+    - service: light.turn_on
+      data:
+        entity_id: light.kitchen_table_light
+        brightness: 127
+
+###########################################
+  # Trigger    - Sunrise
+  # Conditions - Away button ON
+  # Actions    - Set away lights OFF
+  - alias: away sunrise
+    description: Turn away lights OFF if away and SUNRISE
+    trigger:
+    - platform: sun
+      event: sunrise
+    condition:
+      - condition: state
+        entity_id: input_boolean.away
+        state: 'on'
+    action:
+    - service: light.turn_off
+      entity_id: light.kitchen_table_light
+
+###########################################
+  # Trigger    - Away Button ON -> OFF (input_boolean.away)
+  # Conditions - 
+  # Actions    - Turn ON kitchen lights
+  - alias: arrive home
+    description: Arrive Home
+    trigger:
+    - entity_id: input_boolean.away
+      platform: state
+      from: 'on'
+      to: 'off'
+    condition: []
+    action:
+    - service: light.turn_on
+      data:
+        entity_id: light.kitchen_table_light
+        brightness: 255
+    - service: light.turn_on
+      entity_id: light.kitchen_light_ceiling
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+script:
+  away:
+    sequence:
+      # Turn OFF all light
+      - service: light.turn_off
+        entity_id: all
+
+      # Turn OFF all heaters
+      - service: switch.turn_off
+        entity_id: switch.main_bathroom_heater
+      - service: switch.turn_off
+        entity_id: switch.master_bathroom_heater
+
+      # Close all covers !!! EXCEPT !!! roof trapdoor - can be damaged if ladder open
+      - service: cover.close_cover
+        entity_id: cover.downstairs_shutters
+      - service: cover.close_cover
+        entity_id: cover.upstairs_shutters
+
+      # Turn OFF all HVACs
+      - service: climate.turn_off
+        entity_id: all
+
+      # Turn ON night light if leaving during DARK hours (>sunset, <sunrise,)
+      # https://www.home-assistant.io/docs/scripts/conditions/#sun-condition
+      - condition: or
+        conditions:
+          - condition: sun
+            after: sunset
+          - condition: sun
+            before: sunrise
+
+      - service: light.turn_on
+        data:
+          entity_id: light.kitchen_table_light
+          brightness: 127

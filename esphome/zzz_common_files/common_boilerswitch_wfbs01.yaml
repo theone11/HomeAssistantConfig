@@ -1,0 +1,89 @@
+substitutions:
+  platform: ESP8266
+  board: esp01_1m
+  esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
+
+##############################################################
+#   WF-BS01 Boiler Switch
+##############################################################
+#
+#   * Numbers are GPIO#
+#
+#          |      |            Green LED - 00
+#   ---------------            Blue LED  - ??
+#   Button |  03  |
+#   ---------------
+#   LED    |  14  |
+#   ---------------
+#   Relay  |  04  |
+#
+##############################################################
+
+status_led:
+  pin:
+    number: GPIO00
+    inverted: False
+
+
+binary_sensor:
+
+  - platform: gpio
+    id: button
+    name: "${friendly_name} Button"
+    internal: TRUE
+    pin:
+      number: GPIO03
+      inverted: TRUE
+      mode: INPUT_PULLUP
+    filters:
+      - delayed_on: 50ms
+    on_press:
+      - switch.toggle: boiler
+    on_click:
+    # - min_length: ${blue_led_hold_min}s
+    #   max_length: ${blue_led_hold_max}s
+    #   then:
+    #     - switch.toggle: blue_led
+    - min_length: ${reset_hold_min}s
+      max_length: ${reset_hold_max}s
+      then:
+        - switch.turn_on: restart_device
+
+
+switch:
+
+  - platform: gpio
+    id: red_led
+    name: "${friendly_name} LED"
+    internal: true
+    pin: GPIO14
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    id: boiler
+    name: "${friendly_name}"
+    restore_mode: ALWAYS_OFF
+    pin: GPIO04
+    icon: "mdi:water-boiler"
+    on_turn_on:
+    - script.execute: boiler_timer
+    on_turn_off:
+    - switch.turn_off: red_led
+
+script:
+  - id: boiler_timer
+    mode: restart     # Restart script when called
+    then:
+      - switch.turn_on: red_led
+      - delay: ${max_duration_on}
+      - switch.turn_off: boiler
+  
+# interval:
+#   - interval: 30s
+#     then:
+#       - lambda: |-
+#             case 
+#       # - lambda: |-
+#       #     const char *days[7] = { "sunday1", "monday1", "tuesday1", "wednesday1", "thursday", "friday1", "saturday1" };
+#       #     const char *today = days[id(homeassistant_time).now().day_of_week];
+#       #     ESP_LOGI("interval", "Today is %s" and the input_boolean state is %s", today, id(today).state);

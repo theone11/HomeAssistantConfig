@@ -1,0 +1,53 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+input_number:
+  hp_deskjet_4620_series_ink_low_limit:
+    name: HP 4625 Ink Low Level Limit
+    unit_of_measurement: "%"
+    min: 10
+    max: 90
+    step: 10
+
+sensor:
+  - platform: template
+    sensors:
+      hp_deskjet_4620_series_ink_low:
+        icon_template: mdi:printer-alert
+        value_template: >
+          {% set devices =['sensor.hp_deskjet_4620_series_black_ink',
+                          'sensor.hp_deskjet_4620_series_cyan_ink',
+                          'sensor.hp_deskjet_4620_series_magenta_ink',
+                          'sensor.hp_deskjet_4620_series_yellow_ink'] %}
+          {% set hp_deskjet_4620_series_ink_low = namespace(count=0) %}
+          {% for entity_id in devices %}
+            {% if ((states(entity_id) != 'unavailable') and (states(entity_id) | int) <= (states('input_number.hp_deskjet_4620_series_ink_low_limit') | int)) %}
+              {% set hp_deskjet_4620_series_ink_low.count = hp_deskjet_4620_series_ink_low.count + 1 %}
+            {% endif %}
+          {% endfor %}
+          {{ hp_deskjet_4620_series_ink_low.count }}
+
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+automation:
+  - alias: Printer Ink Level Below Limit
+    description: Printer Ink Level Below Limit
+    trigger:
+      platform: template
+      value_template: "{{ (states('sensor.hp_deskjet_4620_series_ink_low') | int) > 0 }}"
+    condition: []
+    action:
+      - service: notify.email
+        data_template:
+          message: Printer ink level below limit. Black={{ sensor.hp_deskjet_4620_series_black_ink }}%, Cyan={{ sensor.hp_deskjet_4620_series_cyan_ink }}%, Magenta={{ sensor.hp_deskjet_4620_series_magenta_ink }}%, Yellow={{ sensor.hp_deskjet_4620_series_yellow_ink }}%
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+# # ---------------------

@@ -1,0 +1,57 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+input_boolean:
+  hvac_hallway_scheduler_enable3:
+    name: Enable
+    icon: mdi:power
+
+input_datetime:
+  hvac_hallway_start_time3:
+    name: Start Time
+    has_date: false
+    has_time: true
+
+climate:
+  - platform: smartir
+    name: HVAC Hallway Virtual 3
+    unique_id: hvac_hallway_virtual3
+    device_code: 1621
+    controller_data: remote.hallway_remote
+    # temperature_sensor:
+    delay: 10
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+automation:
+
+  # Trigger    - Start Time 3
+  # Conditions - 
+  # Actions    - turn on HVAC
+  - alias: hvac_hallway_start3
+    #description: HVAC Hallway Start 3
+    trigger: 
+      platform: time
+      at: input_datetime.hvac_hallway_start_time3
+    condition:
+      - condition: state
+        entity_id: input_boolean.hvac_hallway_scheduler_enable3
+        state: 'on'
+    action:
+      - service: notify.file_debug
+        data:
+          message: "HVAC Hallway 3 - {{ states('input_boolean.hvac_hallway_scheduler_enable3') }} - {{ state_attr('climate.hvac_hallway_virtual_3', 'temperature') }}/{{ state_attr('climate.hvac_hallway_virtual_3', 'fan_mode') }}/{{ states('climate.hvac_hallway_virtual_3') }}"
+      - service: climate.set_fan_mode
+        data:
+          entity_id: climate.hvac_hallway
+          fan_mode: "{{ state_attr('climate.hvac_hallway_virtual_3', 'fan_mode') }}"
+      - service: climate.set_temperature
+        data_template:
+          entity_id: climate.hvac_hallway
+          temperature: "{{ state_attr('climate.hvac_hallway_virtual_3', 'temperature') | float }}"
+          hvac_mode: "{{ states('climate.hvac_hallway_virtual_3') }}"
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.hvac_hallway_scheduler_enable3

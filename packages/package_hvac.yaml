@@ -1,0 +1,40 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+sensor:
+
+  - platform: template
+    sensors:
+      hvac_livingroom_problem:
+        icon_template: mdi:air-conditioner
+        value_template: >
+          {% if (states('sensor.livingroom_temperature') == 'unknown') or (states('sensor.livingroom_temperature') == 'unavailable') %}
+            {{ 1 }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+      hvac_hallway_problem:
+        icon_template: mdi:air-conditioner
+        value_template: >
+          {% if (states('sensor.hallway_temperature') == 'unknown') or (states('sensor.hallway_temperature') == 'unavailable') %}
+            {{ 1 }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+
+climate:
+
+  - platform: smartir
+    name: HVAC Livingroom
+    unique_id: hvac_livingroom
+    device_code: 1620
+    controller_data: remote.livingroom_remote
+    temperature_sensor: sensor.livingroom_temperature
+
+  - platform: smartir
+    name: HVAC Hallway
+    unique_id: hvac_hallway
+    device_code: 1620
+    controller_data: remote.hallway_remote
+    temperature_sensor: sensor.hallway_temperature

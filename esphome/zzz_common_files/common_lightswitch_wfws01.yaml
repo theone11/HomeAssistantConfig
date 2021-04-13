@@ -1,0 +1,79 @@
+substitutions:
+  platform: ESP8266
+  board: esp01_1m
+  esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
+
+##############################################################
+#   WF-WS01 Single Wall Light Switch
+##############################################################
+#
+#   * Numbers are GPIO#
+#
+#          |      |            Green LED - 00
+#   ---------------            Blue LED  - ??
+#   Button |  03  |
+#   ---------------
+#   LED    |  14  |
+#   ---------------
+#   Relay  |  04  |
+#
+##############################################################
+
+status_led:
+  pin:
+    number: GPIO00
+    inverted: False
+
+
+binary_sensor:
+
+  - platform: gpio
+    id: button
+    internal: TRUE
+    pin:
+      number: GPIO03
+      inverted: TRUE
+      mode: INPUT_PULLUP
+    filters:
+      - delayed_on: 50ms
+    on_press:
+      - light.toggle: light_output
+    on_click:
+    # - min_length: ${blue_led_hold_min}s
+    #   max_length: ${blue_led_hold_max}s
+    #   then:
+    #     - switch.toggle: blue_led
+    - min_length: ${reset_hold_min}s
+      max_length: ${reset_hold_max}s
+      then:
+        - switch.turn_on: restart_device
+
+
+switch:
+
+  - platform: gpio
+    id: red_led
+    name: "${friendly_name}"
+    internal: true
+    pin: GPIO14
+    restore_mode: ALWAYS_OFF
+
+
+output:
+
+  - platform: gpio
+    id: relay
+    pin: GPIO04
+
+
+light:
+
+  - platform: binary
+    id: light_output
+    name: "${friendly_name}"
+    output: relay
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+    - switch.turn_on: red_led
+    on_turn_off:
+    - switch.turn_off: red_led

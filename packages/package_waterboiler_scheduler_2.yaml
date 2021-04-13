@@ -1,0 +1,89 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+input_boolean:
+  boiler_switch_scheduler_enable2:
+    name: Enable
+    icon: mdi:power
+  boiler_switch_day_sunday2:
+    name: Sunday
+    icon: mdi:calendar-today
+  boiler_switch_day_monday2:
+    name: Monday
+    icon: mdi:calendar-today
+  boiler_switch_day_tuesday2:
+    name: Tuesday
+    icon: mdi:calendar-today
+  boiler_switch_day_wednesday2:
+    name: Wednesday
+    icon: mdi:calendar-today
+  boiler_switch_day_thursday2:
+    name: Thursday
+    icon: mdi:calendar-today
+  boiler_switch_day_friday2:
+    name: Friday
+    icon: mdi:calendar-today
+  boiler_switch_day_saturday2:
+    name: Saturday
+    icon: mdi:calendar-today
+
+
+input_datetime:
+  boiler_switch_start_time2:
+    name: Start Time
+    has_date: false
+    has_time: true
+
+
+input_number:
+  boiler_switch_timer_duration2:
+    name: Duration
+    unit_of_measurement: "min"
+    min: 0
+    max: 180
+    step: 5
+
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+automation:
+
+  # Trigger    - Start Time 2
+  # Conditions - Enable on and day-of-week true
+  # Actions    - turn on water boiler, delay timer duration 2, turn of water boiler
+  - alias: boiler_switch_timer2
+    description: Water Boiler Timer
+    trigger: 
+      platform: time
+      at: input_datetime.boiler_switch_start_time2
+    condition:
+      - condition: state
+        entity_id: input_boolean.boiler_switch_scheduler_enable2
+        state: 'on'
+      - condition: template
+        value_template: >
+          {% set sensor_names = [ 'monday', 'tuesday', 'wednesday','thursday','friday','saturday','sunday'] %}
+          {% set today_name = sensor_names[now().weekday()] %}
+          {% set entity_id = 'input_boolean.boiler_switch_day_'+today_name+'2' %}
+          {{ is_state(entity_id, 'on') }}
+      - condition: numeric_state
+        entity_id: sensor.accuweather_realfeel_temperature_max_0d
+        below: input_number.boiler_disable_schedulers_temperature
+    action:
+      - service: switch.turn_on
+        entity_id: switch.boiler_switch
+      - delay:
+          minutes: "{{ states('input_number.boiler_switch_timer_duration2') | int }}"
+      - service: switch.turn_off
+        entity_id: switch.boiler_switch
+
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+#   # ---------------------

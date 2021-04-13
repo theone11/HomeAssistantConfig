@@ -1,0 +1,159 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+input_boolean:
+  boiler_switch:
+    name: Water Boiler Immediate
+    icon: mdi:water-boiler
+
+  boiler_switch_one_time:
+    name: Water Boiler One Time
+    icon: mdi:water-boiler
+
+  boiler_disable_schedulers:
+    name: Water Boiler Disable Schedulers
+    icon: mdi:water-boiler
+
+input_number:
+  boiler_switch_on_duration:
+    name: Duration
+    unit_of_measurement: "min"
+    #    initial: 30
+    min: 0
+    max: 180
+    step: 5
+
+  boiler_disable_schedulers_temperature:
+    name: Water Boiler Disable Schedulers Temperature
+    unit_of_measurement: "ºC"
+    #    initial: 25
+    min: 20
+    max: 40
+    step: 1
+
+timer:
+  boiler_switch_on_duration_timer:
+    name: Time Left
+    icon: mdi:timer-outline
+
+sensor:
+  - platform: template
+    sensors:
+      boiler_switch_problem:
+        icon_template: mdi:water-boiler-off
+        value_template: >
+          {% if (states('switch.boiler_switch') == 'unknown') or (states('switch.boiler_switch') == 'unavailable') %}
+            {{ 1 }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+
+input_datetime:
+  boiler_switch_start_time:
+    name: Start Time
+    has_time: true
+    has_date: false
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+automation:
+
+  # Trigger    - HA initializing
+  # Conditions - NONE
+  # Actions    - Turn off water boiler (in case HA restarts during a heating cycle)
+  - alias: Irrigataion Initialization
+    description: Update enitity values upon HA start
+    trigger:
+      event: start
+      platform: homeassistant
+    condition: []
+    action:
+    - entity_id: switch.boiler_switch
+      service: switch.turn_off
+
+  # Trigger    - Manual turn ON Water Boiler Button
+  # Conditions - NONE
+  # Actions    - Start Boiler Manual Timer
+  #            - Turn ON Boiler Switch
+  - alias: Boiler Start 1-Time Cycle
+    description: BLA BLA BLA
+    trigger:
+      platform: state
+      entity_id: input_boolean.boiler_switch
+      to: "on"
+    condition: []
+    action:
+    - service: timer.start
+      data_template:
+        entity_id: timer.boiler_switch_on_duration_timer
+        duration:
+          minutes: "{{ states('input_number.boiler_switch_on_duration') | int }}"
+    - service: switch.turn_on
+      entity_id: switch.boiler_switch
+
+  # Trigger    - One-Time Scheduler start time
+  # Conditions - One-Time Scheduler enabled
+  # Actions    - Start Boiler Manual Timer
+  #            - Turn ON Boiler Switch
+  - alias: Boiler Start 1-Time Scheduler Cycle
+    description: BLA BLA BLA
+    trigger:
+      platform: time
+      at: input_datetime.boiler_switch_start_time
+    condition:
+      condition: state
+      entity_id: input_boolean.boiler_switch_one_time
+      state: 'on'
+    action:
+    - service: timer.start
+      data_template:
+        entity_id: timer.boiler_switch_on_duration_timer
+        duration:
+          minutes: "{{ states('input_number.boiler_switch_on_duration') | int }}"
+    - service: switch.turn_on
+      entity_id: switch.boiler_switch
+      
+  # Trigger    - Manual turn OFF Water Boiler Button
+  #            - Water Boiler Timer Expired
+  #            - Turn OFF Boiler Switch
+  # Conditions - NONE
+  # Actions    - Cancel/Stop Boiler Timer
+  #            - Turn OFF Boiler Switch
+  #            - Turn OFF Water Boiler Button
+  - alias: Boiler Stop 1-Time Cycle
+    description: BLA BLA BLA
+    trigger:
+    - platform: state
+      entity_id: timer.boiler_switch_on_duration_timer
+      to: "idle"
+    - platform: state
+      entity_id: switch.boiler_switch
+      to: "off"
+    - platform: state
+      entity_id: input_boolean.boiler_switch
+      to: "off"
+    - platform: state
+      entity_id: input_boolean.boiler_switch_one_time
+      to: "off"
+    condition: []
+    action:
+    - service: timer.cancel
+      data_template:
+        entity_id: timer.boiler_switch_on_duration_timer
+    - service: switch.turn_off
+      entity_id: switch.boiler_switch
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.boiler_switch
+    - service: input_boolean.turn_off
+      entity_id: input_boolean.boiler_switch_one_time
+
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+#   # ---------------------
