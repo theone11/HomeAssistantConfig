@@ -268,32 +268,28 @@
                         - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
                         - type: 'custom:simple-thermostat'
                           entity: climate.{{ entity }}_virtual_{{ s }}
-                          show_header: false
+                          header: false
+                          setpoints:
+                          layout:
+                            step: row
+                            mode:
+                              names: false
+                              icons: true
+                              headings: false
                           decimals: 0
                           step_size: 1
-                          step_layout: row
                           hide:
-                            setpoint: false
+                            state: true
                             temperature: true
                           control:
-                            _headings: false
                             hvac: true
-                            fan: true
-                        # - type: 'custom:multiple-entity-row'
-                        #   entities:
-                        #   - entity: input_select.{{ entity }}_set_hvac_mode{{ s }}
-                        #   - entity: input_select.{{ entity }}_set_fan_mode{{ s }}
-                        #   entity: input_select.{{ entity }}_set_hvac_mode{{ s }}
-                        #   icon: 'mdi:cog'
-                        #   name: Settings
-                        #   show_state: false
-                        #   #state_header: Enable
-                        #   #toggle: true
-                        #   tap_action:
-                        #     action: none
-                        # - type: 'custom:slider-entity-row'
-                        #   entity: input_number.{{ entity }}_set_temperature{{ s }}
-                        #   hide_state: false
+                            fan:
+                              "low":
+                                icon: mdi:fan-speed-1
+                              "mid":
+                                icon: mdi:fan-speed-2
+                              "high":
+                                icon: mdi:fan-speed-3
                         - type: 'custom:time-picker-card'
                           entity: input_datetime.{{ entity }}_start_time{{ s }}
                           layout:
@@ -1399,8 +1395,8 @@ cards:
                   - this
                 style: |
                   :host .content {
-                    width: 30vw;
-                    height: 45vh;
+                    width: 40vw;
+                    height: 50vh;
                   }
                 title: Details
                 card:
@@ -1786,7 +1782,7 @@ cards:
         entity: cover.garage_door
         style:
           left: 93%
-          top: 80%
+          top: 75%
           transform: 'translate(0, -50%) scale(6, 5)'
         tap_action:
           action: toggle

@@ -152,10 +152,10 @@ sensor:
         else if (id(sun_elevation).state < 17)                        // Panel over 20C and Low sun elevation
           return -12;
         else if (id(panel_out).state > 45)                            // High sun elevation and Panel over 45C
-          if (id(panel_out).state > (id(in_from_panel).state) + 1)    //   Panel warmer than Boiler Top
+          if (id(panel_out).state > (id(in_from_panel).state) + 1)    //   Panel warmer than Boiler Top by at least 1C
             return 15;
           else                                                        //   Panel colder than Boiler Top
-            if (id(panel_out).state > (id(out_to_panel).state) + 1)   //     Panel warmer than Boiler Bottom
+            if (id(panel_out).state > (id(out_to_panel).state) + 1)   //     Panel warmer than Boiler Bottom by at least 1C
               return 17;
             else                                                      //     Panel colder than Boiler Top and Boiler Bottom
               return -14;
