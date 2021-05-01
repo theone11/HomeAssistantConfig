@@ -150,6 +150,7 @@ sensor:
         if (id(panel_out).state < 20)                                 // Panel under 20C
           return -10;
         else if (id(sun_elevation).state < 17)                        // Panel over 20C and Low sun elevation
+                                                                      // https://www.suncalc.org/#/31.9401,34.7953,16/2021.04.17/18:34/1/3
           return -12;
         else if (id(panel_out).state > 45)                            // High sun elevation and Panel over 45C
           if (id(panel_out).state > (id(in_from_panel).state) + 1)    //   Panel warmer than Boiler Top by at least 1C

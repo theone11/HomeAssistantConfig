@@ -54,6 +54,12 @@ automation:
       - condition: state
         entity_id: input_boolean.vacuum_top_scheduler_enable1
         state: 'on'
+      - condition: template
+        value_template: >
+          {% set sensor_names = [ 'monday', 'tuesday', 'wednesday','thursday','friday','saturday','sunday'] %}
+          {% set today_name = sensor_names[now().weekday()] %}
+          {% set entity_id = 'input_boolean.vacuum_top_day_'+today_name+'1' %}
+          {{ is_state(entity_id, 'on') }}
     action:
       - service: vacuum.start
         entity_id: vacuum.vacuum_top
