@@ -1,0 +1,15 @@
+sensor:
+  - platform: template
+    sensors:
+      work_dan_ui:
+        unit_of_measurement: 'm'
+        value_template: "{{ states('sensor.work_dan') | round(0) }}"
+      work_aviva_ui:
+        unit_of_measurement: 'm'
+        value_template: "{{ states('sensor.work_aviva') | round(0) }}"
+      kfar_yona_ui:
+        unit_of_measurement: 'm'
+        value_template: "{{ states('sensor.kfar_yona') | round(0) }}"
+      petach_tikva_ui:
+        unit_of_measurement: 'm'
+        value_template: "{{ states('sensor.petach_tikva') | round(0) }}"
