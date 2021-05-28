@@ -244,6 +244,7 @@ The location parametes are defined in and taken from the DEFINITIONS section.
 ### HVAC
 Defines the HVAC buttons' location.
 If the HVAC control is unavailable the background color of the button will change to RED.
+The temperature of the HVAC set point device is shown and also the HVAC set temperature, mode and fan speed if the HVAC is ON.
 The location parametes are defined in and taken from the DEFINITIONS section.
 
 ![HVAC Button](ScreenShots/hvac.png?raw=true)
@@ -251,6 +252,7 @@ The location parametes are defined in and taken from the DEFINITIONS section.
 ![HVAC 2 Schedulers](ScreenShots/hvac_2_schedulers.png?raw=true)
 ![HVAC 3 Schedulers](ScreenShots/hvac_3_schedulers.png?raw=true)
 ![HVAC 4 Schedulers](ScreenShots/hvac_4_schedulers.png?raw=true)
+![HVAC ON](ScreenShots/hvac_on.png?raw=true)
 
 **Actions**
 * Tap: Opens a popup window to control the HVAC using Thermostat Card
