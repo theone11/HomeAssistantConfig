@@ -537,7 +537,7 @@ cards:
         showMonth: true
         showWeekDay: true
         showDate: false
-        showDescription: true
+        showDescription: false
         showNoEventsForToday: true
         disableEventLink: true
         disableLocationLink: true
