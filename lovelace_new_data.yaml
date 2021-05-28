@@ -829,6 +829,7 @@ cards:
             command: popup
             style: |
               :host .content {
+                height: 60vh;
                 width: 30vw;
               }
             deviceID:
@@ -861,6 +862,8 @@ cards:
                     - entity: switch.irrigation_sprinkler_north
                     - entity: switch.irrigation_drips
         double_tap_action:
+          action: more-info
+        hold_action:
           action: fire-dom-event
           browser_mod:
             command: popup
@@ -874,8 +877,6 @@ cards:
                 - entity: switch.irrigation_drips
               show_header_toggle: false
               type: entities
-        hold_action:
-          action: more-info
 
       - type: conditional
         conditions:
