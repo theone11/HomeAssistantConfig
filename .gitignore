@@ -12,6 +12,9 @@
 !*.jpg
 !*.ttf
 !packages
+!ScreenShots
+!*.png
+
 
 # Ignore folders.
 
