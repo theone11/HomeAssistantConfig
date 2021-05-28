@@ -1,3 +1,25 @@
+- [HomeAssistantConfig](#homeassistantconfig)
+  - [UI Explained](#ui-explained)
+    - [Definition](#definition)
+    - [Macros](#macros)
+    - [Start](#start)
+    - [Pictures](#pictures)
+    - [Weather Card](#weather-card)
+    - [Calendar Card](#calendar-card)
+    - [Lights](#lights)
+      - [Light Entity](#light-entity)
+      - [Light Group](#light-group)
+    - [Covers](#covers)
+      - [Cover Entity](#cover-entity)
+      - [Cover Group](#cover-group)
+    - [Irrigation](#irrigation)
+      - [Irrigation Entity](#irrigation-entity)
+      - [Irrigation Group](#irrigation-group)
+    - [Water Boiler](#water-boiler)
+  - [Sources](#sources)
+    - [Integrations](#integrations)
+    - [Custom Cards](#custom-cards)
+
 # HomeAssistantConfig
 
 This is my HomeAssistant configuration.
@@ -8,7 +30,7 @@ My main interface with the systen is via two wall mounted DIY 15.6 RaspberryPi b
 
 You can take a glance at the functionality here (although not up-to-date):
 
-![Youtube](https://www.youtube.com/watch?v=o_AKHEyWXR0)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/o_AKHEyWXR0/0.jpg)](https://www.youtube.com/watch?v=o_AKHEyWXR0)
 
 The main goal was to have the day-2-day activations and information always available/visible and everything else (like schedulers, history graphs) available upto 1-click away.
 
@@ -23,16 +45,8 @@ Two main floorplan images are the starting point:
 
 Only custom cards can be displayed on the UI so if an internal HA card need to be shown then a custom card template should be used as wrapper.
 
-## Table of Contents
-[Definitions](#definitions)
-[Macros](#macros)
-[Start](#start)
-[Pictures](#pictures)
-[Weather Card](#weather_card)
-[Calendar Card](#calendar_card)
-[Lights](#lights)
-[Cover](#covers)
-[Irrigation Group](#irrigation_group)
+## UI Explained
+<a name="definitions"/>
 
 <a name="definitions"/>
 
@@ -65,7 +79,7 @@ Displays a custom weather card for local weather status.
 
 Tap Action on the weather card will open up the hourly weather forecast.
 
-![Alt text](ScreenShots/weather_card_hourly_forecast.png?raw=true "Weather Card")
+![Weather Card](ScreenShots/weather_card_hourly_forecast.png?raw=true)
 
 <a name="calendar_card"/>
 
@@ -75,37 +89,44 @@ Displays a custom calendar card with upcoming events.
 <a name="lights"/>
 
 ### Lights
+#### Light Entity
 Defines the lights' active areas where Tap Action will toggle lights.
 These are transparent square images which are scaled (X,Y) as needed. The borders can be shown to help with the configuration.
 
 The location and scale parametes are defined in and taken from the DEFINITIONS section.
 
-![Alt text](ScreenShots/lights.png?raw=true "Lights")
+![Lights](ScreenShots/lights.png?raw=true)
 
 Double Tap Action will open a more-info popup window.
 
-![Alt text](ScreenShots/light_double_tap_action.png?raw=true "Lights Double Tap Action")
+![Lights Double Tap Action](ScreenShots/light_double_tap_action.png?raw=true)
 
 Hold Action can be used for special lights (in my case the amilight of the kitchen table light)
 
-![Alt text](ScreenShots/light_hold_action.png?raw=true "Lights Tap Hold Action")
+![Lights Tap Hold Action](ScreenShots/light_hold_action.png?raw=true)
 
+#### Light Group
+Defines the Light Group contol buttons.
 
-This section also defines the Light Group contol buttons.
+![Lights Group](ScreenShots/light_group.png?raw=true)
 
-![Alt text](ScreenShots/light_group.png?raw=true "Lights Group")
+If any of the lights in the group are unavailable the background color of the button will change to RED
 
+![Lights Group](ScreenShots/light_group_warning.png?raw=true)
 * Tap Action will toggle all lights in that group.
 * Double Tap Action will give more-info of the group.
 
-![Alt text](ScreenShots/light_group_double_tap_action.png?raw=true "Lights Group Double Tap Action")
+![Lights Group Double Tap Action](ScreenShots/light_group_double_tap_action.png?raw=true)
 * Hold Action will display a popup window with all lights in the group to control.
 
-![Alt text](ScreenShots/light_group_hold_action.png?raw=true "Lights Group Hold Action")
+![Lights Group Hold Action](ScreenShots/light_group_hold_action.png?raw=true)
 
 <a name="covers"/>
 
 ### Covers
+<a name="cover_entity"/>
+
+#### Cover Entity
 Defines the covers' active areas where Tap Action will open/close/stop covers.
 These are green/red/blue/grey square images (depending on the cover state) which are scaled (X,Y) as needed.
 
@@ -119,9 +140,15 @@ Hold Action is used to display the custom Vertical Slider Cover card.
 
 ![Covers Tap Hold Action](ScreenShots/cover_hold_action.png?raw=true)
 
-This section also defines the Cover Group contol buttons.
+<a name="cover_group"/>
+
+#### Cover Group
+Defines the Cover Group contol buttons.
 
 ![Covers Group](ScreenShots/cover_group.png?raw=true)
+
+If any of the covers in the group are unavailable the background color of the button will change to RED
+
 * Tap Action will open/close/stop all lights in that group depending which of the three buttons was presses.
 * Double Tap Action will give more-info of the group.
 
@@ -130,10 +157,37 @@ This section also defines the Cover Group contol buttons.
 
 ![Covers Group Hold Action](ScreenShots/cover_group_hold_action.png?raw=true)
 
+<a name="irrigation"/>
+
+### Irrigation
+<a name="irrigation_entity"/>
+
+#### Irrigation Entity
+Defines the Irrigation valves button location and groups.
+
+The location parametes are defined in and taken from the DEFINITIONS section.
+
+![Irrigation Button](ScreenShots/irrigation.png?raw=true)
+![Irrigation Button 1 Scheduler](ScreenShots/irrigation_1_scheduler.png?raw=true)
+![Irrigation Button 2 Schedulers](ScreenShots/irrigation_2_schedulers.png?raw=true)
+
+* Actions
+  * Tap: Toggles the valve (ON/OFF)
+  * Double Tap: Opens the more-info popup window.
+
+![Irrigation Double Tap Action](ScreenShots/irrigation_double_tap_action.png?raw=true)
+
+* Hold: Opens the schedulers (2) for specific Irrigation Valve and includes:
+  * Day of week
+  * Enable/Disable the scheduler
+  * Start Time
+  * Duration
+
+![Irrigation Double Tap Action](ScreenShots/irrigation_hold_action.png?raw=true)
+
 <a name="irrigation_group"/>
 
-### Irrigation Group
-
+#### Irrigation Group
 Defines the Irrigation Group control buttons.
 
 ![Irrigation Group](ScreenShots/irrigation_group.png?raw=true)
@@ -141,18 +195,87 @@ Defines the Irrigation Group control buttons.
 Show the total cycle time if a cycle is currently being run (cannot figure out how to show remaining time)
 
 ![Irrigation Group](ScreenShots/irrigation_group_cycle.png?raw=true)
-* Tap Action will open a popup window where you can run a 1-Time irrigation cycle
-  * Choose which valves to include in cycle.
-  * Choose the duration of the cycle.
-  * Start/Stop the cycle.
-  * Show the remaining time of the current cycle
-  * Shows the 24 hour history of all irrigation valves in the group
 
-![Irrigation Group Tap Action](ScreenShots/irrigation_group_tap_action.png?raw=true)
-* Double Tap Action will give more-info of the group.
+If any of the irrigation valves in the group are unavailable the background color of the button will change to RED
+* Actions:
+  * Tap: Opens a popup window where you can run a 1-Time irrigation cycle
+    * Choose which valves to include in cycle.
+    * Choose the duration of the cycle.
+    * Start/Stop the cycle.
+    * Show the remaining time of the current cycle
+    * Shows the 24 hour history of all irrigation valves in the group
 
-![Irrigation Group Double Tap Action](ScreenShots/irrigation_group_double_tap_action.png?raw=true)
-* Hold Action will display a popup window with all irrigation valves in the group to control.
+    ![Irrigation Group Tap Action](ScreenShots/irrigation_group_tap_action.png?raw=true)
+  * Double Tap: Opens more-info popup of the group.
 
-![Irrigation Group Hold Action](ScreenShots/irrigation_group_hold_action.png?raw=true)
+    ![Irrigation Group Double Tap Action](ScreenShots/irrigation_group_double_tap_action.png?raw=true)
+  * Hold: Opens Popup window with all irrigation valves in the group to control.
+
+    ![Irrigation Group Hold Action](ScreenShots/irrigation_group_hold_action.png?raw=true)
+
+### Water Boiler
+<a name="water_boiler"/>
+Defines the Water Boiler button location.
+
+The location parametes are defined in and taken from the DEFINITIONS section.
+
+![Water Boiler Button](ScreenShots/water_boiler.png?raw=true)
+![Water Boiler 1 Scheduler](ScreenShots/water_boiler_1_scheduler.png?raw=true)
+![Water Boiler 2 Schedulers](ScreenShots/water_boiler_2_schedulers.png?raw=true)
+![Water Boiler Timer](ScreenShots/water_boiler_timer.png?raw=true)
+![Water Boiler Timer Schedule](ScreenShots/water_boiler_timer_scheduler.png?raw=true)
+
+* Actions
+  * Tap: Opens a popup window where you can run a 1-Time Water Boiler timer
+    * Water Boiler button for direct control
+    * Timer duration
+    * Start time
+    * Immediate timer start
+    * Scheduled timer start (according to Start time)
+    * Time left on timer
+
+    ![Water Boiler Tap Action](ScreenShots/water_boiler_tap_action.png?raw=true)
+  * Double Tap: Opens the more-info popup window.
+
+    ![Irrigation Double Tap Action](ScreenShots/irrigation_double_tap_action.png?raw=true)
+  * Hold: Opens the schedulers (2) for the Water Boiler and includes:
+    * Day of week
+    * Enable/Disable the scheduler
+    * Start Time
+    * Duration
+
+    ![Irrigation Double Tap Action](ScreenShots/irrigation_hold_action.png?raw=true)
+
+## Sources
+<a name="sources"/>
+
+### Integrations
+<a name="integrations"/>
+
+[browser_mod](https://github.com/thomasloven/hass-browser_mod)
+
+[lovelace_gen](https://github.com/thomasloven/hass-lovelace_gen)
+
+### Custom Cards
+<a name="custom_cards"/>
+
+[Atomic Calendar Revive](https://github.com/marksie1988/atomic-calendar-revive)
+
+[Config Template Card](https://github.com/iantrich/config-template-card)
+
+[Lovelace Slider Entity Row](https://github.com/thomasloven/lovelace-slider-entity-row)
+
+[Lovelace Time Picker Card](https://github.com/GeorgeSG/lovelace-time-picker-card)
+
+[Lovelace Vertical Slider Cover Card](https://github.com/konnectedvn/lovelace-vertical-slider-cover-card)
+
+[Mini Media Player](https://github.com/kalkih/mini-media-player)
+
+[Simple Thermostat](https://github.com/nervetattoo/simple-thermostat)
+
+[Vacuum Card](https://github.com/denysdovhan/vacuum-card)
+
+[Weather Card](https://github.com/bramkragten/weather-card)
+
+
 

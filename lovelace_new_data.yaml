@@ -73,11 +73,13 @@
 {% set cover_groups = [("downstairs", 53, 68),
                        ("upstairs"  , 28, 68)] %}
 
-#                        entity                      , type  , left, top, display_name)
-{% set miscellaneous = [("irrigation_sprinkler_west" , "switch", 78, 34, "West Sprinklers"),
-                        ("irrigation_sprinkler_north", "switch", 82, 51, "North Sprinklers"),
-                        ("irrigation_drips"          , "switch", 87, 55, "Drips"),
-                        ("boiler_switch"             , "switch", 3 , 68, "Water Boiler")] %}
+#                   entity                      , type  , left, top, display_name)
+{% set boilers = [("boiler_switch"             , "switch", 3 , 68, "Water Boiler")] %}
+
+#                             entity                      , type  , left, top, display_name)
+{% set irrigation_valves = [("irrigation_sprinkler_west" , "switch", 78, 34, "West Sprinklers"),
+                            ("irrigation_sprinkler_north", "switch", 82, 51, "North Sprinklers"),
+                            ("irrigation_drips"          , "switch", 87, 55, "Drips")] %}
 
 #                 entity   , left, top
 {% set vacuums = [("bottom", 53 , 80),
@@ -807,13 +809,60 @@ cards:
       {% endfor %}
       {% endfor %}
 
-#### ########  ########  ####  ######      ###    ######## ####  #######  ##    ##           ######   ########   #######  ##     ## ########  
- ##  ##     ## ##     ##  ##  ##    ##    ## ##      ##     ##  ##     ## ###   ##          ##    ##  ##     ## ##     ## ##     ## ##     ## 
- ##  ##     ## ##     ##  ##  ##         ##   ##     ##     ##  ##     ## ####  ##          ##        ##     ## ##     ## ##     ## ##     ## 
- ##  ########  ########   ##  ##   #### ##     ##    ##     ##  ##     ## ## ## ##          ##   #### ########  ##     ## ##     ## ########  
- ##  ##   ##   ##   ##    ##  ##    ##  #########    ##     ##  ##     ## ##  ####          ##    ##  ##   ##   ##     ## ##     ## ##        
- ##  ##    ##  ##    ##   ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ###          ##    ##  ##    ##  ##     ## ##     ## ##        
-#### ##     ## ##     ## ####  ######   ##     ##    ##    ####  #######  ##    ##           ######   ##     ##  #######   #######  ##        
+#### ########  ########  ####  ######      ###    ######## ####  #######  ##    ##                       
+ ##  ##     ## ##     ##  ##  ##    ##    ## ##      ##     ##  ##     ## ###   ##                       
+ ##  ##     ## ##     ##  ##  ##         ##   ##     ##     ##  ##     ## ####  ##                       
+ ##  ########  ########   ##  ##   #### ##     ##    ##     ##  ##     ## ## ## ##                       
+ ##  ##   ##   ##   ##    ##  ##    ##  #########    ##     ##  ##     ## ##  ####                       
+ ##  ##    ##  ##    ##   ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ###                       
+#### ##     ## ##     ## ####  ######   ##     ##    ##    ####  #######  ##    ##         
+
+      # -----------------------------------------------
+      # -----------------------------------------------
+      # Define Irrigation Controls & Day_Start_Duration Schedulers
+      # -----------------------------------------------
+      # -----------------------------------------------
+
+      {% for entity, type, left, top, display_name in irrigation_valves %}
+
+      {{ create_warning_background(entity ~ "_problem", type ~ "." ~ entity, left, top) }}
+
+      - entity: {{ type }}.{{ entity }}
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: {{ left }}%
+          top: {{ top }}%
+          transform: translate(-50%, -50%) scale({{ group_scaleX }}, {{ group_scaleY }})
+        tap_action:
+          action: toggle
+        double_tap_action:
+          action: more-info
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                height: 45vh;
+                width: 50vw;
+              }
+            title: {{ display_name }} Scheduler
+            card:
+              {{ create_schedulers_popup(entity, "DSD") }}
+        type: state-icon
+
+      {{ create_schedulers_icons(entity, left, top) }}
+
+      {% endfor %}
+
+      # -------------------------------------
+      # -------------------------------------
+      # Define Irrigation Group Controls
+      # -------------------------------------
+      # -------------------------------------
 
       - type: state-icon
         entity: group.irrigation
@@ -892,15 +941,6 @@ cards:
               top: 33%
               transform: 'translate(-50%, -50%)'
 
-
-#### ########  ########  ####  ######      ###    ######## ####  #######  ##    ##                       
- ##  ##     ## ##     ##  ##  ##    ##    ## ##      ##     ##  ##     ## ###   ##                       
- ##  ##     ## ##     ##  ##  ##         ##   ##     ##     ##  ##     ## ####  ##                       
- ##  ########  ########   ##  ##   #### ##     ##    ##     ##  ##     ## ## ## ##                       
- ##  ##   ##   ##   ##    ##  ##    ##  #########    ##     ##  ##     ## ##  ####                       
- ##  ##    ##  ##    ##   ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ###                       
-#### ##     ## ##     ## ####  ######   ##     ##    ##    ####  #######  ##    ##         
-
 ##      ##    ###    ######## ######## ########     ########   #######  #### ##       ######## ########  
 ##  ##  ##   ## ##      ##    ##       ##     ##    ##     ## ##     ##  ##  ##       ##       ##     ## 
 ##  ##  ##  ##   ##     ##    ##       ##     ##    ##     ## ##     ##  ##  ##       ##       ##     ## 
@@ -911,14 +951,11 @@ cards:
 
       # -----------------------------------------------
       # -----------------------------------------------
-      # Define Controls & Day_Start_Duration Schedulers
-      #
-      # Irrigation
-      # Water Boiler
+      # Define Water Boilers Controls & Day_Start_Duration Schedulers
       # -----------------------------------------------
       # -----------------------------------------------
 
-      {% for entity, type, left, top, display_name in miscellaneous %}
+      {% for entity, type, left, top, display_name in boilers %}
 
       {{ create_warning_background(entity ~ "_problem", type ~ "." ~ entity, left, top) }}
 
@@ -930,7 +967,6 @@ cards:
           top: {{ top }}%
           transform: translate(-50%, -50%) scale({{ group_scaleX }}, {{ group_scaleY }})
         tap_action:
-          {% if entity == "boiler_switch" %}
           action: fire-dom-event
           browser_mod:
             command: popup
@@ -980,9 +1016,6 @@ cards:
                   show_header_toggle: false
                   entities:
                     - entity: timer.{{ entity }}_on_duration_timer
-          {% else %}
-          action: toggle
-          {% endif %}
         double_tap_action:
           action: more-info
         hold_action:
@@ -1003,7 +1036,6 @@ cards:
 
       {{ create_schedulers_icons(entity, left, top) }}
 
-      {% if entity == "boiler_switch" %}
       - type: conditional
         conditions:
           - entity: input_boolean.{{ entity }}_one_time
@@ -1030,7 +1062,6 @@ cards:
               left: {{ left }}%
               top: {{ top + timer_top_offset }}%
               transform: 'translate(-50%, -50%)'
-      {% endif %}
       {% endfor %}
 
 ##     ##    ###     ######  ##     ## ##     ## ##     ##  ######  
