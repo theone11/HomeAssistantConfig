@@ -109,6 +109,7 @@ Defines the Light Group contol buttons.
 If any of the lights in the group are unavailable the background color of the button will change to RED
 
 ![Lights Group](ScreenShots/light_group_warning.png?raw=true) ![Lights Group](ScreenShots/light_group.png?raw=true)
+
 **Actions**
 * Tap: Toggle all lights in that group.
 * Double Tap: Opens a more-info popup window of the group.
@@ -300,9 +301,9 @@ Creates and populizes the Status Bar.
 The entities to show are defined and taken from the DEFINITIONS section.
 **Actions:**
 * Tap: Opens a popup window that shows relevant entities defined in the DEFINITIONS section
-  ![Status Bar Tap Action Example 1](ScreenShots/status_bar_tap_action1.png?raw=true) ![Status Bar Tap Action Example 2](ScreenShots/status_bar_tap_action2.png?raw=true) ![Status Bar Tap Action Example 3](ScreenShots/status_bar_tap_action3.png?raw=true)
+  ![Status Bar Tap Action Example 1](ScreenShots/status_bar_tap_action_1.png?raw=true) ![Status Bar Tap Action Example 2](ScreenShots/status_bar_tap_action_2.png?raw=true) ![Status Bar Tap Action Example 3](ScreenShots/status_bar_tap_action_3.png?raw=true)
 * Hold: Opens a more-info popup window
-  ![Status Bar Hold Action Example 1](ScreenShots/status_bar_hold_action1.png?raw=true) ![Status Bar Hold Action Example 2](ScreenShots/status_bar_hold_action2.png?raw=true) ![Status Bar Hold Action Example 3](ScreenShots/status_bar_hold_action3.png?raw=true)
+  ![Status Bar Hold Action Example 1](ScreenShots/status_bar_hold_action_1.png?raw=true) ![Status Bar Hold Action Example 2](ScreenShots/status_bar_hold_action_2.png?raw=true) ![Status Bar Hold Action Example 3](ScreenShots/status_bar_hold_action_3.png?raw=true)
 
 ### Settings
 Creates and populizes the Settings popup window.
