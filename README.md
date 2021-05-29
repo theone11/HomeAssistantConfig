@@ -39,9 +39,21 @@ Only custom cards can be displayed on the UI so if an internal HA card need to b
     - [Irrigation](#irrigation)
       - [Irrigation Entity](#irrigation-entity)
       - [Irrigation Group](#irrigation-group)
+    - [Temperature Sensors](#temperature-sensors)
     - [Water Boiler](#water-boiler)
     - [Vacuums](#vacuums)
+    - [Media Players](#media-players)
     - [HVAC](#hvac)
+    - [Navigation](#navigation)
+    - [Status Bar](#status-bar)
+    - [Settings](#settings)
+    - [UnRaid](#unraid)
+    - [Water](#water)
+    - [Roof Information](#roof-information)
+    - [Actions](#actions)
+    - [Parking](#parking)
+    - [Heaters](#heaters)
+    - [Refresh Reload](#refresh-reload)
   - [Sources](#sources)
     - [Integrations](#integrations)
     - [Custom Cards](#custom-cards)
@@ -184,6 +196,9 @@ If any of the irrigation valves in the group are unavailable the background colo
 
   ![Irrigation Group Hold Action](ScreenShots/irrigation_group_hold_action.png?raw=true)
 
+### Temperature Sensors
+Displays all temperature sensors that are defined in the relevant DEFINITIONS section - including their location on the floorplan.
+
 ### Water Boiler
 Defines the Water Boiler button location.
 If the water boiler is unavailable the background color of the button will change to RED.
@@ -241,6 +256,9 @@ The location parametes are defined in and taken from the DEFINITIONS section.
 
   ![Vacuum Hold Action](ScreenShots/vacuum_hold_action.png?raw=true)
 
+### Media Players
+TBD
+
 ### HVAC
 Defines the HVAC buttons' location.
 If the HVAC control is unavailable the background color of the button will change to RED.
@@ -269,6 +287,54 @@ The location parametes are defined in and taken from the DEFINITIONS section.
   * Start Time - To stop the HVAC just set a scheduler to mode OFF and set the start time as the stop time you want
 
   ![HVAC Hold Action](ScreenShots/hvac_hold_action.png?raw=true)
+
+### Navigation
+Displays the Waze Navigation routes, icons and time to destination.
+The list of entities and look&feel is defined and taken from the DEFINITIONS section.
+
+### Status Bar
+Creates and populizes the Status Bar.
+
+![Status Bar](ScreenShots/status_bar.png?raw=true)
+
+The entities to show are defined and taken from the DEFINITIONS section.
+**Actions:**
+* Tap: Opens a popup window that shows relevant entities defined in the DEFINITIONS section
+  ![Status Bar Tap Action Example 1](ScreenShots/status_bar_tap_action1.png?raw=true) ![Status Bar Tap Action Example 2](ScreenShots/status_bar_tap_action2.png?raw=true) ![Status Bar Tap Action Example 3](ScreenShots/status_bar_tap_action3.png?raw=true)
+* Hold: Opens a more-info popup window
+  ![Status Bar Hold Action Example 1](ScreenShots/status_bar_hold_action1.png?raw=true) ![Status Bar Hold Action Example 2](ScreenShots/status_bar_hold_action2.png?raw=true) ![Status Bar Hold Action Example 3](ScreenShots/status_bar_hold_action3.png?raw=true)
+
+### Settings
+Creates and populizes the Settings popup window.
+
+![Settings](ScreenShots/settings.png?raw=true)
+
+The entities to show are defined and taken from the DEFINITIONS section.
+The settings page is divided into columns. Each column can have multiple sections. Each section can have multiple entities.
+**Actions:**
+* Tap: Opens a popup window that shows relevant settings entities defined in the DEFINITIONS section
+  ![Settings Tap ACtion](ScreenShots/settings_tap_action.png?raw=true)
+
+### UnRaid
+TBD
+
+### Water
+TBD
+
+### Roof Information
+TBD
+
+### Actions
+TBD
+
+### Parking
+TBD
+
+### Heaters
+TBD
+
+### Refresh Reload
+TBD
 
 ## Sources
 ### Integrations
