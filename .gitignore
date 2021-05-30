@@ -3,17 +3,18 @@
 *
 
 # You can whitelist files/folders with !, these will not be ignored.
-!*.yaml
 !.gitignore
+!*.yaml
 !*.md
+!*.jpg
+!*.ttf
+!*.png
 !esphome
 !esphome/zzz_common_files
 !esphome/zzz_resource_files
-!*.jpg
-!*.ttf
 !packages
 !ScreenShots
-!*.png
+!www/images
 
 
 # Ignore folders.

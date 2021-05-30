@@ -153,6 +153,12 @@
                               ("livingroom_temperature"                , 71.5, 46  ),
                               ("hallway_temperature"                   , 36.6, 65.5)] %}
 
+#                             entity                                                   left, top, icon      , tap_action
+{% set conditional_entities = [("switch.roof_right_table_power_relay"                    , 10 , 67, "power"   , "toggle"),
+                               ("binary_sensor.water_boiler_power_pump_controller_status", 8.5, 47, "pump"    , "none"  ),
+                               ("switch.main_bathroom_heater"                            , 44 , 66, "radiator", "toggle"),
+                               ("switch.master_bathroom_heater"                          , 44 , 83, "radiator", "toggle")] %}
+
 ##     ##    ###     ######  ########   #######   ######  
 ###   ###   ## ##   ##    ## ##     ## ##     ## ##    ## 
 #### ####  ##   ##  ##       ##     ## ##     ## ##       
@@ -168,15 +174,10 @@
 {% set schedulers = ['1', '2'] %}
 {% endif %}
 {% for s in schedulers %}
-{% if entity == "hvac_hallway" or entity == "hvac_livingroom" %}
-      - conditions:
+      - type: conditional
+        conditions:
           - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
             state: 'on'
-{% else %}
-      - conditions:
-          - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
-            state: 'on'
-{% endif %}
         elements:
           - icon: 'mdi:timer-outline'
             style:
@@ -195,7 +196,6 @@
               {% endif %}
               transform: translate(-50%, -50%) scale({{ scheduler_scaleX }}, {{ scheduler_scaleY }})
             type: icon
-        type: conditional
 {% endfor %}
 {%- endmacro %}
 
@@ -371,13 +371,13 @@ cards:
       {% endfor %}
 
 
-##      ## ########    ###    ######## ##     ## ######## ########            ######     ###    ########  ########  
-##  ##  ## ##         ## ##      ##    ##     ## ##       ##     ##          ##    ##   ## ##   ##     ## ##     ## 
-##  ##  ## ##        ##   ##     ##    ##     ## ##       ##     ##          ##        ##   ##  ##     ## ##     ## 
-##  ##  ## ######   ##     ##    ##    ######### ######   ########           ##       ##     ## ########  ##     ## 
-##  ##  ## ##       #########    ##    ##     ## ##       ##   ##            ##       ######### ##   ##   ##     ## 
-##  ##  ## ##       ##     ##    ##    ##     ## ##       ##    ##           ##    ## ##     ## ##    ##  ##     ## 
- ###  ###  ######## ##     ##    ##    ##     ## ######## ##     ##           ######  ##     ## ##     ## ########  
+##      ## ########    ###    ######## ##     ## ######## ########  
+##  ##  ## ##         ## ##      ##    ##     ## ##       ##     ## 
+##  ##  ## ##        ##   ##     ##    ##     ## ##       ##     ## 
+##  ##  ## ######   ##     ##    ##    ######### ######   ########  
+##  ##  ## ##       #########    ##    ##     ## ##       ##   ##   
+##  ##  ## ##       ##     ##    ##    ##     ## ##       ##    ##  
+ ###  ###  ######## ##     ##    ##    ##     ## ######## ##     ## 
 
       - type: custom:weather-card
         #entity: weather.darksky_daily
@@ -392,111 +392,6 @@ cards:
           left: -2% #-3% 0%
           top: -3%  #-3% 0%
           transform: 'translate(0%, 0%) scale(0.9, 0.9)'
-
-# - type: 'custom:ha-card-weather-conditions'
-#   style:
-#     left: -3%
-#     top: -5%
-#     width: 30%
-#     transform: 'translate(0%, 0%) scale(0.8, 0.8)'
-#   language: en
-#   animation: false
-#   weather:
-#     icons_model: darksky
-#     current:
-#       current_conditions: sensor.dark_sky_icon
-#       humidity: sensor.dark_sky_humidity
-#       #pressure: sensor.dark_sky_pressure
-#       temperature: sensor.dark_sky_temperature
-#       feels_like: sensor.dark_sky_apparent_temperature
-#       #visibility: sensor.dark_sky_visibility
-#       wind_bearing: sensor.dark_sky_wind_bearing
-#       wind_speed: sensor.dark_sky_wind_speed
-#       precipitation: sensor.dark_sky_precip_probability
-#       sun: sun.sun
-#       forecast: true
-#     forecast:
-#       icons:
-#         day_1: sensor.dark_sky_icon_0d
-#         day_2: sensor.dark_sky_icon_1d
-#         day_3: sensor.dark_sky_icon_2d
-#         day_4: sensor.dark_sky_icon_3d
-#         day_5: sensor.dark_sky_icon_4d
-#         day_6: sensor.dark_sky_icon_5d
-#       temperature_high:
-#         day_1: sensor.dark_sky_daytime_high_temperature_0d
-#         day_2: sensor.dark_sky_daytime_high_temperature_1d
-#         day_3: sensor.dark_sky_daytime_high_temperature_2d
-#         day_4: sensor.dark_sky_daytime_high_temperature_3d
-#         day_5: sensor.dark_sky_daytime_high_temperature_4d
-#         day_6: sensor.dark_sky_daytime_high_temperature_5d
-#       temperature_low:
-#         day_1: sensor.dark_sky_overnight_low_temperature_0d
-#         day_2: sensor.dark_sky_overnight_low_temperature_1d
-#         day_3: sensor.dark_sky_overnight_low_temperature_2d
-#         day_4: sensor.dark_sky_overnight_low_temperature_3d
-#         day_5: sensor.dark_sky_overnight_low_temperature_4d
-#         day_6: sensor.dark_sky_overnight_low_temperature_5d
-#       precipitation_probability:
-#         day_1: sensor.dark_sky_precip_probability_0d
-#         day_2: sensor.dark_sky_precip_probability_1d
-#         day_3: sensor.dark_sky_precip_probability_2d
-#         day_4: sensor.dark_sky_precip_probability_3d
-#         day_5: sensor.dark_sky_precip_probability_4d
-#         day_6: sensor.dark_sky_precip_probability_5d
-#       precipitation_intensity:
-#         day_1: sensor.dark_sky_precip_intensity_0d
-#         day_2: sensor.dark_sky_precip_intensity_1d
-#         day_3: sensor.dark_sky_precip_intensity_2d
-#         day_4: sensor.dark_sky_precip_intensity_3d
-#         day_5: sensor.dark_sky_precip_intensity_4d
-#         day_6: sensor.dark_sky_precip_intensity_5d
-
-# - type: 'custom:lovelace-darksky-card' # CANT BE MOVED !!! #
-#   locale: en
-#   static_icons: true
-#   tooltips: false
-#   old_daily_format: false
-#   time_format: locale
-#   show_beaufort: true
-#   entity_current_conditions: sensor.dark_sky_icon
-#   entity_temperature: sensor.dark_sky_temperature
-#   entity_forecast_high_temp_1: sensor.dark_sky_daytime_high_temperature_1d
-#   entity_forecast_high_temp_2: sensor.dark_sky_daytime_high_temperature_2d
-#   entity_forecast_high_temp_3: sensor.dark_sky_daytime_high_temperature_3d
-#   entity_forecast_high_temp_4: sensor.dark_sky_daytime_high_temperature_4d
-#   entity_forecast_high_temp_5: sensor.dark_sky_daytime_high_temperature_5d
-#   entity_forecast_icon_1: sensor.dark_sky_icon_1d
-#   entity_forecast_icon_2: sensor.dark_sky_icon_2d
-#   entity_forecast_icon_3: sensor.dark_sky_icon_3d
-#   entity_forecast_icon_4: sensor.dark_sky_icon_4d
-#   entity_forecast_icon_5: sensor.dark_sky_icon_5d
-#   entity_forecast_low_temp_1: sensor.dark_sky_overnight_low_temperature_0d
-#   entity_forecast_low_temp_2: sensor.dark_sky_overnight_low_temperature_1d
-#   entity_forecast_low_temp_3: sensor.dark_sky_overnight_low_temperature_2d
-#   entity_forecast_low_temp_4: sensor.dark_sky_overnight_low_temperature_3d
-#   entity_forecast_low_temp_5: sensor.dark_sky_overnight_low_temperature_4d
-#   entity_summary_1: sensor.dark_sky_summary_1d
-#   entity_summary_2: sensor.dark_sky_summary_2d
-#   entity_summary_3: sensor.dark_sky_summary_3d
-#   entity_summary_4: sensor.dark_sky_summary_4d
-#   entity_summary_5: sensor.dark_sky_summary_5d
-#   entity_sun: sun.sun
-#   entity_visibility: sensor.dark_sky_visibility
-#   entity_daytime_high: sensor.dark_sky_daytime_high_temperature_0d
-#   entity_wind_bearing: sensor.dark_sky_wind_bearing
-#   entity_wind_speed: sensor.dark_sky_wind_speed
-#   entity_humidity: sensor.dark_sky_humidity
-#   entity_pressure: sensor.dark_sky_pressure
-#   entity_apparent_temp: sensor.dark_sky_apparent_temperature
-#   entity_daily_summary: sensor.dark_sky_daily_summary
-#   entity_pop: sensor.dark_sky_precip_probability
-#   entity_pop_intensity: sensor.dark_sky_precip_intensity
-#   entity_pop_1: sensor.dark_sky_precip_probability_1d
-#   entity_pop_2: sensor.dark_sky_precip_probability_2d
-#   entity_pop_3: sensor.dark_sky_precip_probability_3d
-#   entity_pop_4: sensor.dark_sky_precip_probability_4d
-#   entity_pop_5: sensor.dark_sky_precip_probability_5d
 
       - type: image
         image: /local/images/floorplan/transparent_square.png
@@ -533,13 +428,13 @@ cards:
         hold_action:
           action: none
 
-######     ###    ##       ######## ##    ## ########     ###    ########            ######     ###    ########  ########  
-##    ##   ## ##   ##       ##       ###   ## ##     ##   ## ##   ##     ##          ##    ##   ## ##   ##     ## ##     ## 
-##        ##   ##  ##       ##       ####  ## ##     ##  ##   ##  ##     ##          ##        ##   ##  ##     ## ##     ## 
-##       ##     ## ##       ######   ## ## ## ##     ## ##     ## ########           ##       ##     ## ########  ##     ## 
-##       ######### ##       ##       ##  #### ##     ## ######### ##   ##            ##       ######### ##   ##   ##     ## 
-##    ## ##     ## ##       ##       ##   ### ##     ## ##     ## ##    ##           ##    ## ##     ## ##    ##  ##     ## 
-######  ##     ## ######## ######## ##    ## ########  ##     ## ##     ##           ######  ##     ## ##     ## ########  
+######     ###    ##       ######## ##    ## ########     ###    ########   
+##    ##   ## ##   ##       ##       ###   ## ##     ##   ## ##   ##     ## 
+##        ##   ##  ##       ##       ####  ## ##     ##  ##   ##  ##     ## 
+##       ##     ## ##       ######   ## ## ## ##     ## ##     ## ########  
+##       ######### ##       ##       ##  #### ##     ## ######### ##   ##   
+##    ## ##     ## ##       ##       ##   ### ##     ## ##     ## ##    ##  
+######  ##     ## ######## ######## ##    ## ########  ##     ## ##     ##  
 
 
       - type: 'custom:atomic-calendar-revive'
@@ -824,13 +719,13 @@ cards:
       {% endfor %}
       {% endfor %}
 
-#### ########  ########  ####  ######      ###    ######## ####  #######  ##    ##                       
- ##  ##     ## ##     ##  ##  ##    ##    ## ##      ##     ##  ##     ## ###   ##                       
- ##  ##     ## ##     ##  ##  ##         ##   ##     ##     ##  ##     ## ####  ##                       
- ##  ########  ########   ##  ##   #### ##     ##    ##     ##  ##     ## ## ## ##                       
- ##  ##   ##   ##   ##    ##  ##    ##  #########    ##     ##  ##     ## ##  ####                       
- ##  ##    ##  ##    ##   ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ###                       
-#### ##     ## ##     ## ####  ######   ##     ##    ##    ####  #######  ##    ##         
+#### ########  ########  ####  ######      ###    ######## ####  #######  ##    ##
+ ##  ##     ## ##     ##  ##  ##    ##    ## ##      ##     ##  ##     ## ###   ##
+ ##  ##     ## ##     ##  ##  ##         ##   ##     ##     ##  ##     ## ####  ##
+ ##  ########  ########   ##  ##   #### ##     ##    ##     ##  ##     ## ## ## ##
+ ##  ##   ##   ##   ##    ##  ##    ##  #########    ##     ##  ##     ## ##  ####
+ ##  ##    ##  ##    ##   ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ###
+#### ##     ## ##     ## ####  ######   ##     ##    ##    ####  #######  ##    ##
 
       # -----------------------------------------------
       # -----------------------------------------------
@@ -1096,6 +991,93 @@ cards:
               top: {{ top + timer_top_offset }}%
               transform: 'translate(-50%, -50%)'
       {% endfor %}
+
+      # -----------------------------------------------
+      # -----------------------------------------------
+      # Water Boiler Information
+      # -----------------------------------------------
+      # -----------------------------------------------
+      - type: icon
+        icon: mdi:information-variant
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: 9.75%
+          top: 44.75%
+          transform: 'translate(0, -50%)'
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 75vw;
+                height: 75;
+              }
+            title: Roof Temperature & Humidity
+            card:
+              type: grid
+              columns: 2
+              square: false
+              cards:
+                - type: grid
+                  columns: 1
+                  square: false
+                  cards:
+                    - type: grid
+                      columns: 1
+                      square: false
+                      cards:
+                        - type: 'custom:slider-entity-row'
+                          entity: input_number.roof_information_graph_hours
+                          hide_state: false
+                    - type: 'custom:config-template-card'
+                      variables:
+                        HOURS: states['input_number.roof_information_graph_hours'].state
+                      entities:
+                        - input_number.roof_information_graph_hours
+                      card:
+                        type: history-graph
+                        entities:
+                          - entity: sensor.water_boiler_temperature_panel_out
+                          - entity: sensor.water_boiler_temperature_in_from_panel
+                          - entity: sensor.water_boiler_temperature_out_to_panel
+                          - entity: sensor.water_boiler_temperature_temperature_difference
+                          - entity: binary_sensor.water_boiler_power_pump_controller_status
+                            name: Pump
+                          - entity: binary_sensor.water_boiler_power_wall_switch_status
+                            name: Switch
+                          - entity: sensor.water_boiler_power_adc
+                          - entity: sensor.water_boiler_temperature_water_level
+                          - entity: sensor.water_boiler_power_power_w
+                        hours_to_show: "${ HOURS }"
+                        refresh_interval: 0
+                - type: grid
+                  columns: 1
+                  square: false
+                  cards:
+                    - type: 'custom:config-template-card'
+                      variables:
+                        HOURS: states['input_number.roof_information_graph_hours'].state
+                      entities:
+                        - input_number.roof_information_graph_hours
+                      card:
+                        type: history-graph
+                        entities:
+                          - entity: sensor.water_boiler_power_am2302_temperature
+                          - entity: sensor.water_boiler_power_si7021_temperature
+                          - entity: sensor.water_boiler_temperature_case_temperature
+                          - entity: sensor.water_boiler_power_am2302_humidity
+                          - entity: sensor.water_boiler_power_si7021_humidity
+                          - entity: sensor.water_boiler_temperature_case_humidity
+                        hours_to_show: "${ HOURS }"
+                        refresh_interval: 0
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
 
 ##     ##    ###     ######  ##     ## ##     ## ##     ##  ######  
 ##     ##   ## ##   ##    ## ##     ## ##     ## ###   ### ##    ## 
@@ -1656,136 +1638,6 @@ cards:
         hold_action:
           action: none
 
-########   #######   #######  ########    #### ##    ## ########  #######  ########  ##     ##    ###    ######## ####  #######  ##    ## 
-##     ## ##     ## ##     ## ##           ##  ###   ## ##       ##     ## ##     ## ###   ###   ## ##      ##     ##  ##     ## ###   ## 
-##     ## ##     ## ##     ## ##           ##  ####  ## ##       ##     ## ##     ## #### ####  ##   ##     ##     ##  ##     ## ####  ## 
-########  ##     ## ##     ## ######       ##  ## ## ## ######   ##     ## ########  ## ### ## ##     ##    ##     ##  ##     ## ## ## ## 
-##   ##   ##     ## ##     ## ##           ##  ##  #### ##       ##     ## ##   ##   ##     ## #########    ##     ##  ##     ## ##  #### 
-##    ##  ##     ## ##     ## ##           ##  ##   ### ##       ##     ## ##    ##  ##     ## ##     ##    ##     ##  ##     ## ##   ### 
-##     ##  #######   #######  ##          #### ##    ## ##        #######  ##     ## ##     ## ##     ##    ##    ####  #######  ##    ## 
-
-      - type: conditional
-        conditions:
-          - entity: switch.roof_right_table_power_relay
-            state: 'on'
-        elements:
-          - type: icon
-            icon: mdi:power
-            entity: switch.roof_right_table_power_relay
-            style:
-              color: red
-              left: 10%
-              top: 67%
-              transform: 'translate(0, -50%)'
-            tap_action:
-              action: toggle
-            double_tap_action:
-              action: none
-            hold_tap_action:
-              action: none
-
-      - type: conditional
-        conditions:
-          - entity: binary_sensor.water_boiler_power_pump_controller_status
-            state: 'on'
-        elements:
-          - type: icon
-            icon: mdi:pump
-            entity: binary_sensor.water_boiler_power_pump_controller_status
-            style:
-              color: red
-              left: 8.5%
-              top: 47%
-              transform: 'translate(0, -50%)'
-            tap_action:
-              action: none
-            double_tap_action:
-                action: none
-            hold_tap_action:
-              action: none
-  
-      - type: icon
-        icon: mdi:information-variant
-        style:
-          background-color: {{ background_color }}
-          border-radius: {{ border_radius }}%
-          left: 9.75%
-          top: 44.75%
-          transform: 'translate(0, -50%)'
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 75vw;
-                height: 70vh;
-              }
-            title: Roof Temperature & Humidity
-            card:
-              type: grid
-              columns: 2
-              square: false
-              cards:
-                - type: grid
-                  columns: 1
-                  square: false
-                  cards:
-                    - type: grid
-                      columns: 1
-                      square: false
-                      cards:
-                        - type: 'custom:slider-entity-row'
-                          entity: input_number.roof_information_graph_hours
-                          hide_state: false
-                    - type: 'custom:config-template-card'
-                      variables:
-                        HOURS: states['input_number.roof_information_graph_hours'].state
-                      entities:
-                        - input_number.roof_information_graph_hours
-                      card:
-                        type: history-graph
-                        entities:
-                          - entity: sensor.water_boiler_temperature_panel_out
-                          - entity: sensor.water_boiler_temperature_in_from_panel
-                          - entity: sensor.water_boiler_temperature_out_to_panel
-                          - entity: sensor.water_boiler_temperature_temperature_difference
-                          - entity: binary_sensor.water_boiler_power_pump_controller_status
-                            name: Pump
-                          - entity: binary_sensor.water_boiler_power_wall_switch_status
-                            name: Switch
-                          - entity: sensor.water_boiler_power_adc
-                          - entity: sensor.water_boiler_temperature_water_level
-                          - entity: sensor.water_boiler_power_power_w
-                        hours_to_show: "${ HOURS }"
-                        refresh_interval: 0
-                - type: grid
-                  columns: 1
-                  square: false
-                  cards:
-                    - type: 'custom:config-template-card'
-                      variables:
-                        HOURS: states['input_number.roof_information_graph_hours'].state
-                      entities:
-                        - input_number.roof_information_graph_hours
-                      card:
-                        type: history-graph
-                        entities:
-                          - entity: sensor.water_boiler_power_am2302_temperature
-                          - entity: sensor.water_boiler_power_si7021_temperature
-                          - entity: sensor.water_boiler_temperature_case_temperature
-                          - entity: sensor.water_boiler_power_am2302_humidity
-                          - entity: sensor.water_boiler_power_si7021_humidity
-                          - entity: sensor.water_boiler_temperature_case_humidity
-                        hours_to_show: "${ HOURS }"
-                        refresh_interval: 0
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
-
    ###     ######  ######## ####  #######  ##    ##  ######  
   ## ##   ##    ##    ##     ##  ##     ## ###   ## ##    ## 
  ##   ##  ##          ##     ##  ##     ## ####  ## ##       
@@ -1812,72 +1664,33 @@ cards:
         {% set actions_left.value = actions_left.value + actions_left_offset %}
       {% endfor %}
 
-########     ###    ########  ##    ## #### ##    ##  ######   
-##     ##   ## ##   ##     ## ##   ##   ##  ###   ## ##    ##  
-##     ##  ##   ##  ##     ## ##  ##    ##  ####  ## ##        
-########  ##     ## ########  #####     ##  ## ## ## ##   #### 
-##        ######### ##   ##   ##  ##    ##  ##  #### ##    ##  
-##        ##     ## ##    ##  ##   ##   ##  ##   ### ##    ##  
-##        ##     ## ##     ## ##    ## #### ##    ##  ######   
+ ######   #######  ##    ## ########  #### ######## ####  #######  ##    ##    ###    ##             ######## ##    ## ######## #### ######## ##    ## 
+##    ## ##     ## ###   ## ##     ##  ##     ##     ##  ##     ## ###   ##   ## ##   ##             ##       ###   ##    ##     ##     ##     ##  ##  
+##       ##     ## ####  ## ##     ##  ##     ##     ##  ##     ## ####  ##  ##   ##  ##             ##       ####  ##    ##     ##     ##      ####   
+##       ##     ## ## ## ## ##     ##  ##     ##     ##  ##     ## ## ## ## ##     ## ##             ######   ## ## ##    ##     ##     ##       ##    
+##       ##     ## ##  #### ##     ##  ##     ##     ##  ##     ## ##  #### ######### ##             ##       ##  ####    ##     ##     ##       ##    
+##    ## ##     ## ##   ### ##     ##  ##     ##     ##  ##     ## ##   ### ##     ## ##             ##       ##   ###    ##     ##     ##       ##    
+ ######   #######  ##    ## ########  ####    ##    ####  #######  ##    ## ##     ## ########       ######## ##    ##    ##    ####    ##       ##    
 
-      # - type: state-icon
-      #   entity: cover.garage_door
-      #   style:
-      #     left: 93%
-      #     top: 75%
-      #     transform: 'translate(0, -50%) scale(6, 5)'
-      #   tap_action:
-      #     action: toggle
-      #   double_tap_action:
-      #       action: none
-      #   hold_tap_action:
-      #     action: none
-
-##     ## ########    ###    ######## ######## ########   ######  
-##     ## ##         ## ##      ##    ##       ##     ## ##    ## 
-##     ## ##        ##   ##     ##    ##       ##     ## ##       
-######### ######   ##     ##    ##    ######   ########   ######  
-##     ## ##       #########    ##    ##       ##   ##         ## 
-##     ## ##       ##     ##    ##    ##       ##    ##  ##    ## 
-##     ## ######## ##     ##    ##    ######## ##     ##  ######  
+      {% for entity, left, top, icon, tap_action in conditional_entities %}
 
       - type: conditional
         conditions:
-          - entity: switch.main_bathroom_heater
+          - entity: {{ entity }}
             state: 'on'
         elements:
           - type: icon
-            icon: mdi:radiator
-            entity: switch.main_bathroom_heater
+            icon: mdi:{{ icon }}
+            entity: {{ entity }}
             style:
               color: red
-              left: 44%
-              top: 66%
+              left: {{ left }}%
+              top: {{ top }}%
               transform: 'translate(0, -50%)'
             tap_action:
-              action: toggle
+              action: {{ tap_action }}
             double_tap_action:
-                action: none
-            hold_tap_action:
               action: none
-
-      - type: conditional
-        conditions:
-          - entity: switch.master_bathroom_heater
-            state: 'on'
-        elements:
-          - type: icon
-            icon: mdi:radiator
-            entity: switch.master_bathroom_heater
-            style:
-              color: red
-              left: 44%
-              top: 83%
-              transform: 'translate(0, -50%)'
-            tap_action:
-              action: toggle
-            double_tap_action:
-                action: none
             hold_tap_action:
               action: none
 

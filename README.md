@@ -7,7 +7,7 @@ My main interface with the systen is via two wall mounted DIY 15.6 RaspberryPi b
 
 You can take a glance at the functionality in the below video (although not up-to-date):
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/o_AKHEyWXR0/0.jpg)](https://www.youtube.com/watch?v=o_AKHEyWXR0)
+[![Floorplan](hScreenShots/floorplan.png?raw=true)](https://www.youtube.com/watch?v=o_AKHEyWXR0)
 
 The UI is defined in the *lovelace_new_data.yaml* file.
 Each section has a header and implements a different part of the UI.
@@ -28,8 +28,8 @@ Only custom cards can be displayed on the UI so if an internal HA card need to b
     - [Macros](#macros)
     - [Start](#start)
     - [Pictures](#pictures)
-    - [Weather Card](#weather-card)
-    - [Calendar Card](#calendar-card)
+    - [Weather](#weather)
+    - [Calendar](#calendar)
     - [Lights](#lights)
       - [Light Entity](#light-entity)
       - [Light Group](#light-group)
@@ -49,10 +49,8 @@ Only custom cards can be displayed on the UI so if an internal HA card need to b
     - [Settings](#settings)
     - [UnRaid](#unraid)
     - [Water](#water)
-    - [Roof Information](#roof-information)
     - [Actions](#actions)
-    - [Parking](#parking)
-    - [Heaters](#heaters)
+    - [Conditional Entity](#conditional-entity)
     - [Refresh Reload](#refresh-reload)
   - [Sources](#sources)
     - [Integrations](#integrations)
@@ -62,7 +60,8 @@ Only custom cards can be displayed on the UI so if an internal HA card need to b
 ## UI Explained
 
 ### Definition
-Contains parameters and settings for the UI to easily change the look-and-feel of the UI.
+Contains parameters and settings for the UI to easily change the look&feel of the UI.
+Includes lists of entities and their parameters for placement, icons, actions, etc...
 
 ### Macros
 Contains "functions" to simplify reoccuring UI elements.
@@ -75,15 +74,15 @@ Displays the Lights' status by placing all lighting images over the background d
 Lights' images were created from the previously mentioned two main floorplan images.
 The light images were named after the actual entity names.
 
-### Weather Card
+### Weather
 Displays a custom weather card for local weather status.
 
 **Actions**
 * Tap: Opens popup windows with hourly weather forecast.
 
-  ![Weather Card](ScreenShots/weather_card_hourly_forecast.png?raw=true)
+  ![Weather](ScreenShots/weather_card_hourly_forecast.png?raw=true)
 
-### Calendar Card
+### Calendar
 Displays a custom calendar card with upcoming events.
 
 ### Lights
@@ -211,6 +210,10 @@ The location parametes are defined in and taken from the DEFINITIONS section.
 ![Water Boiler Timer](ScreenShots/water_boiler_timer.png?raw=true)
 ![Water Boiler Timer Schedule](ScreenShots/water_boiler_timer_schedule.png?raw=true)
 
+In addition gives history information regarding Water Boiler status and temperatures. The number of hours to show in the history graphs can be changed on-the-fly using the slider input.
+
+![Water Boiler Information](ScreenShots/water_boiler_information.png?raw=true)
+
 **Actions**
 * Tap: Opens a popup window that includes:
   * Water Boiler button for direct control
@@ -301,8 +304,10 @@ Creates and populizes the Status Bar.
 The entities to show are defined and taken from the DEFINITIONS section.
 **Actions:**
 * Tap: Opens a popup window that shows relevant entities defined in the DEFINITIONS section
+  
   ![Status Bar Tap Action Example 1](ScreenShots/status_bar_tap_action_1.png?raw=true) ![Status Bar Tap Action Example 2](ScreenShots/status_bar_tap_action_2.png?raw=true) ![Status Bar Tap Action Example 3](ScreenShots/status_bar_tap_action_3.png?raw=true)
 * Hold: Opens a more-info popup window
+
   ![Status Bar Hold Action Example 1](ScreenShots/status_bar_hold_action_1.png?raw=true) ![Status Bar Hold Action Example 2](ScreenShots/status_bar_hold_action_2.png?raw=true) ![Status Bar Hold Action Example 3](ScreenShots/status_bar_hold_action_3.png?raw=true)
 
 ### Settings
@@ -314,32 +319,46 @@ The entities to show are defined and taken from the DEFINITIONS section.
 The settings page is divided into columns. Each column can have multiple sections. Each section can have multiple entities.
 **Actions:**
 * Tap: Opens a popup window that shows relevant settings entities defined in the DEFINITIONS section
-  ![Settings Tap ACtion](ScreenShots/settings_tap_action.png?raw=true)
+  ![Settings Tap Action](ScreenShots/settings_tap_action.png?raw=true)
 
 ### UnRaid
 TBD
 
 ### Water
-TBD
+Displays water consumption data in graphs
 
-### Roof Information
-TBD
+![Water](ScreenShots/water.png?raw=true)
+
+**Actions:**
+* Tap: Opens popup window with all relevant history information using relevant integration entities.
 
 ### Actions
-TBD
+Buttons for special/quick access funcitons/scenarios
+The look&feel and list of Actions are defined in and taken from the DEFINITIONS section.
 
-### Parking
-TBD
+![Actions](ScreenShots/actions.png?raw=true)
 
-### Heaters
+**Actions:**
+* Tap: Active toggle
+* Double Tap: Opens a more-info popup window
+* Hold: Opens a more-info popup window
+
+### Conditional Entity
 TBD
 
 ### Refresh Reload
-TBD
+Buttons for refreshing/reloading UI
+
+![Refresh/Reload](ScreenShots/refresh_reload.png?raw=true)
+
+**Actions:**
+* Tap: UI refresh
+* Double Tap: Browser window refresh/reload
 
 ## Sources
 ### Integrations
 [browser_mod](https://github.com/thomasloven/hass-browser_mod) * 
+[City-Mind Water Meter](https://github.com/maorcc/citymind_water_meter) * 
 [lovelace_gen](https://github.com/thomasloven/hass-lovelace_gen) * 
 [Xiaomi Cloud Map Extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor)
 
