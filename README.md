@@ -7,7 +7,7 @@ My main interface with the systen is via two wall mounted DIY 15.6 RaspberryPi b
 
 You can take a glance at the functionality in the below video (although not up-to-date):
 
-[![Floorplan](hScreenShots/floorplan.png?raw=true)](https://www.youtube.com/watch?v=o_AKHEyWXR0)
+[![Floorplan](ScreenShots/floorplan.png?raw=true)](https://www.youtube.com/watch?v=o_AKHEyWXR0)
 
 The UI is defined in the *lovelace_new_data.yaml* file.
 Each section has a header and implements a different part of the UI.
