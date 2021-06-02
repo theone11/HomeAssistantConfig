@@ -127,11 +127,16 @@
 #                             entity                                              , column, section, label                 , type
 {% set settings_entities = [("input_number.hp_deskjet_4620_series_ink_low_limit"       , "1", "y", "Printers"              , "slider"),
                             ("input_number.water_consumption_hourly_limit"             , "1", "y", "Water Consumption"     , "slider"),
-                            ("input_number.water_consumption_daily_limit"              , "1", "n", "Water Consumption"     , "slider"),
-                            ("input_number.water_consumption_monthly_limit"            , "1", "n", "Water Consumption"     , "slider"),
-                            ("input_number.water_consumption_monthly_prediciton_limit" , "1", "n", "Water Consumption"     , "slider"),
+                            ("input_number.water_consumption_daily_limit"              , "1", "n", ""                      , "slider"),
+                            ("input_number.water_consumption_monthly_limit"            , "1", "n", ""                      , "slider"),
+                            ("input_number.water_consumption_monthly_prediciton_limit" , "1", "n", ""                      , "slider"),
                             ("input_number.boiler_disable_schedulers_temperature"      , "2", "y", "Water Boiler"          , "slider"),
-                            ("script.1586449615879"                                    , "3", "y", "Home Assistant Control", "entity")] %}
+                            ("script.1586449615879"                                    , "3", "y", "Home Assistant Control", "entity"),
+                            ("input_boolean.ui_hide_room_temperatures"                 , "3", "y", "Hide"                  , "entity"),
+                            ("input_boolean.ui_hide_water_boiler_temperatures"         , "3", "n", ""                      , "entity"),
+                            ("input_boolean.ui_hide_weather          "                 , "3", "n", ""                      , "entity"),
+                            ("input_boolean.ui_hide_calendar         "                 , "3", "n", ""                      , "entity"),
+                            ("input_boolean.ui_hide_navigation"                        , "3", "n", ""                      , "entity")] %}
 
 {% set actions_left, actions_top = namespace(value=60), 3 %}
 {% set actions_left_offset = 8 %}
@@ -142,16 +147,16 @@
                            ("cover.garage_door"      )] %}
 
 {% set temperature_sensors_font_size = 75 %}
-#                              entity                                  , left, top
-{% set temperature_sensors = [("master_bedroom_temperature"            , 36.5, 93  ),
-                              ("noga_temperature"                      , 45  , 59  ),
-                              ("ella_temperature"                      , 36  , 56  ),
-                              ("tomer_temperature"                     , 28  , 61.5),
-                              ("water_boiler_temperature_panel_out"    , 3.5 , 52  ),
-                              ("water_boiler_temperature_in_from_panel", 9.5 , 43  ),
-                              ("water_boiler_temperature_out_to_panel" , 9.5 , 47  ),
-                              ("livingroom_temperature"                , 71.5, 46  ),
-                              ("hallway_temperature"                   , 36.6, 65.5)] %}
+#                              entity                                  , category       , left, top
+{% set temperature_sensors = [("master_bedroom_temperature"            , "room"         , 36.5, 93  ),
+                              ("noga_temperature"                      , "room"         , 45  , 59  ),
+                              ("ella_temperature"                      , "room"         , 36  , 56  ),
+                              ("tomer_temperature"                     , "room"         , 28  , 61.5),
+                              ("water_boiler_temperature_panel_out"    , "water_boiler" , 3.5 , 52  ),
+                              ("water_boiler_temperature_in_from_panel", "water_boiler" , 9.5 , 43  ),
+                              ("water_boiler_temperature_out_to_panel" , "water_boiler" , 9.5 , 47  ),
+                              ("livingroom_temperature"                , "room"         , 71.5, 46  ),
+                              ("hallway_temperature"                   , "room"         , 36.6, 65.5)] %}
 
 #                             entity                                                   left, top, icon      , tap_action
 {% set conditional_entities = [("switch.roof_right_table_power_relay"                    , 10 , 67, "power"   , "toggle"),
@@ -379,54 +384,58 @@ cards:
 ##  ##  ## ##       ##     ##    ##    ##     ## ##       ##    ##  
  ###  ###  ######## ##     ##    ##    ##     ## ######## ##     ## 
 
-      - type: custom:weather-card
-        #entity: weather.darksky_daily
-        entity: weather.accuweather
-        icons: "/local/icons/weather_icons/static/"
-        current: true
-        details: true # true false
-        number_of_forecasts: 5
-        hourly_forecast: false
-        style:
-          #border: 1px solid red
-          left: -2% #-3% 0%
-          top: -3%  #-3% 0%
-          transform: 'translate(0%, 0%) scale(0.9, 0.9)'
-
-      - type: image
-        image: /local/images/floorplan/transparent_square.png
-        entity: weather.darksky_hourly
-        style:
-          #border: 1px solid red
-          left: 0%
-          top: 0%
-          width: 27.25%
-          height: 35%
-          transform: 'translate(0%, 0%) scale(1, 1)'
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 80vw;
-              }
-            title: Hourly Weather Forecast
-            card:
-              type: 'custom:weather-card'
-              entity: weather.darksky_hourly
-              hourly_forecast: true
-              forecast: true
-              number_of_forecasts: '18'
-              details: false
-              current: false
-              icons: /local/icons/weather_icons/static/
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
+      - type: conditional
+        conditions:
+          - entity: input_boolean.ui_hide_weather
+            state_not: 'on'
+        elements:
+          - type: custom:weather-card
+            #entity: weather.darksky_daily
+            entity: weather.accuweather
+            icons: "/local/icons/weather_icons/static/"
+            current: true
+            details: true # true false
+            number_of_forecasts: 5
+            hourly_forecast: false
+            style:
+              #border: 1px solid red
+              left: -2% #-3% 0%
+              top: -3%  #-3% 0%
+              transform: 'translate(0%, 0%) scale(0.9, 0.9)'
+          - type: image
+            image: /local/images/floorplan/transparent_square.png
+            entity: weather.darksky_hourly
+            style:
+              #border: 1px solid red
+              left: 0%
+              top: 0%
+              width: 27.25%
+              height: 35%
+              transform: 'translate(0%, 0%) scale(1, 1)'
+            tap_action:
+              action: fire-dom-event
+              browser_mod:
+                command: popup
+                deviceID:
+                  - this
+                style: |
+                  :host .content {
+                    width: 80vw;
+                  }
+                title: Hourly Weather Forecast
+                card:
+                  type: 'custom:weather-card'
+                  entity: weather.darksky_hourly
+                  hourly_forecast: true
+                  forecast: true
+                  number_of_forecasts: '18'
+                  details: false
+                  current: false
+                  icons: /local/icons/weather_icons/static/
+            double_tap_action:
+              action: none
+            hold_action:
+              action: none
 
 ######     ###    ##       ######## ##    ## ########     ###    ########   
 ##    ##   ## ##   ##       ##       ###   ## ##     ##   ## ##   ##     ## 
@@ -436,48 +445,39 @@ cards:
 ##    ## ##     ## ##       ##       ##   ### ##     ## ##     ## ##    ##  
 ######  ##     ## ######## ######## ##    ## ########  ##     ## ##     ##  
 
-
-      - type: 'custom:atomic-calendar-revive'
-        entities:
-          - entity: calendar.kessler_family
-            name: calendar.kessler_family
-          - entity: calendar.holidays_in_israel
-            name: Holidays in Israel
-        maxDaysToShow: 14
-        maxEventCount: 6
-        showLocation: true
-        showMonth: true
-        showWeekDay: true
-        showDate: false
-        showDescription: false
-        showNoEventsForToday: true
-        disableEventLink: true
-        disableLocationLink: true
-        defaultMode: Event
-        refreshInterval: 60
-        showHours: true
-        showRelativeTime: true
-        europeanDate: true
-        dateFormat: 'LL'
-        hoursFormat: 24h
-        style:
-          left: 30%
-          top: -2%
-          width: 20%
-          transform: 'translate(0%, 0%) scale(1, 0.96)'
-
-      # - type: "custom:analog-clock"
-      #   style:
-      #     left: 90%
-      #     top: 2%
-      #     width: 10%
-      #     transform: 'translate(0%, 0%) scale(0.5, 0.5)'
-
-      # - type: custom:plan-coordinates
-      #   style:
-      #     left: 10%
-      #     top: 1.1%
-      #     transform: 'translate(-50%, -50%) scale(1, 1)'
+      - type: conditional
+        conditions:
+          - entity: input_boolean.ui_hide_calendar
+            state_not: 'on'
+        elements:
+          - type: 'custom:atomic-calendar-revive'
+            entities:
+              - entity: calendar.kessler_family
+                name: calendar.kessler_family
+              - entity: calendar.holidays_in_israel
+                name: Holidays in Israel
+            maxDaysToShow: 14
+            maxEventCount: 6
+            showLocation: true
+            showMonth: true
+            showWeekDay: true
+            showDate: false
+            showDescription: false
+            showNoEventsForToday: true
+            disableEventLink: true
+            disableLocationLink: true
+            defaultMode: Event
+            refreshInterval: 60
+            showHours: true
+            showRelativeTime: true
+            europeanDate: true
+            dateFormat: 'LL'
+            hoursFormat: 24h
+            style:
+              left: 30%
+              top: -2%
+              width: 20%
+              transform: 'translate(0%, 0%) scale(1, 0.96)'
 
 ##       ####  ######   ##     ## ########  ######  
 ##        ##  ##    ##  ##     ##    ##    ##    ## 
@@ -859,14 +859,23 @@ cards:
    ##    ##       ##     ## ##        ##       ##    ##  ##     ##    ##    ##     ## ##    ##  ##          ##    ## ##       ##   ### ##    ## ##     ## ##    ##  ##    ## 
    ##    ######## ##     ## ##        ######## ##     ## ##     ##    ##     #######  ##     ## ########     ######  ######## ##    ##  ######   #######  ##     ##  ######  
 
-      {% for entity, left, top in temperature_sensors %}
-      - type: state-label
-        entity: sensor.{{ entity }}
-        style:
-          left: {{ left }}%
-          top: {{ top }}%
-          transform: translate(0, -50%)
-          font-size: {{ temperature_sensors_font_size }}%
+      {% for entity, category, left, top in temperature_sensors %}
+      - type: conditional
+        conditions:
+          {% if category == "room" %}
+          - entity: input_boolean.ui_hide_room_temperatures
+          {% elif category == "water_boiler" %}
+          - entity: input_boolean.ui_hide_water_boiler_temperatures
+          {% endif %}
+            state_not: 'on'
+        elements:
+        - type: state-label
+          entity: sensor.{{ entity }}
+          style:
+            left: {{ left }}%
+            top: {{ top }}%
+            transform: translate(0, -50%)
+            font-size: {{ temperature_sensors_font_size }}%
       {% endfor %}
 
 ##      ##    ###    ######## ######## ########     ########   #######  #### ##       ######## ########  
@@ -1016,7 +1025,7 @@ cards:
                 width: 75vw;
                 height: 75;
               }
-            title: Roof Temperature & Humidity
+            title: Water Boiler Temperature & Humidity
             card:
               type: grid
               columns: 2
@@ -1031,13 +1040,13 @@ cards:
                       square: false
                       cards:
                         - type: 'custom:slider-entity-row'
-                          entity: input_number.roof_information_graph_hours
+                          entity: input_number.ui_water_boiler_graph_hours
                           hide_state: false
                     - type: 'custom:config-template-card'
                       variables:
-                        HOURS: states['input_number.roof_information_graph_hours'].state
+                        HOURS: states['input_number.ui_water_boiler_graph_hours'].state
                       entities:
-                        - input_number.roof_information_graph_hours
+                        - input_number.ui_water_boiler_graph_hours
                       card:
                         type: history-graph
                         entities:
@@ -1060,9 +1069,9 @@ cards:
                   cards:
                     - type: 'custom:config-template-card'
                       variables:
-                        HOURS: states['input_number.roof_information_graph_hours'].state
+                        HOURS: states['input_number.ui_water_boiler_graph_hours'].state
                       entities:
-                        - input_number.roof_information_graph_hours
+                        - input_number.ui_water_boiler_graph_hours
                       card:
                         type: history-graph
                         entities:
@@ -1367,48 +1376,53 @@ cards:
 ##   ### ##     ##   ## ##    ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ### 
 ##    ## ##     ##    ###    ####  ######   ##     ##    ##    ####  #######  ##    ## 
 
-      {% for entity in navigations %}
-      - type: image
-        image: /local/images/floorplan/navigation/{{ entity }}.png
-        style:
-          left: {{ navi_left }}%
-          top: {{ navi_top.value }}%
-          transform: translate(-50%, -50%) scale({{ navi_scaleX }}, {{ navi_scaleY }})
-        tap_action:
-          action: none
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
+      - type: conditional
+        conditions:
+          - entity: input_boolean.ui_hide_navigation
+            state_not: 'on'
+        elements:
+          {% for entity in navigations %}
+          - type: image
+            image: /local/images/floorplan/navigation/{{ entity }}.png
+            style:
+              left: {{ navi_left }}%
+              top: {{ navi_top.value }}%
+              transform: translate(-50%, -50%) scale({{ navi_scaleX }}, {{ navi_scaleY }})
+            tap_action:
+              action: none
+            double_tap_action:
+              action: none
+            hold_action:
+              action: none
 
-      - type: state-label
-        entity: sensor.{{ entity }}
-        attribute: route
-        style:
-          left: {{ navi_left - navi_left_offset}}%
-          top: {{ navi_top.value }}%
-          transform: translate(-100%, -50%) scale({{ navi_scaleX * navi_scaleT }}, {{ navi_scaleY * navi_scaleT }})
-        tap_action:
-          action: none
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
+          - type: state-label
+            entity: sensor.{{ entity }}
+            attribute: route
+            style:
+              left: {{ navi_left - navi_left_offset}}%
+              top: {{ navi_top.value }}%
+              transform: translate(-100%, -50%) scale({{ navi_scaleX * navi_scaleT }}, {{ navi_scaleY * navi_scaleT }})
+            tap_action:
+              action: none
+            double_tap_action:
+              action: none
+            hold_action:
+              action: none
 
-      - type: state-label
-        entity: sensor.{{ entity }}_ui
-        style:
-          left: {{ navi_left + navi_left_offset }}%
-          top: {{ navi_top.value }}%
-          transform: translate(0%, -50%) scale({{ navi_scaleX * navi_scaleT }}, {{ navi_scaleY * navi_scaleT }})
-        tap_action:
-          action: none
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
-      {% set navi_top.value = navi_top.value - navi_top_offset %}
-      {% endfor %}
+          - type: state-label
+            entity: sensor.{{ entity }}_ui
+            style:
+              left: {{ navi_left + navi_left_offset }}%
+              top: {{ navi_top.value }}%
+              transform: translate(0%, -50%) scale({{ navi_scaleX * navi_scaleT }}, {{ navi_scaleY * navi_scaleT }})
+            tap_action:
+              action: none
+            double_tap_action:
+              action: none
+            hold_action:
+              action: none
+          {% set navi_top.value = navi_top.value - navi_top_offset %}
+          {% endfor %}
 
  ######  ########    ###    ######## ##     ##  ######        ########     ###    ########  
 ##    ##    ##      ## ##      ##    ##     ## ##    ##       ##     ##   ## ##   ##     ## 
@@ -1527,8 +1541,6 @@ cards:
                       {% if column == current_column %}
                         {% if section == "y" %}
                     - type: section
-                        {% endif %}
-                        {% if label != "" %}
                       label: {{ label }}
                         {% endif %}
                         {%if type == "slider" %}
@@ -1693,6 +1705,8 @@ cards:
               action: none
             hold_tap_action:
               action: none
+
+      {% endfor %}
 
 ########  ######## ######## ########  ########  ######  ##     ##                ########  ######## ##        #######     ###    ########  
 ##     ## ##       ##       ##     ## ##       ##    ## ##     ##                ##     ## ##       ##       ##     ##   ## ##   ##     ## 

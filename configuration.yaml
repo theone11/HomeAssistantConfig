@@ -213,8 +213,24 @@ google:
 #     homeassistant.core: debug
 
 input_number:
-  roof_information_graph_hours:
+  ui_water_boiler_graph_hours:
     name: Hours to Show
     min: 1
     max: 72
     step: 1
+input_boolean:
+  ui_hide_room_temperatures:
+    name: Room Temperatures
+    icon: mdi:thermometer
+  ui_hide_water_boiler_temperatures:
+    name: Water Boiler Temperatures
+    icon: mdi:thermometer
+  ui_hide_weather:
+    name: Weather Forecast
+    icon: mdi:weather-partly-cloudy
+  ui_hide_calendar:
+    name: Calendar
+    icon: mdi:calendar
+  ui_hide_navigation:
+    name: Navigation
+    icon: mdi:navigation

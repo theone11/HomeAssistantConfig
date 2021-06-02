@@ -197,7 +197,7 @@ If any of the irrigation valves in the group are unavailable the background colo
   ![Irrigation Group Hold Action](ScreenShots/irrigation_group_hold_action.png?raw=true)
 
 ### Temperature Sensors
-Displays all temperature sensors that are defined in the relevant DEFINITIONS section - including their location on the floorplan.
+Displays all temperature sensors, depending on the Hide setting, that are defined in the relevant DEFINITIONS section - including their location on the floorplans
 
 ### Water Boiler
 Defines the Water Boiler button location.
