@@ -9,16 +9,21 @@
 !*.jpg
 !*.ttf
 !*.png
-!esphome
-!esphome/zzz_common_files
-!esphome/zzz_resource_files
 !packages
 !ScreenShots
+!www
 !www/images
+!www/images/floorplan/
+!www/images/floorplan/lights
+!www/images/floorplan/navigation
+!www/images/floorplan/shutters
+!www/images/radio_stations
 
+#!esphome
+#!esphome/zzz_common_files
+#!esphome/zzz_resource_files
 
 # Ignore folders.
-
 
 # Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
 ip_bans.yaml

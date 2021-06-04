@@ -308,7 +308,7 @@ The entities to show are defined and taken from the DEFINITIONS section.
   ![Status Bar Tap Action Example 1](ScreenShots/status_bar_tap_action_1.png?raw=true) ![Status Bar Tap Action Example 2](ScreenShots/status_bar_tap_action_2.png?raw=true) ![Status Bar Tap Action Example 3](ScreenShots/status_bar_tap_action_3.png?raw=true)
 * Hold: Opens a more-info popup window
 
-  ![Status Bar Hold Action Example 1](ScreenShots/status_bar_hold_action_1.png?raw=true) ![Status Bar Hold Action Example 2](ScreenShots/status_bar_hold_action_2.png?raw=true) ![Status Bar Hold Action Example 3](ScreenShots/status_bar_hold_action_3.png?raw=true)
+  ![Status Bar Hold Action Example 1](ScreenShots/status_bar_hold_action_1.png?raw=true) ![Status Bar Hold Action Example 2](ScreenShots/status_bar_hold_action_2.png?raw=true) ![Status Bar Hold Action Example 3](ScreenShots/status_bar_hold_action_3.png?raw=true) ![Status Bar Hold Action Example 3](ScreenShots/status_bar_hold_action_4.png?raw=true)
 
 ### Settings
 Creates and populizes the Settings popup window.
