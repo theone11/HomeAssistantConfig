@@ -76,12 +76,10 @@ The light images were named after the actual entity names.
 
 ### Weather
 Displays a custom weather card for local weather status.
-<details>
-  <summary>**Actions**</summary>
-  * Tap: Opens popup windows with hourly weather forecast.
+**Actions**
+* Tap: Opens popup windows with hourly weather forecast.
 
-    ![Weather](ScreenShots/weather_card_hourly_forecast.png?raw=true)
-</details>
+  ![Weather](ScreenShots/weather_card_hourly_forecast.png?raw=true)
 
 ### Calendar
 Displays a custom calendar card with upcoming events.
