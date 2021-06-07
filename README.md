@@ -1,8 +1,8 @@
 # My Home Assistant Configuration
 ## Overview
-This is my HomeAssistant configuration.
+This is my HomeAssistant Dashboard configuration.
 
-The main goal was to have the day-to-day activations and information immediately visible and everything else (like schedulers, history graphs) available upto 1-click away.
+The main goal was to have the day-to-day activations and information readily visible and everything else (like schedulers, history graphs) available upto 1-click away.
 My main interface with the systen is via two wall mounted DIY 15.6 RaspberryPi based touchscreens. One on each floor.
 
 You can take a glance at the functionality in the below video (although not up-to-date):
@@ -10,12 +10,12 @@ You can take a glance at the functionality in the below video (although not up-t
 [![Floorplan](ScreenShots/floorplan.png?raw=true)](https://www.youtube.com/watch?v=o_AKHEyWXR0)
 
 The UI is defined in the *lovelace_new_data.yaml* file.
-Each section has a header and implements a different part of the UI.
+The files is divided into sections with each section having a commented header. Each sections implements a different part of the Dashboard.
 
 All house images were created using SweetHome3D software and manipulated using GIMP image editing SW.
 Two main floorplan images are the starting point:
 * All lights OFF
-* All light ON - from there each light ON image was created seperately
+* All light ON - from there each light ON image was created/extrated seperately
 
 Only custom cards can be displayed on the UI so if an internal HA card need to be shown then a custom card template should be used as wrapper.
 
@@ -322,7 +322,7 @@ The settings page is divided into columns. Each column can have multiple section
   ![Settings Tap Action](ScreenShots/settings_tap_action.png?raw=true)
 
 ### UnRaid
-TBD
+Display the WEBUI of the unRaid Server (or any webpage for that matter) as a popup window.
 
 ### Water
 Displays water consumption data in graphs
@@ -344,7 +344,11 @@ The look&feel and list of Actions are defined in and taken from the DEFINITIONS 
 * Hold: Opens a more-info popup window
 
 ### Conditional Entity
-TBD
+Displays enities only when they meet a certain condition (conditional). For example entities that should only be displayed when they are on.
+Once the entity is displayed you can also control what the tap_action does.
+The list of entities, conditions, tap_action and look&feel are defined and taken from the DEFINITIONS section.
+
+  ![Conditional Entity Example 1](ScreenShots/conditional_entity_1.png?raw=true) ![Conditional Entity Example 2](ScreenShots/conditional_entity_2.png?raw=true) ![Conditional Entity Example 3](ScreenShots/conditional_entity_3.png?raw=true)
 
 ### Refresh Reload
 Buttons for refreshing/reloading UI

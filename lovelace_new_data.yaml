@@ -158,11 +158,12 @@
                               ("livingroom_temperature"                , "room"         , 71.5, 46  ),
                               ("hallway_temperature"                   , "room"         , 36.6, 65.5)] %}
 
-#                             entity                                                   left, top, icon      , tap_action
-{% set conditional_entities = [("switch.roof_right_table_power_relay"                    , 10 , 67, "power"   , "toggle"),
-                               ("binary_sensor.water_boiler_power_pump_controller_status", 8.5, 47, "pump"    , "none"  ),
-                               ("switch.main_bathroom_heater"                            , 44 , 66, "radiator", "toggle"),
-                               ("switch.master_bathroom_heater"                          , 44 , 83, "radiator", "toggle")] %}
+{% set conditional_color = "red" %}
+#                             entity                                                   , state, left, top, icon     , tap_action
+{% set conditional_entities = [("switch.roof_right_table_power_relay"                    , "on", 10 , 67, "power"   , "toggle"),
+                               ("binary_sensor.water_boiler_power_pump_controller_status", "on", 8.5, 47, "pump"    , "none"  ),
+                               ("switch.main_bathroom_heater"                            , "on", 44 , 66, "radiator", "toggle"),
+                               ("switch.master_bathroom_heater"                          , "on", 44 , 83, "radiator", "toggle")] %}
 
 ##     ##    ###     ######  ########   #######   ######  
 ###   ###   ## ##   ##    ## ##     ## ##     ## ##    ## 
@@ -1524,7 +1525,7 @@ cards:
             style: |
               :host .content {
                 width: 85vw;
-                height: 45vh;
+                height: 50vh;
               }
             title: Settings
             card:
@@ -1577,6 +1578,7 @@ cards:
           action: fire-dom-event
           browser_mod:
             command: popup
+            hide_header: true
             deviceID:
               - this
             style: |
@@ -1684,18 +1686,18 @@ cards:
 ##    ## ##     ## ##   ### ##     ##  ##     ##     ##  ##     ## ##   ### ##     ## ##             ##       ##   ###    ##     ##     ##       ##    
  ######   #######  ##    ## ########  ####    ##    ####  #######  ##    ## ##     ## ########       ######## ##    ##    ##    ####    ##       ##    
 
-      {% for entity, left, top, icon, tap_action in conditional_entities %}
+      {% for entity, state, left, top, icon, tap_action in conditional_entities %}
 
       - type: conditional
         conditions:
           - entity: {{ entity }}
-            state: 'on'
+            state: '{{ state }}'
         elements:
           - type: icon
             icon: mdi:{{ icon }}
             entity: {{ entity }}
             style:
-              color: red
+              color: {{ conditional_color }}
               left: {{ left }}%
               top: {{ top }}%
               transform: 'translate(0, -50%)'
