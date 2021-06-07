@@ -76,7 +76,6 @@ The light images were named after the actual entity names.
 
 ### Weather
 Displays a custom weather card for local weather status.
-
 **Actions**
 * Tap: Opens popup windows with hourly weather forecast.
 
