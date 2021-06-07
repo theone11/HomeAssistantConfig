@@ -1,6 +1,6 @@
 # My Home Assistant Configuration
 ## Overview
-This is my HomeAssistant Dashboard configuration.
+This is my HomeAssistant Floorplan Dashboard configuration.
 
 The main goal was to have the day-to-day activations and information readily visible and everything else (like schedulers, history graphs) available upto 1-click away.
 My main interface with the systen is via two wall mounted DIY 15.6 RaspberryPi based touchscreens. One on each floor.
