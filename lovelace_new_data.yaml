@@ -158,6 +158,17 @@
                               ("livingroom_temperature"                , "room"         , 71.5, 46  ),
                               ("hallway_temperature"                   , "room"         , 36.6, 65.5)] %}
 
+#                              entity                 , category       , left, top
+{% set humidity_sensors = [("master_bedroom_humidity" , "room"         , 36.5, 93  ),
+                           ("noga_humidity"           , "room"         , 45  , 59  ),
+                           ("ella_humidity"           , "room"         , 36  , 56  ),
+                           ("tomer_humidity"          , "room"         , 28  , 61.5)] %}
+#                              entity                     , category       , left, top
+{% set battery_sensors = [("master_bedroom_battery_level" , "room"         , 36.5, 93  ),
+                          ("noga_battery_level"           , "room"         , 45  , 59  ),
+                          ("ella_battery_level"           , "room"         , 36  , 56  ),
+                          ("tomer_battery_level"          , "room"         , 28  , 61.5)] %}
+
 {% set conditional_color = "red" %}
 #                             entity                                                   , state, left, top, icon     , tap_action
 {% set conditional_entities = [("switch.roof_right_table_power_relay"                    , "on", 10 , 67, "power"   , "toggle"),
@@ -879,6 +890,67 @@ cards:
             font-size: {{ temperature_sensors_font_size }}%
       {% endfor %}
 
+      - type: icon
+        icon: mdi:thermometer
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: 3%
+          top: 92%
+          transform: translate(-50%, -50%) scale({{ group_scaleX }}, {{ group_scaleY }})
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 75vw;
+                height: 75;
+              }
+            title: Temperature & Humidity Sensors
+            card:
+              type: grid
+              columns: 1
+              square: false
+              cards:
+                - type: grid
+                  columns: 1
+                  square: false
+                  cards:
+                    - type: grid
+                      columns: 1
+                      square: false
+                      cards:
+                        - type: 'custom:slider-entity-row'
+                          entity: input_number.ui_water_boiler_graph_hours
+                          hide_state: false
+                    - type: 'custom:config-template-card'
+                      variables:
+                        HOURS: states['input_number.ui_water_boiler_graph_hours'].state
+                      entities:
+                        - input_number.ui_water_boiler_graph_hours
+                      card:
+                        type: history-graph
+                        entities:
+                          {% for entity, category, left, top in temperature_sensors %}
+                          {% if category == "room" %}
+                          - entity: sensor.{{ entity }}
+                          {% endif %}
+                          {% endfor %}
+                          {% for entity, category, left, top in humidity_sensors %}
+                          {% if category == "room" %}
+                          - entity: sensor.{{ entity }}
+                          {% endif %}
+                          {% endfor %}
+                        hours_to_show: "${ HOURS }"
+                        refresh_interval: 0
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
+
 ##      ##    ###    ######## ######## ########     ########   #######  #### ##       ######## ########  
 ##  ##  ##   ## ##      ##    ##       ##     ##    ##     ## ##     ##  ##  ##       ##       ##     ## 
 ##  ##  ##  ##   ##     ##    ##       ##     ##    ##     ## ##     ##  ##  ##       ##       ##     ## 
@@ -897,7 +969,8 @@ cards:
 
       {{ create_warning_background(entity ~ "_problem", type ~ "." ~ entity, left, top) }}
 
-      - entity: {{ type }}.{{ entity }}
+      - type: state-icon
+        entity: {{ type }}.{{ entity }}
         style:
           background-color: {{ background_color }}
           border-radius: {{ border_radius }}%
@@ -970,7 +1043,6 @@ cards:
             title: {{ display_name }} Scheduler
             card:
               {{ create_schedulers_popup(entity, "DSD") }}
-        type: state-icon
 
       {{ create_schedulers_icons(entity, left, top) }}
 
@@ -1101,7 +1173,8 @@ cards:
       
       {{ create_warning_background("vacuum_" ~ entity ~ "_problem", "vacuum.vacuum_" ~ entity, left, top) }}
 
-      - entity: vacuum.vacuum_{{ entity }}
+      - type: state-icon
+        entity: vacuum.vacuum_{{ entity }}
         style:
           background-color: {{ background_color }}
           border-radius: {{ border_radius }}%
@@ -1175,7 +1248,6 @@ cards:
             title: Vacuum {{ entity.capitalize() }} Scheduler
             card:
               {{ create_schedulers_popup("vacuum_" ~ entity, "DS") }}
-        type: state-icon
 
       {{ create_schedulers_icons("vacuum_" ~ entity, left, top) }}
       {% endfor %}
@@ -1188,7 +1260,92 @@ cards:
 ##     ## ##       ##     ##  ##  ##     ##    ##        ##       ##     ##    ##    ##       ##    ##  ##    ## 
 ##     ## ######## ########  #### ##     ##    ##        ######## ##     ##    ##    ######## ##     ##  ######  
 
-      - entity: media_player.squeezebox_radio
+      # - type: state-icon
+      #   entity: media_player.squeezebox_radio
+      #   icon: 'mdi:music'
+      #   style:
+      #     background-color: {{ background_color }}
+      #     border-radius: {{ border_radius }}%
+      #     left: 53%
+      #     top: 86%
+      #   tap_action:
+      #     action: fire-dom-event
+      #     browser_mod:
+      #       command: popup
+      #       deviceID:
+      #         - this
+      #       style: |
+      #         :host .content {
+      #           width: 30vw;
+      #         }
+      #       title: SqueezeBox Radio
+      #       card:
+      #         type: 'custom:mini-media-player'
+      #         sound_mode: icon
+      #         source: icon
+      #         artwork: cover
+      #         entity: media_player.squeezebox_radio
+      #         info: scroll
+      #         shortcuts:
+      #           buttons:
+      #             - id: >-
+      #                 http://opml.radiotime.com/Tune.ashx?id=s8712&partnerId=16
+      #               #image: /local/images/radio_stations/ECO99FM.png
+      #               cover: /local/images/radio_stations/ECO99FM.png
+      #               type: channel
+      #             - id: >-
+      #                 http://opml.radiotime.com/Tune.ashx?id=s68320&partnerId=16
+      #               #image: /local/images/radio_stations/GALGALTZ.jpg
+      #               cover: /local/images/radio_stations/GALGALTZ.jpg
+      #               type: channel
+      #             - id: >-
+      #                 http://opml.radiotime.com/Tune.ashx?id=s45475&partnerId=16
+      #               #image: /local/images/radio_stations/GIMEL.png
+      #               cover: /local/images/radio_stations/GIMEL.png
+      #               type: channel
+      #             - id: >-
+      #                 http://opml.radiotime.com/Tune.ashx?id=s26087&partnerId=16
+      #               #image: /local/images/radio_stations/RADIOS100FM.png
+      #               cover: /local/images/radio_stations/RADIOS100FM.png
+      #               type: channel
+      #             - id: >-
+      #                 http://opml.radiotime.com/Tune.ashx?id=s24889&partnerId=16
+      #               #image: /local/images/radio_stations/BET.png
+      #               cover: /local/images/radio_stations/BET.png
+      #               type: channel
+      #             - id: >-
+      #                 http://opml.radiotime.com/Tune.ashx?id=s9067&partnerId=16
+      #               #image: /local/images/radio_stations/SKY_RADIO_101.png
+      #               cover: /local/images/radio_stations/SKY_RADIO_101.png
+      #               type: channel
+      #             - id: >-
+      #                 http://opml.radiotime.com/Tune.ashx?id=s84481&partnerId=16
+      #               #image: /local/images/radio_stations/FFH_Die_80er.png
+      #               cover: /local/images/radio_stations/FFH_Die_80er.png
+      #               type: channel
+      #           columns: 4
+      #           column_height: 100
+      #   double_tap_action:
+      #     action: more-info
+      #   hold_action:
+      #     action: fire-dom-event
+      #     browser_mod:
+      #       command: popup
+      #       deviceID:
+      #         - this
+      #       style: |
+      #         :host .content {
+      #           width: 80vw;
+      #           height: 85vh;
+      #         }
+      #       title: Logitech Media Server
+      #       card:
+      #         type: iframe
+      #         url: !secret squeezebox_url
+      #         aspect: 100%
+
+      - type: state-icon
+        entity: media_player.kitchen_speaker
         icon: 'mdi:music'
         style:
           background-color: {{ background_color }}
@@ -1199,59 +1356,19 @@ cards:
           action: fire-dom-event
           browser_mod:
             command: popup
+            hide_header: true
             deviceID:
               - this
             style: |
               :host .content {
-                width: 30vw;
+                width: 80vw;
+                height: 75vh;
               }
-            title: SqueezeBox Radio
+            title: UnRAID Server
             card:
-              type: 'custom:mini-media-player'
-              sound_mode: icon
-              source: icon
-              artwork: cover
-              entity: media_player.squeezebox_radio
-              info: scroll
-              shortcuts:
-                buttons:
-                  - id: >-
-                      http://opml.radiotime.com/Tune.ashx?id=s8712&partnerId=16
-                    #image: /local/images/radio_stations/ECO99FM.png
-                    cover: /local/images/radio_stations/ECO99FM.png
-                    type: channel
-                  - id: >-
-                      http://opml.radiotime.com/Tune.ashx?id=s68320&partnerId=16
-                    #image: /local/images/radio_stations/GALGALTZ.jpg
-                    cover: /local/images/radio_stations/GALGALTZ.jpg
-                    type: channel
-                  - id: >-
-                      http://opml.radiotime.com/Tune.ashx?id=s45475&partnerId=16
-                    #image: /local/images/radio_stations/GIMEL.png
-                    cover: /local/images/radio_stations/GIMEL.png
-                    type: channel
-                  - id: >-
-                      http://opml.radiotime.com/Tune.ashx?id=s26087&partnerId=16
-                    #image: /local/images/radio_stations/RADIOS100FM.png
-                    cover: /local/images/radio_stations/RADIOS100FM.png
-                    type: channel
-                  - id: >-
-                      http://opml.radiotime.com/Tune.ashx?id=s24889&partnerId=16
-                    #image: /local/images/radio_stations/BET.png
-                    cover: /local/images/radio_stations/BET.png
-                    type: channel
-                  - id: >-
-                      http://opml.radiotime.com/Tune.ashx?id=s9067&partnerId=16
-                    #image: /local/images/radio_stations/SKY_RADIO_101.png
-                    cover: /local/images/radio_stations/SKY_RADIO_101.png
-                    type: channel
-                  - id: >-
-                      http://opml.radiotime.com/Tune.ashx?id=s84481&partnerId=16
-                    #image: /local/images/radio_stations/FFH_Die_80er.png
-                    cover: /local/images/radio_stations/FFH_Die_80er.png
-                    type: channel
-                columns: 4
-                column_height: 100
+              type: iframe
+              url: http://192.168.1.104:9000/material
+              aspect: 100%
         double_tap_action:
           action: more-info
         hold_action:
@@ -1268,10 +1385,8 @@ cards:
             title: Logitech Media Server
             card:
               type: iframe
-              url: http://192.168.1.104:9000
+              url: !secret squeezebox_url
               aspect: 100%
-        type: state-icon
-
 
 ##     ## ##     ##    ###     ######  
 ##     ## ##     ##   ## ##   ##    ## 
@@ -1312,8 +1427,31 @@ cards:
               }
             title: {{ entity.capitalize() }} Air Conditioning
             card:
+              type: 'custom:simple-thermostat'
               entity: climate.hvac_{{ entity }}
-              type: thermostat
+              header: false
+              setpoints:
+              layout:
+                step: row
+                mode:
+                  names: false
+                  icons: true
+                  headings: false
+              decimals: 0
+              step_size: 1
+              hide:
+                state: true
+                temperature: true
+              control:
+                hvac: true
+                fan:
+                  "low":
+                    icon: mdi:fan-speed-1
+                  "mid":
+                    icon: mdi:fan-speed-2
+                  "high":
+                    icon: mdi:fan-speed-3
+
         double_tap_action:
           action: more-info
         hold_action:
@@ -1376,6 +1514,8 @@ cards:
 ##  #### #########  ##   ##   ##  ##    ##  #########    ##     ##  ##     ## ##  #### 
 ##   ### ##     ##   ## ##    ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ### 
 ##    ## ##     ##    ###    ####  ######   ##     ##    ##    ####  #######  ##    ## 
+
+# Navigation images/logod should be 300x300 with transparent background
 
       - type: conditional
         conditions:
