@@ -1367,7 +1367,7 @@ cards:
             title: UnRAID Server
             card:
               type: iframe
-              url: http://192.168.1.104:9000/material
+              url: !secret squeezebox_url
               aspect: 100%
         double_tap_action:
           action: more-info
@@ -1380,7 +1380,7 @@ cards:
             style: |
               :host .content {
                 width: 80vw;
-                height: 85vh;
+                height: 75vh;
               }
             title: Logitech Media Server
             card:
