@@ -29,7 +29,7 @@ input_number:
     unit_of_measurement: "ºC"
     #    initial: 25
     min: 20
-    max: 40
+    max: 60
     step: 1
 
 timer:

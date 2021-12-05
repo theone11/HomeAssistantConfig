@@ -9,7 +9,7 @@ homeassistant:
   # metric for Metric, imperial for Imperial
   unit_system: metric
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-  time_zone: Israel
+  time_zone: "Asia/Jerusalem"
   # Customization file
   customize: !include customize.yaml
   # Packages
@@ -179,6 +179,18 @@ sensor:
       - visibility
     scan_interval:
       minutes: 120
+
+# Sensor to track available updates for supervisor & addons
+  - platform: command_line
+    name: Supervisor updates
+    command: 'curl http://supervisor/supervisor/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"newest_version":.data.version_latest,"current_version":.data.version,"update_available":.data.update_available,"addons":[.data.addons[] | select(.update_available)]}'''
+    value_template: "{{ value_json.addons | length }}"
+    unit_of_measurement: pending update(s)
+    json_attributes:
+    - update_available
+    - newest_version
+    - current_version
+    - addons
 
 
 # Text to speech

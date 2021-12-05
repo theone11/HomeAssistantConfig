@@ -102,24 +102,25 @@
 
 #                           number,        entity                                        , state_t_f, state,      icon,             card_type
 {% set statusbar_entities = [("1", "binary_sensor.updater"                                     , "t", "on", "mdi:download"      , "more-info"),
-                             ("2", "sensor.hacs"                                               , "f", "0" , "mdi:cloud-download", "hacs"),
-                             ("3", "sensor.hp_deskjet_4620_series_ink_low"                     , "f", "0" , "mdi:printer-alert" , "entities"),
-                             ("4", "sensor.water_consumption_limit_exceeded"                   , "f", "0" , "mdi:water-alert"   , "history-graph")] %}
+                             ("2", "sensor.supervisor_updates"                                 , "f", "0" , "mdi:cloud-download", "supervisor"),
+                             ("3", "sensor.hacs"                                               , "f", "0" , "mdi:cloud-download", "hacs"),
+                             ("4", "sensor.hp_deskjet_4620_series_ink_low"                     , "f", "0" , "mdi:printer-alert" , "entities"),
+                             ("5", "sensor.water_consumption_limit_exceeded"                   , "f", "0" , "mdi:water-alert"   , "history-graph")] %}
 
 {% set statusbar_details = [("1", "binary_sensor.updater"),
                             ("2", "sensor.hacs"),
-                            ("3", "sensor.hp_deskjet_4620_series_black_ink"),
-                            ("3", "sensor.hp_deskjet_4620_series_yellow_ink"),
-                            ("3", "sensor.hp_deskjet_4620_series_magenta_ink"),
-                            ("3", "sensor.hp_deskjet_4620_series_cyan_ink"),
-                            ("4", "sensor.water_consumption_hourly_limit_exceeded"),
-                            ("4", "sensor.water_consumption_daily_limit_exceeded"),
-                            ("4", "sensor.water_consumption_monthly_limit_exceeded"),
-                            ("4", "sensor.water_consumption_monthly_prediction_limit_exceeded"),
-                            ("4", "sensor.water_consumption_hourly"),
-                            ("4", "sensor.water_meter_16452690_today_s_consumption"),
-                            ("4", "sensor.water_meter_16452690_monthly_consumption"),
-                            ("4", "sensor.water_consumption_monthly_prediction")] %}
+                            ("4", "sensor.hp_deskjet_4620_series_black_ink"),
+                            ("4", "sensor.hp_deskjet_4620_series_yellow_ink"),
+                            ("4", "sensor.hp_deskjet_4620_series_magenta_ink"),
+                            ("4", "sensor.hp_deskjet_4620_series_cyan_ink"),
+                            ("5", "sensor.water_consumption_hourly_limit_exceeded"),
+                            ("5", "sensor.water_consumption_daily_limit_exceeded"),
+                            ("5", "sensor.water_consumption_monthly_limit_exceeded"),
+                            ("5", "sensor.water_consumption_monthly_prediction_limit_exceeded"),
+                            ("5", "sensor.water_consumption_hourly"),
+                            ("5", "sensor.water_meter_16452690_today_s_consumption"),
+                            ("5", "sensor.water_meter_16452690_monthly_consumption"),
+                            ("5", "sensor.water_consumption_monthly_prediction")] %}
 
 {% set settings_color = 'gray' %}
 {% set settings_left, settings_top = 98.5, 0 %}
@@ -481,10 +482,10 @@ cards:
             defaultMode: Event
             refreshInterval: 60
             showHours: true
-            showRelativeTime: true
-            europeanDate: true
+            showRelativeTime: false
+            europeanDate: false
             dateFormat: 'LL'
-            hoursFormat: 24h
+            hoursFormat: 'HH:mm'
             style:
               left: 30%
               top: -2%
@@ -890,7 +891,8 @@ cards:
             font-size: {{ temperature_sensors_font_size }}%
       {% endfor %}
 
-      - type: icon
+      - type: state-icon
+        entity: input_boolean.ui_hide_room_temperatures
         icon: mdi:thermometer
         style:
           background-color: {{ background_color }}
@@ -1123,6 +1125,7 @@ cards:
                       card:
                         type: history-graph
                         entities:
+                          - entity: sensor.water_boiler_temperature_temperature_difference_state
                           - entity: sensor.water_boiler_temperature_panel_out
                           - entity: sensor.water_boiler_temperature_in_from_panel
                           - entity: sensor.water_boiler_temperature_out_to_panel
@@ -1260,90 +1263,6 @@ cards:
 ##     ## ##       ##     ##  ##  ##     ##    ##        ##       ##     ##    ##    ##       ##    ##  ##    ## 
 ##     ## ######## ########  #### ##     ##    ##        ######## ##     ##    ##    ######## ##     ##  ######  
 
-      # - type: state-icon
-      #   entity: media_player.squeezebox_radio
-      #   icon: 'mdi:music'
-      #   style:
-      #     background-color: {{ background_color }}
-      #     border-radius: {{ border_radius }}%
-      #     left: 53%
-      #     top: 86%
-      #   tap_action:
-      #     action: fire-dom-event
-      #     browser_mod:
-      #       command: popup
-      #       deviceID:
-      #         - this
-      #       style: |
-      #         :host .content {
-      #           width: 30vw;
-      #         }
-      #       title: SqueezeBox Radio
-      #       card:
-      #         type: 'custom:mini-media-player'
-      #         sound_mode: icon
-      #         source: icon
-      #         artwork: cover
-      #         entity: media_player.squeezebox_radio
-      #         info: scroll
-      #         shortcuts:
-      #           buttons:
-      #             - id: >-
-      #                 http://opml.radiotime.com/Tune.ashx?id=s8712&partnerId=16
-      #               #image: /local/images/radio_stations/ECO99FM.png
-      #               cover: /local/images/radio_stations/ECO99FM.png
-      #               type: channel
-      #             - id: >-
-      #                 http://opml.radiotime.com/Tune.ashx?id=s68320&partnerId=16
-      #               #image: /local/images/radio_stations/GALGALTZ.jpg
-      #               cover: /local/images/radio_stations/GALGALTZ.jpg
-      #               type: channel
-      #             - id: >-
-      #                 http://opml.radiotime.com/Tune.ashx?id=s45475&partnerId=16
-      #               #image: /local/images/radio_stations/GIMEL.png
-      #               cover: /local/images/radio_stations/GIMEL.png
-      #               type: channel
-      #             - id: >-
-      #                 http://opml.radiotime.com/Tune.ashx?id=s26087&partnerId=16
-      #               #image: /local/images/radio_stations/RADIOS100FM.png
-      #               cover: /local/images/radio_stations/RADIOS100FM.png
-      #               type: channel
-      #             - id: >-
-      #                 http://opml.radiotime.com/Tune.ashx?id=s24889&partnerId=16
-      #               #image: /local/images/radio_stations/BET.png
-      #               cover: /local/images/radio_stations/BET.png
-      #               type: channel
-      #             - id: >-
-      #                 http://opml.radiotime.com/Tune.ashx?id=s9067&partnerId=16
-      #               #image: /local/images/radio_stations/SKY_RADIO_101.png
-      #               cover: /local/images/radio_stations/SKY_RADIO_101.png
-      #               type: channel
-      #             - id: >-
-      #                 http://opml.radiotime.com/Tune.ashx?id=s84481&partnerId=16
-      #               #image: /local/images/radio_stations/FFH_Die_80er.png
-      #               cover: /local/images/radio_stations/FFH_Die_80er.png
-      #               type: channel
-      #           columns: 4
-      #           column_height: 100
-      #   double_tap_action:
-      #     action: more-info
-      #   hold_action:
-      #     action: fire-dom-event
-      #     browser_mod:
-      #       command: popup
-      #       deviceID:
-      #         - this
-      #       style: |
-      #         :host .content {
-      #           width: 80vw;
-      #           height: 85vh;
-      #         }
-      #       title: Logitech Media Server
-      #       card:
-      #         type: iframe
-      #         url: !secret squeezebox_url
-      #         aspect: 100%
-
       - type: state-icon
         entity: media_player.kitchen_speaker
         icon: 'mdi:music'
@@ -1356,36 +1275,92 @@ cards:
           action: fire-dom-event
           browser_mod:
             command: popup
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 30vw;
+              }
+            title: Kitchen Speaker
+            card:
+              type: 'custom:mini-media-player'
+              sound_mode: icon
+              source: icon
+              artwork: cover
+              entity: media_player.kitchen_speaker
+              info: scroll
+              shortcuts:
+                buttons:
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s8712&partnerId=16
+                    #image: /local/images/radio_stations/ECO99FM.png
+                    cover: /local/images/radio_stations/ECO99FM.png
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s68320&partnerId=16
+                    #image: /local/images/radio_stations/GALGALTZ.jpg
+                    cover: /local/images/radio_stations/GALGALTZ.jpg
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s45475&partnerId=16
+                    #image: /local/images/radio_stations/GIMEL.png
+                    cover: /local/images/radio_stations/GIMEL.png
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s26087&partnerId=16
+                    #image: /local/images/radio_stations/RADIOS100FM.png
+                    cover: /local/images/radio_stations/RADIOS100FM.png
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s24889&partnerId=16
+                    #image: /local/images/radio_stations/BET.png
+                    cover: /local/images/radio_stations/BET.png
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s9067&partnerId=16
+                    #image: /local/images/radio_stations/SKY_RADIO_101.png
+                    cover: /local/images/radio_stations/SKY_RADIO_101.png
+                    type: channel
+                  - id: >-
+                      http://opml.radiotime.com/Tune.ashx?id=s84481&partnerId=16
+                    #image: /local/images/radio_stations/FFH_Die_80er.png
+                    cover: /local/images/radio_stations/FFH_Die_80er.png
+                    type: channel
+                columns: 4
+                column_height: 100
+        double_tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
             hide_header: true
             deviceID:
               - this
             style: |
               :host .content {
                 width: 80vw;
-                height: 75vh;
-              }
-            title: UnRAID Server
-            card:
-              type: iframe
-              url: !secret squeezebox_url
-              aspect: 100%
-        double_tap_action:
-          action: more-info
-        hold_action:
-          action: fire-dom-event
-          browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 80vw;
-                height: 75vh;
+                height: 80vh;
               }
             title: Logitech Media Server
             card:
               type: iframe
               url: !secret squeezebox_url
+              aspect: 100%
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            hide_header: true
+            deviceID:
+              - this
+            style: |
+              :host .content {
+                width: 80vw;
+                height: 80vh;
+              }
+            title: Logitech Media Server
+            card:
+              type: iframe
+              url: !secret squeezebox_url_regular
               aspect: 100%
 
 ##     ## ##     ##    ###     ######  
@@ -1619,11 +1594,30 @@ cards:
                     - entity: {{ entity2 }}
                   {% endif %}
                   {% endfor %}
+                {% elif (card_type == "supervisor") %}
+                  type: markdown
+                  entity_id: {{ entity }}
+                  {% raw %}
+                  content: |
+                    {% if state_attr('sensor.supervisor_updates', 'current_version') != state_attr('sensor.supervisor_updates', 'newest_version') %}
+                    Supervisor updates
+                    ------------------
+                    **Supervisor** _{{ state_attr('sensor.supervisor_updates', 'current_version') }}_ -> _{{ state_attr('sensor.supervisor_updates', 'newest_version') }}_
+                    {% endif %}
+
+                    Addons updates:
+                    ---------------
+                    {% for addon in state_attr('sensor.supervisor_updates', 'addons') %}
+                    **{{ addon.name }}** _{{ addon["version"] }}_ -> _{{ addon["version_latest"] }}_
+                    {% endfor %}
+                  {% endraw %}
                 {% elif (card_type == "hacs") %}
                   type: markdown
                   entity_id: {{ entity }}
                   {% raw %}
                   content: |
+                    HACS updates:
+                    -------------
                     {% for repo in state_attr('sensor.hacs', 'repositories') %}
                     **{{ repo.display_name }}** _{{ repo["installed_version"] }}_ -> _{{ repo["available_version"] }}_
                     {% endfor %}
