@@ -21,7 +21,7 @@ input_number:
     unit_of_measurement: "min"
     #    initial: 30
     min: 0
-    max: 180
+    max: 240
     step: 5
 
   boiler_disable_schedulers_temperature:
