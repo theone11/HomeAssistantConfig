@@ -52,14 +52,17 @@ input_number:
 automation:
 
   # Trigger    - Start Time 1
-  # Conditions - Enable on and day-of-week true
-  # Actions    - turn on water boiler, delay timer duration 1, turn of water boiler
+  # Conditions - Switch off, Enable on and day-of-week true
+  # Actions    - turn on water boiler, turn of duration timer (OLD delay timer duration 1, turn of water boiler)
   - alias: boiler_switch_timer1
     description: Water Boiler Timer
     trigger: 
       platform: time
       at: input_datetime.boiler_switch_start_time1
     condition:
+      - condition: state
+        entity_id: switch.boiler_switch
+        state: 'off'
       - condition: state
         entity_id: input_boolean.boiler_switch_scheduler_enable1
         state: 'on'
@@ -76,10 +79,15 @@ automation:
     action:
       - service: switch.turn_on
         entity_id: switch.boiler_switch
-      - delay:
-          minutes: "{{ states('input_number.boiler_switch_timer_duration1') | int }}"
-      - service: switch.turn_off
-        entity_id: switch.boiler_switch
+      - service: timer.start
+        data_template:
+          entity_id: timer.boiler_switch_on_duration_timer
+          duration:
+            minutes: "{{ states('input_number.boiler_switch_timer_duration1') | int }}"
+      # - delay:
+      #     minutes: "{{ states('input_number.boiler_switch_timer_duration1') | int }}"
+      # - service: switch.turn_off
+      #   entity_id: switch.boiler_switch
 
 
 ###################################
