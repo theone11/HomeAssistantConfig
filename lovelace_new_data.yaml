@@ -1192,49 +1192,18 @@ cards:
               - this
             style: |
               :host .content {
-                width: 40vw;
+                width: 20vw;
               }
             title: Vacuum {{ entity.capitalize() }}
             card:
-              type: grid
-              columns: 2
-              square: false
-              cards:
-                - type: 'custom:vacuum-card'
-                  compact_view: false
-                  entity: vacuum.vacuum_{{ entity }}
-                  image: default
-                  show_name: true
-                  show_toolbar: true
-                  stats:
-                    cleaning:
-                      - attribute: cleaned_area
-                        subtitle: Cleaning area
-                        unit: m2
-                      - attribute: cleaning_time
-                        subtitle: Cleaning time
-                        unit: minutes
-                    default:
-                      - attribute: filter_left
-                        subtitle: Filter
-                        unit: hours
-                      - attribute: side_brush_left
-                        subtitle: Side brush
-                        unit: hours
-                      - attribute: main_brush_left
-                        subtitle: Main brush
-                        unit: hours
-                      - attribute: sensor_dirty_left
-                        subtitle: Sensors
-                        unit: hours
-                - type: picture-glance
-                  image: ''
-                  entities: []
-                  camera_image: camera.vacuum_{{ entity }}
-                  tap_action:
-                    action: none
-                  hold_action:
-                    action: none
+              type: custom:xiaomi-vacuum-map-card
+              map_source:
+                camera: camera.vacuum_{{ entity }}
+              calibration_source:
+                camera: true
+              entity: vacuum.vacuum_{{ entity }}
+              vacuum_platform: default
+              map_locked: true
         double_tap_action:
           action: more-info
         hold_action:

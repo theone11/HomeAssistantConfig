@@ -5,22 +5,29 @@
 camera:
   - platform: xiaomi_cloud_map_extractor
     name: "Vacuum Bottom"
-    host: 192.168.1.177
+    host: !secret vacuum_bottom_host
     token: !secret vacuum_bottom_token
     username: !secret xiaomi_username
     password: !secret xiaomi_password
     country: !secret xiaomi_country
+    draw: ['all']
+    attributes:
+      - calibration_points
     scan_interval:
-      seconds: 120
+      seconds: 60
+
   - platform: xiaomi_cloud_map_extractor
     name: "Vacuum Top"
-    host: 192.168.1.178
+    host: !secret vacuum_top_host
     token: !secret vacuum_top_token
     username: !secret xiaomi_username
     password: !secret xiaomi_password
     country: !secret xiaomi_country
+    draw: ['all']
+    attributes:
+      - calibration_points
     scan_interval:
-      seconds: 120
+      seconds: 60
 
 sensor:
   - platform: template
