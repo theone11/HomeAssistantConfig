@@ -103,7 +103,7 @@
 
 #                           number,        entity                                        , state_t_f, state,      icon,             card_type
 {% set statusbar_entities = [("1", "binary_sensor.updater"                                     , "t", "on", "mdi:download"      , "more-info"),
-                             ("2", "sensor.supervisor_updates"                                 , "f", "0" , "mdi:cloud-download", "supervisor"),
+                             ("2", "group.updates"                                             , "t", "on", "mdi:cloud-download", "ha_updates"),
                              ("3", "sensor.hacs"                                               , "f", "0" , "mdi:cloud-download", "hacs"),
                              ("4", "sensor.hp_deskjet_4620_series_ink_low"                     , "f", "0" , "mdi:printer-alert" , "entities"),
                              ("5", "sensor.water_consumption_limit_exceeded"                   , "f", "0" , "mdi:water-alert"   , "history-graph")] %}
@@ -1579,21 +1579,15 @@ cards:
                     - entity: {{ entity2 }}
                   {% endif %}
                   {% endfor %}
-                {% elif (card_type == "supervisor") %}
+                {% elif (card_type == "ha_updates") %}
                   type: markdown
                   entity_id: {{ entity }}
                   {% raw %}
                   content: |
-                    {% if state_attr('sensor.supervisor_updates', 'current_version') != state_attr('sensor.supervisor_updates', 'newest_version') %}
-                    Supervisor updates
-                    ------------------
-                    **Supervisor** _{{ state_attr('sensor.supervisor_updates', 'current_version') }}_ -> _{{ state_attr('sensor.supervisor_updates', 'newest_version') }}_
-                    {% endif %}
-
-                    Addons updates:
-                    ---------------
-                    {% for addon in state_attr('sensor.supervisor_updates', 'addons') %}
-                    **{{ addon.name }}** _{{ addon["version"] }}_ -> _{{ addon["version_latest"] }}_
+                    {% for updates in state_attr('group.updates', 'entity_id') %}
+                      {% if states(updates) == "on" %}
+                        ## <img src="{{ state_attr(updates, 'entity_picture') }}" alt="-" width="20"/> **{{ state_attr(updates, 'title') }}** _{{ state_attr(updates, 'installed_version') }}_ -> _{{ state_attr(updates, 'latest_version') }}_
+                      {% endif %}
                     {% endfor %}
                   {% endraw %}
                 {% elif (card_type == "hacs") %}
