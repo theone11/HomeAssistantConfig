@@ -9,6 +9,7 @@
 ##     ## ##       ##        ##  ##  ####  ##     ##     ##  ##     ## ##  ####       ## 
 ##     ## ##       ##        ##  ##   ###  ##     ##     ##  ##     ## ##   ### ##    ## 
 ########  ######## ##       #### ##    ## ####    ##    ####  #######  ##    ##  ######  
+# DEFINITIONS
 
 {% set border_radius = 12 %}
 {% set background_color = 'rgba(255, 255, 255, 0.1)' %}
@@ -96,7 +97,7 @@
 {% set navigations = ["kfar_yona", "petach_tikva", "work_aviva", "work_dan"] %}
 
 {% set statusbar_color = 'red' %}
-{% set statusbar_left, statusbar_top = namespace(value=97), 0 %}
+{% set statusbar_left, statusbar_top = namespace(value=97), 1 %}
 {% set statusbar_left_offset = -1.5 %}
 {% set statusbar_scaleX, statusbar_scaleY = 0.8, 0.8 %}
 
@@ -123,7 +124,7 @@
                             ("5", "sensor.water_consumption_monthly_prediction")] %}
 
 {% set settings_color = 'gray' %}
-{% set settings_left, settings_top = 98.5, 0 %}
+{% set settings_left, settings_top = 98.5, 1 %}
 {% set settings_scaleX, settings_scaleY = 0.8, 0.8 %}
 #                             entity                                              , column, section, label                 , type
 {% set settings_entities = [("input_number.hp_deskjet_4620_series_ink_low_limit"       , "1", "y", "Printers"              , "slider"),
@@ -184,6 +185,7 @@
 ##     ## ######### ##       ##   ##   ##     ##       ## 
 ##     ## ##     ## ##    ## ##    ##  ##     ## ##    ## 
 ##     ## ##     ##  ######  ##     ##  #######   ######  
+# MACROS
 
 {% macro create_schedulers_icons(entity, left, top) -%}
 {% if (entity == "hvac_hallway") or (entity == "hvac_livingroom") %}
@@ -348,6 +350,7 @@
       ##    ##    ######### ##   ##      ##    
 ##    ##    ##    ##     ## ##    ##     ##    
  ######     ##    ##     ## ##     ##    ##    
+# START
 
 badges: []
 icon: 'mdi:home-outline'
@@ -366,6 +369,7 @@ cards:
 ##         ##  ##       ##     ##    ##    ##       ##   ##         ## 
 ##         ##  ##    ## ##     ##    ##    ##       ##    ##  ##    ## 
 ##        ####  ######   #######     ##    ######## ##     ##  ######  
+# PICTURES
 
       {% for entity, group, left, top, scaleX, scaleY, deg in lights %}
       {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) %}
@@ -396,6 +400,7 @@ cards:
 ##  ##  ## ##       #########    ##    ##     ## ##       ##   ##   
 ##  ##  ## ##       ##     ##    ##    ##     ## ##       ##    ##  
  ###  ###  ######## ##     ##    ##    ##     ## ######## ##     ## 
+#WEATHER
 
       - type: conditional
         conditions:
@@ -413,7 +418,7 @@ cards:
             style:
               #border: 1px solid red
               left: -2% #-3% 0%
-              top: -3%  #-3% 0%
+              top: -2%  #-3% 0%
               transform: 'translate(0%, 0%) scale(0.9, 0.9)'
           - type: image
             image: /local/images/floorplan/transparent_square.png
@@ -457,6 +462,7 @@ cards:
 ##       ######### ##       ##       ##  #### ##     ## ######### ##   ##   
 ##    ## ##     ## ##       ##       ##   ### ##     ## ##     ## ##    ##  
 ######  ##     ## ######## ######## ##    ## ########  ##     ## ##     ##  
+#CALENDAR
 
       - type: conditional
         conditions:
@@ -488,7 +494,7 @@ cards:
             hoursFormat: 'HH:mm'
             style:
               left: 30%
-              top: -2%
+              top: -1%
               width: 20%
               transform: 'translate(0%, 0%) scale(1, 0.96)'
 
@@ -499,6 +505,7 @@ cards:
 ##        ##  ##    ##  ##     ##    ##          ## 
 ##        ##  ##    ##  ##     ##    ##    ##    ## 
 ######## ####  ######   ##     ##    ##     ######  
+# LIGHTS
 
       # ------------------------------
       # Define LIGHTS active areas
@@ -583,6 +590,7 @@ cards:
 ##       ##     ##  ##   ##  ##       ##   ##         ## 
 ##    ## ##     ##   ## ##   ##       ##    ##  ##    ## 
  ######   #######     ###    ######## ##     ##  ######  
+#COVERS
 
       # -----------------------------------
       # -----------------------------------
@@ -739,6 +747,7 @@ cards:
  ##  ##   ##   ##   ##    ##  ##    ##  #########    ##     ##  ##     ## ##  ####
  ##  ##    ##  ##    ##   ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ###
 #### ##     ## ##     ## ####  ######   ##     ##    ##    ####  #######  ##    ##
+# IRRIGATION
 
       # -----------------------------------------------
       # -----------------------------------------------
@@ -871,6 +880,7 @@ cards:
    ##    ##       ##     ## ##        ##       ##   ##   #########    ##    ##     ## ##   ##   ##                ## ##       ##  ####       ## ##     ## ##   ##         ## 
    ##    ##       ##     ## ##        ##       ##    ##  ##     ##    ##    ##     ## ##    ##  ##          ##    ## ##       ##   ### ##    ## ##     ## ##    ##  ##    ## 
    ##    ######## ##     ## ##        ######## ##     ## ##     ##    ##     #######  ##     ## ########     ######  ######## ##    ##  ######   #######  ##     ##  ######  
+# TEMPERATURE SENSORS
 
       {% for entity, category, left, top in temperature_sensors %}
       - type: conditional
@@ -960,6 +970,7 @@ cards:
 ##  ##  ## #########    ##    ##       ##   ##      ##     ## ##     ##  ##  ##       ##       ##   ##   
 ##  ##  ## ##     ##    ##    ##       ##    ##     ##     ## ##     ##  ##  ##       ##       ##    ##  
  ###  ###  ##     ##    ##    ######## ##     ##    ########   #######  #### ######## ######## ##     ## 
+# WATER BOILER
 
       # -----------------------------------------------
       # -----------------------------------------------
@@ -1171,6 +1182,7 @@ cards:
  ##   ##  ######### ##       ##     ## ##     ## ##     ##       ## 
   ## ##   ##     ## ##    ## ##     ## ##     ## ##     ## ##    ## 
    ###    ##     ##  ######   #######   #######  ##     ##  ######  
+# VACUUMS
 
       {% for entity, left, top in vacuums %}
       
@@ -1192,7 +1204,7 @@ cards:
               - this
             style: |
               :host .content {
-                width: 20vw;
+                width: 25vw;
               }
             title: Vacuum {{ entity.capitalize() }}
             card:
@@ -1231,6 +1243,7 @@ cards:
 ##     ## ##       ##     ##  ##  #########    ##        ##       #########    ##    ##       ##   ##         ## 
 ##     ## ##       ##     ##  ##  ##     ##    ##        ##       ##     ##    ##    ##       ##    ##  ##    ## 
 ##     ## ######## ########  #### ##     ##    ##        ######## ##     ##    ##    ######## ##     ##  ######  
+# MEDIA PLAYERS
 
       - type: state-icon
         entity: media_player.kitchen_speaker
@@ -1339,6 +1352,7 @@ cards:
 ##     ##  ##   ##  ######### ##       
 ##     ##   ## ##   ##     ## ##    ## 
 ##     ##    ###    ##     ##  ######  
+# HVAC
 
       # --------------------------------------------
       # --------------------------------------------
@@ -1458,6 +1472,7 @@ cards:
 ##  #### #########  ##   ##   ##  ##    ##  #########    ##     ##  ##     ## ##  #### 
 ##   ### ##     ##   ## ##    ##  ##    ##  ##     ##    ##     ##  ##     ## ##   ### 
 ##    ## ##     ##    ###    ####  ######   ##     ##    ##    ####  #######  ##    ## 
+# NAVIGATION
 
 # Navigation images/logod should be 300x300 with transparent background
 
@@ -1516,6 +1531,7 @@ cards:
       ##    ##    #########    ##    ##     ##       ##       ##     ## ######### ##   ##   
 ##    ##    ##    ##     ##    ##    ##     ## ##    ##       ##     ## ##     ## ##    ##  
  ######     ##    ##     ##    ##     #######   ######        ########  ##     ## ##     ## 
+# STATUS BAR
 
       {% for number, entity, state_t_f, state, icon, card_type in statusbar_entities %}
       - type: conditional
@@ -1611,6 +1627,7 @@ cards:
       ## ##          ##       ##     ##  ##  #### ##    ##        ## 
 ##    ## ##          ##       ##     ##  ##   ### ##    ##  ##    ## 
  ######  ########    ##       ##    #### ##    ##  ######    ######  
+# SETTINGS
 
       - type: icon
         icon: mdi:cog
@@ -1666,6 +1683,7 @@ cards:
 ##     ## ##  #### ##   ##   #########  ##  ##     ## 
 ##     ## ##   ### ##    ##  ##     ##  ##  ##     ## 
  #######  ##    ## ##     ## ##     ## #### ########  
+# UNRAID
 
       {{ create_warning_background("unraid_problem", "binary_sensor.unraid", 3, 80) }}
 
@@ -1706,6 +1724,7 @@ cards:
 ##  ##  ## #########    ##    ##       ##   ##   
 ##  ##  ## ##     ##    ##    ##       ##    ##  
  ###  ###  ##     ##    ##    ######## ##     ## 
+# WATER
 
       - type: state-icon
         entity: sensor.water_meter_16452690_last_reading
@@ -1762,6 +1781,7 @@ cards:
 ######### ##          ##     ##  ##     ## ##  ####       ## 
 ##     ## ##    ##    ##     ##  ##     ## ##   ### ##    ## 
 ##     ##  ######     ##    ####  #######  ##    ##  ######  
+# ACTIONS
 
       {% for entity in actions_entities %}
       - type: state-icon
@@ -1788,6 +1808,8 @@ cards:
 ##       ##     ## ##  #### ##     ##  ##     ##     ##  ##     ## ##  #### ######### ##             ##       ##  ####    ##     ##     ##       ##    
 ##    ## ##     ## ##   ### ##     ##  ##     ##     ##  ##     ## ##   ### ##     ## ##             ##       ##   ###    ##     ##     ##       ##    
  ######   #######  ##    ## ########  ####    ##    ####  #######  ##    ## ##     ## ########       ######## ##    ##    ##    ####    ##       ##    
+# CONDITIONAL ENTITY
+# Physical enities that appear only on certain condition
 
       {% for entity, state, left, top, icon, tap_action in conditional_entities %}
 
@@ -1820,6 +1842,7 @@ cards:
 ##   ##   ##       ##       ##   ##   ##             ## ##     ##                ##   ##   ##       ##       ##     ## ######### ##     ## 
 ##    ##  ##       ##       ##    ##  ##       ##    ## ##     ##                ##    ##  ##       ##       ##     ## ##     ## ##     ## 
 ##     ## ######## ##       ##     ## ########  ######  ##     ##                ##     ## ######## ########  #######  ##     ## ########  
+# REFRESH RELOAD
 
       - type: icon
         icon: mdi:refresh

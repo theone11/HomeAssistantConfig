@@ -1,15 +1,15 @@
 homeassistant:
   # Name of the location where Home Assistant is running
-  name: Home
+  #name: Home
   # Location required to calculate the time the sun rises and sets
-  latitude: !secret latitude
-  longitude: !secret longitude
+  #latitude: !secret latitude
+  #longitude: !secret longitude
   # Impacts weather/sunrise data (altitude above sea level in meters)
-  elevation: 35
+  #elevation: 35
   # metric for Metric, imperial for Imperial
-  unit_system: metric
+  #unit_system: metric
   # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-  time_zone: "Asia/Jerusalem"
+  #time_zone: "Asia/Jerusalem"
   # Customization file
   customize: !include customize.yaml
   # Packages
@@ -121,10 +121,10 @@ panel_iframe:
 weather:
 
   # Dark Sky Dialy
-  - platform: darksky
-    api_key: !secret darksky_api_key
-    name: 'DarkSky Daily'
-    mode: daily
+  # - platform: darksky
+  #   api_key: !secret darksky_api_key
+  #   name: 'DarkSky Daily'
+  #   mode: daily
 
   # Dark Sky Hourly
   - platform: darksky
@@ -209,9 +209,9 @@ browser_mod:
     - light
     - media_player
 
-google:
-  client_id: !secret google_client_id
-  client_secret: !secret google_client_secret
+#google:
+#  client_id: !secret google_client_id
+#  client_secret: !secret google_client_secret
 
 #tuya:
 #  username: !secret tuya_username
