@@ -253,10 +253,21 @@ group:
     entities:
       - update.home_assistant_core_update
       - update.home_assistant_operating_system_update
-      - update.check_home_assistant_configuration_update
       - update.home_assistant_supervisor_update
       - update.esphome_update
       - update.check_home_assistant_configuration_update
       - update.samba_backup_update
       - update.samba_share_update
       - update.studio_code_server_update
+
+sensor:
+  - platform: template
+    sensors:
+      update_available:
+        icon_template: mdi:cloud-download
+        value_template: >
+          {% if (states('group.updates') == 'on') or (states('sensor.hacs') > 0) %}
+            {{ 1 }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
