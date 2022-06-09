@@ -11,6 +11,9 @@
 ########  ######## ##       #### ##    ## ####    ##    ####  #######  ##    ##  ######  
 # DEFINITIONS
 
+#--------------------------------------------------------------------------------------------------
+# General
+#--------------------------------------------------------------------------------------------------
 {% set border_radius = 12 %}
 {% set background_color = 'rgba(255, 255, 255, 0.1)' %}
 {% set background_color_alert = 'rgba(255, 0, 0, 0.2)' %}
@@ -29,7 +32,12 @@
                ("friday"   , "6", "Fri", "שישי"),
                ("saturday" , "7", "Sat", "שבת")] %}
 
-# Lights - List all active areas if more than one exists - must be consecutive
+#--------------------------------------------------------------------------------------------------
+# Lights
+#  - List all active areas.
+#    If more than one exists with the same name - must be consecutive
+#  - List groups for group buttons
+#--------------------------------------------------------------------------------------------------
 #                 entity                          , group       , left, top, scaleX, scaleY, deg)
 {% set lights = [("diningroom_light"              , "downstairs", 69  , 67  , 1.3, 2  , 0),
                  ("kitchen_light_ceiling"         , "downstairs", 62.5, 82  , 1.1, 1.2, 0),
@@ -60,6 +68,11 @@
                        ("upstairs"  , 28, 74),
                        ("roof"      , 3 , 74)] %}
 
+#--------------------------------------------------------------------------------------------------
+# Covers
+#  - List active area (windows/doors)
+#  - List groups for group buttons
+#--------------------------------------------------------------------------------------------------
 #                 entity                     , group       , left, top, scaleX, scaleY, tap_action
 {% set covers = [("diningroom_window_shutter", "downstairs", 72.9 , 68.5, 0.3 , 1.8 ,  "toggle"),
                  ("livingroom_window_shutter", "downstairs", 72.9 , 50.5, 0.3 , 1.8 ,  "toggle"),
@@ -74,28 +87,47 @@
 {% set cover_groups = [("downstairs", 53, 68),
                        ("upstairs"  , 28, 68)] %}
 
+#--------------------------------------------------------------------------------------------------
+# Boiler
+#--------------------------------------------------------------------------------------------------
 #                   entity                      , type  , left, top, display_name)
 {% set boilers = [("boiler_switch"             , "switch", 3 , 68, "Water Boiler")] %}
 
+#--------------------------------------------------------------------------------------------------
+# Irrigation
+#--------------------------------------------------------------------------------------------------
 #                             entity                      , type  , left, top, display_name)
 {% set irrigation_valves = [("irrigation_sprinkler_west" , "switch", 78, 34, "West Sprinklers"),
                             ("irrigation_sprinkler_north", "switch", 82, 51, "North Sprinklers"),
                             ("irrigation_drips"          , "switch", 87, 55, "Drips")] %}
 
+#--------------------------------------------------------------------------------------------------
+# Vacuums
+#--------------------------------------------------------------------------------------------------
 #                 entity   , left, top
 {% set vacuums = [("bottom", 53 , 80),
                   ("top"   , 28 , 80)] %}
 
+#--------------------------------------------------------------------------------------------------
+# HVAC
+#--------------------------------------------------------------------------------------------------
 #                 entity     , left, top
 {% set hvacs = [("livingroom", 53 , 92),
                 ("hallway"   , 28 , 92)] %}
 
-# Navigation entities are placed from bottom to top starting from navi_top value
+#--------------------------------------------------------------------------------------------------
+# Navigation
+#  - Entities are placed from bottom to top starting from navi_top value
+#--------------------------------------------------------------------------------------------------
 {% set navi_left, navi_top = 96, namespace(value=94) %}
 {% set navi_left_offset, navi_top_offset = 1, 3 %}
 {% set navi_scaleX, navi_scaleY, navi_scaleT = 0.3, 0.3, 3.5 %}
 {% set navigations = ["kfar_yona", "petach_tikva", "work_aviva", "work_dan"] %}
 
+#--------------------------------------------------------------------------------------------------
+# Statusbar
+#  - Icons are placed from right to left
+#--------------------------------------------------------------------------------------------------
 {% set statusbar_color = 'red' %}
 {% set statusbar_left, statusbar_top = namespace(value=97), 1 %}
 {% set statusbar_left_offset = -1.5 %}
@@ -119,6 +151,12 @@
                             ("3", "sensor.water_meter_16452690_monthly_consumption"),
                             ("3", "sensor.water_consumption_monthly_prediction")] %}
 
+#--------------------------------------------------------------------------------------------------
+# Settings
+#  - Divided into "column" and seperated by "section"
+#    If a sections is defined as "y" then the "label" is used as the header
+#    The type can be either a "slider" or an "entity"
+#--------------------------------------------------------------------------------------------------
 {% set settings_color = 'gray' %}
 {% set settings_left, settings_top = 98.5, 1 %}
 {% set settings_scaleX, settings_scaleY = 0.8, 0.8 %}
@@ -136,6 +174,10 @@
                             ("input_boolean.ui_hide_calendar         "                 , "3", "n", ""                      , "entity"),
                             ("input_boolean.ui_hide_navigation"                        , "3", "n", ""                      , "entity")] %}
 
+#--------------------------------------------------------------------------------------------------
+# Actions
+#  - Buttons are placed from left to right
+#--------------------------------------------------------------------------------------------------
 {% set actions_left, actions_top = namespace(value=60), 3 %}
 {% set actions_left_offset = 8 %}
 {% set actions_scaleX, actions_scaleY = 3, 3 %}
@@ -144,6 +186,10 @@
                            ("input_boolean.goodnight"),
                            ("cover.garage_door"      )] %}
 
+#--------------------------------------------------------------------------------------------------
+# Temperature Sensors
+#  - They include humidity and battery values as well
+#--------------------------------------------------------------------------------------------------
 {% set temperature_sensors_font_size = 75 %}
 #                              entity                                  , category       , left, top
 {% set temperature_sensors = [("master_bedroom_temperature"            , "room"         , 36.5, 93  ),
@@ -167,6 +213,10 @@
                           ("ella_battery_level"           , "room"         , 36  , 56  ),
                           ("tomer_battery_level"          , "room"         , 28  , 61.5)] %}
 
+#--------------------------------------------------------------------------------------------------
+# Conditional Entities
+#  - Will only be displayed if condition "state" active
+#--------------------------------------------------------------------------------------------------
 {% set conditional_color = "red" %}
 #                             entity                                                   , state, left, top, icon     , tap_action
 {% set conditional_entities = [("switch.roof_right_table_power_relay"                    , "on", 10 , 67, "power"   , "toggle"),
