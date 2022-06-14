@@ -1574,11 +1574,15 @@ cards:
                   {% raw %}
                   content: |
                     # Home Assistant updates:
-                    {% for updates in state_attr('group.updates', 'entity_id') %}
-                      {% if states(updates) == "on" %}
+                    {% if states('group.updates') == "on" %}
+                      {% for updates in state_attr('group.updates', 'entity_id') %}
+                        {% if states(updates) == "on" %}
                       - <img src="{{ state_attr(updates, 'entity_picture') }}" alt="-" width="15"/> **{{ state_attr(updates, 'title') }}** _{{ state_attr(updates, 'installed_version') }}_ -> _{{ state_attr(updates, 'latest_version') }}_
-                      {% endif %}
-                    {% endfor %}
+                        {% endif %}
+                      {% endfor %}
+                    {% else %}
+                      - No updates
+                    {% endif %}
                     ---
                     # HACS updates:
                     {% if states('sensor.hacs') != "0" %}

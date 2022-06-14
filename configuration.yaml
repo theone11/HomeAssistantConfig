@@ -102,11 +102,11 @@ panel_iframe:
     icon: mdi:music
     url: !secret squeezebox_url
     require_admin: false
-  unraid:
-    title: unRAID
-    icon: mdi:server
-    url: !secret unraid_url
-    require_admin: true
+  # unraid:
+  #   title: unRAID
+  #   icon: mdi:server
+  #   url: !secret unraid_url
+  #   require_admin: true
   # unraid_dhcpserver:
   #   title: DHCP Server
   #   icon: mdi:server-network
@@ -180,6 +180,17 @@ sensor:
     scan_interval:
       minutes: 120
 
+  - platform: template
+    sensors:
+      update_available:
+        icon_template: mdi:cloud-download
+        value_template: >
+          {% if (states('group.updates') == 'on') or (states('sensor.hacs') > "0") %}
+            {{ 1 }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+
 # Sensor to track available updates for supervisor & addons
   # - platform: command_line
   #   name: Supervisor updates
@@ -223,6 +234,12 @@ browser_mod:
 #   logs:
 #     homeassistant.components.onvif: debug
 #     homeassistant.core: debug
+logger:
+  default: info
+  logs:
+    homeassistant.components.google: debug
+    oauth2client: debug
+    oauth2client.client: debug
 
 input_number:
   ui_water_boiler_graph_hours:
@@ -259,15 +276,3 @@ group:
       - update.samba_backup_update
       - update.samba_share_update
       - update.studio_code_server_update
-
-sensor:
-  - platform: template
-    sensors:
-      update_available:
-        icon_template: mdi:cloud-download
-        value_template: >
-          {% if (states('group.updates') == 'on') or (states('sensor.hacs') > 0) %}
-            {{ 1 }}
-          {% else %}
-            {{ 0 }}
-          {% endif %}
