@@ -229,17 +229,16 @@ browser_mod:
 #  password: !secret password
 #  country_code: !secret tuya_country_code
 
-# logger:
-#   default: warn
-#   logs:
-#     homeassistant.components.onvif: debug
-#     homeassistant.core: debug
-logger:
-  default: info
-  logs:
-    homeassistant.components.google: debug
-    oauth2client: debug
-    oauth2client.client: debug
+#logger:
+#  default: info
+#  logs:
+#    homeassistant.components.onvif: debug
+#    homeassistant.core: debug
+#    homeassistant.components.google: debug
+#    oauth2client: debug
+#    oauth2client.client: debug
+#    custom_components.hacs: debug
+#    aiogithubapi: debug
 
 input_number:
   ui_water_boiler_graph_hours:

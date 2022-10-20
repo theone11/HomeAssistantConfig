@@ -524,11 +524,11 @@ cards:
             maxDaysToShow: 14
             maxEventCount: 6
             showLocation: true
-            showMonth: true
+            showMonth: false
             showWeekDay: true
             showDate: false
             showDescription: false
-            showNoEventsForToday: true
+            showNoEventsForToday: false
             disableEventLink: true
             disableLocationLink: true
             defaultMode: Event
@@ -538,6 +538,8 @@ cards:
             europeanDate: false
             dateFormat: 'LL'
             hoursFormat: 'HH:mm'
+            showMultiDay: false
+            showMultiDayEventParts: true
             style:
               left: 30%
               top: -1%
