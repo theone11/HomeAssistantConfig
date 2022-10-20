@@ -299,94 +299,94 @@
 #        S_HVAC  - Start HVAC
 
 {% macro create_schedulers_popup(entity, scheduler_type) -%}
-              {% if (scheduler_type == "S_HVAC") %}
-              {% set num_schedulers = 4 %}
-              {% set schedulers = ['1', '2', '3', '4'] %}
-              {% else %}
-              {% set num_schedulers = 2 %}
-              {% set schedulers = ['1', '2'] %}
-              {% endif %}
-              type: grid
-              columns: {{ num_schedulers }}
-              square: false
-              cards:
-                {% for s in schedulers %}
-                - type: grid
-                  columns: 1
-                  square: false
-                  title: Schedule {{ s }}
-                  cards:
-                    {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
-                    - type: grid
-                      columns: 7
-                      square: false
-                      cards:
-                        {% for day, number, name, name_he in days %}
-                        - type: button
-                          entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
-                          name: {{ name_he }}
-                          icon: mdi:numeric-{{ number }}-box-outline
-                          show_name: true
-                          show_icon: true
-                        {% endfor %}
-                    {% endif %}
-                    - type: entities
-                      # icon: 'mdi:timer-outline'
-                      show_header_toggle: false
-                      state_color: false
-                      # title: Schedule {{ s }}
-                      entities:
-                        {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
-                        # - type: section
-                        - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
-                        - type: 'custom:time-picker-card'
-                          entity: input_datetime.{{ entity }}_start_time{{ s }}
-                          layout:
-                            embedded: true
-                            name: inside
-                            align_controls: right
+                {% if (scheduler_type == "S_HVAC") %}
+                {% set num_schedulers = 4 %}
+                {% set schedulers = ['1', '2', '3', '4'] %}
+                {% else %}
+                {% set num_schedulers = 2 %}
+                {% set schedulers = ['1', '2'] %}
+                {% endif %}
+                type: grid
+                columns: {{ num_schedulers }}
+                square: false
+                cards:
+                  {% for s in schedulers %}
+                  - type: grid
+                    columns: 1
+                    square: false
+                    title: Schedule {{ s }}
+                    cards:
+                      {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
+                      - type: grid
+                        columns: 7
+                        square: false
+                        cards:
+                          {% for day, number, name, name_he in days %}
+                          - type: button
+                            entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
+                            name: {{ name_he }}
+                            icon: mdi:numeric-{{ number }}-box-outline
+                            show_name: true
+                            show_icon: true
+                          {% endfor %}
+                      {% endif %}
+                      - type: entities
+                        # icon: 'mdi:timer-outline'
+                        show_header_toggle: false
+                        state_color: false
+                        # title: Schedule {{ s }}
+                        entities:
+                          {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
+                          # - type: section
+                          - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+                          - type: 'custom:time-picker-card'
+                            entity: input_datetime.{{ entity }}_start_time{{ s }}
+                            layout:
+                              embedded: true
+                              name: inside
+                              align_controls: right
+                            {% endif %}
+                          {% if (scheduler_type == "S_HVAC") %}
+                          # - type: section
+                          - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+                          - type: 'custom:simple-thermostat'
+                            entity: climate.{{ entity }}_virtual_{{ s }}
+                            header: false
+                            setpoints:
+                            layout:
+                              step: row
+                              mode:
+                                names: false
+                                icons: true
+                                headings: false
+                            decimals: 0
+                            step_size: 1
+                            hide:
+                              state: true
+                              temperature: true
+                            control:
+                              hvac: true
+                              fan:
+                                "low":
+                                  icon: mdi:fan-speed-1
+                                "mid":
+                                  icon: mdi:fan-speed-2
+                                "high":
+                                  icon: mdi:fan-speed-3
+                          - type: 'custom:time-picker-card'
+                            entity: input_datetime.{{ entity }}_start_time{{ s }}
+                            layout:
+                              embedded: true
+                              name: inside
+                              align_controls: right
                           {% endif %}
-                        {% if (scheduler_type == "S_HVAC") %}
-                        # - type: section
-                        - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
-                        - type: 'custom:simple-thermostat'
-                          entity: climate.{{ entity }}_virtual_{{ s }}
-                          header: false
-                          setpoints:
-                          layout:
-                            step: row
-                            mode:
-                              names: false
-                              icons: true
-                              headings: false
-                          decimals: 0
-                          step_size: 1
-                          hide:
-                            state: true
-                            temperature: true
-                          control:
-                            hvac: true
-                            fan:
-                              "low":
-                                icon: mdi:fan-speed-1
-                              "mid":
-                                icon: mdi:fan-speed-2
-                              "high":
-                                icon: mdi:fan-speed-3
-                        - type: 'custom:time-picker-card'
-                          entity: input_datetime.{{ entity }}_start_time{{ s }}
-                          layout:
-                            embedded: true
-                            name: inside
-                            align_controls: right
-                        {% endif %}
-                        {% if scheduler_type == "DSD" %}
-                        - type: section
-                        - type: 'custom:slider-entity-row'
-                          entity: input_number.{{ entity }}_timer_duration{{ s }}
-                          hide_state: false
-                        {% endif %}
-                {% endfor %}
+                          {% if scheduler_type == "DSD" %}
+                          - type: section
+                          - type: 'custom:slider-entity-row'
+                            entity: input_number.{{ entity }}_timer_duration{{ s }}
+                            hide_state: false
+                          {% endif %}
+                  {% endfor %}
 {%- endmacro %}
 
  ######  ########    ###    ########  ######## 
@@ -479,23 +479,26 @@ cards:
             tap_action:
               action: fire-dom-event
               browser_mod:
-                command: popup
-                deviceID:
-                  - this
-                style: |
-                  :host .content {
-                    width: 80vw;
-                  }
-                title: Hourly Weather Forecast
-                card:
-                  type: 'custom:weather-card'
-                  entity: weather.darksky_hourly
-                  hourly_forecast: true
-                  forecast: true
-                  number_of_forecasts: '18'
-                  details: false
-                  current: false
-                  icons: /local/icons/weather_icons/static/
+                service: browser_mod.popup
+                data:
+                  browser_id: THIS
+                  style: |
+                    --popup-min-width: 80vw;
+                    --popup-border-color: white;
+                  # style: |
+                  #   :host .content {
+                  #     width: 80vw;
+                  #   }
+                  title: Hourly Weather Forecast
+                  content:
+                    type: 'custom:weather-card'
+                    entity: weather.darksky_hourly
+                    hourly_forecast: true
+                    forecast: true
+                    number_of_forecasts: '18'
+                    details: false
+                    current: false
+                    icons: /local/icons/weather_icons/static/
             double_tap_action:
               action: none
             hold_action:
@@ -576,14 +579,17 @@ cards:
           {% if entity == "kitchen_table_light" %}
           action: fire-dom-event
           browser_mod:
-            command: more_info
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 30vw;
-              }
-            entity_id: light.kitchen_table_light_ambilight
+            service: browser_mod.more_info
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 30vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 30vw;
+              #   }
+              entity_id: light.kitchen_table_light_ambilight
           {% else %}
           action: more-info
           {% endif %}
@@ -615,19 +621,19 @@ cards:
         hold_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            title: {{ entity_group.capitalize() }} Lights
-            card:
-              entities:
-                {% for entity, group, left, top, scaleX, scaleY, deg in lights %}
-                {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) and (entity_group == group) %}
-                - light.{{ entity }}
-                {% endif %}
-                {% endfor %}
-              show_header_toggle: false
-              type: entities
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              title: {{ entity_group.capitalize() }} Lights
+              content:
+                entities:
+                  {% for entity, group, left, top, scaleX, scaleY, deg in lights %}
+                  {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) and (entity_group == group) %}
+                  - light.{{ entity }}
+                  {% endif %}
+                  {% endfor %}
+                show_header_toggle: false
+                type: entities
         type: state-icon
       {% endfor %}
 
@@ -665,31 +671,34 @@ cards:
         hold_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 25vw;
-              }
-            title: Cover
-            card:
-              type: 'custom:vertical-slider-cover-card'
-              title: not_shown
-              showSidebar: false
-              panelType: true
-              switchHeight: 150%
-              switchColor: closedColor
-              entities:
-                - entity: cover.{{ entity }}
-              # entities:
-              #   - entity: cover.{{ entity }}
-              #   - entity: cover.{{ entity }}
-              #     full_row: true
-              #     hide_state: true
-              #     type: 'custom:slider-entity-row'
-              # show_header_toggle: false
-              # type: entities
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 20vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 25vw;
+              #   }
+              title: Cover
+              content:
+                type: 'custom:vertical-slider-cover-card'
+                title: not_shown
+                showSidebar: false
+                panelType: true
+                switchHeight: 150%
+                switchColor: closedColor
+                entities:
+                  - entity: cover.{{ entity }}
+                # entities:
+                #   - entity: cover.{{ entity }}
+                #   - entity: cover.{{ entity }}
+                #     full_row: true
+                #     hide_state: true
+                #     type: 'custom:slider-entity-row'
+                # show_header_toggle: false
+                # type: entities
         type: image
       {% endif %}
       {% endfor %}
@@ -730,34 +739,37 @@ cards:
         hold_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 25vw;
-              }
-            title: {{ entity_group.capitalize() }} Shutters
-            card:
-              # entities:
-              type: 'custom:vertical-slider-cover-card'
-              title: not_shown
-              showSidebar: false
-              panelType: true
-              switchHeight: 150%
-              switchColor: closedColor
-              entities:
-                {% for entity, group, left, top, scaleX, scaleY, tap_action in covers %}
-                {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) and (entity_group == group) %}
-                - entity: cover.{{ entity }}
-                # - entity: cover.{{ entity }}
-                #   full_row: true
-                #   hide_state: true
-                #   type: 'custom:slider-entity-row'
-                {% endif %}
-                {% endfor %}
-              # show_header_toggle: false
-              # type: entities
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 25vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 25vw;
+              #   }
+              title: {{ entity_group.capitalize() }} Shutters
+              content:
+                # entities:
+                type: 'custom:vertical-slider-cover-card'
+                title: not_shown
+                showSidebar: false
+                panelType: true
+                switchHeight: 150%
+                switchColor: closedColor
+                entities:
+                  {% for entity, group, left, top, scaleX, scaleY, tap_action in covers %}
+                  {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) and (entity_group == group) %}
+                  - entity: cover.{{ entity }}
+                  # - entity: cover.{{ entity }}
+                  #   full_row: true
+                  #   hide_state: true
+                  #   type: 'custom:slider-entity-row'
+                  {% endif %}
+                  {% endfor %}
+                # show_header_toggle: false
+                # type: entities
         type: state-icon
 
       - icon: {{ icon }}
@@ -821,17 +833,20 @@ cards:
         hold_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                height: 45vh;
-                width: 50vw;
-              }
-            title: {{ display_name }} Scheduler
-            card:
-              {{ create_schedulers_popup(entity, "DSD") }}
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 50vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     height: 45vh;
+              #     width: 50vw;
+              #   }
+              title: {{ display_name }} Scheduler
+              content:
+                {{ create_schedulers_popup(entity, "DSD") }}
         type: state-icon
 
       {{ create_schedulers_icons(entity, left, top) }}
@@ -855,57 +870,60 @@ cards:
         tap_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            style: |
-              :host .content {
-                height: 60vh;
-                width: 30vw;
-              }
-            deviceID:
-              - this
-            title: Irrigation Valves 1-Time Cycle
-            card:
-              type: grid
-              columns: 1
-              square: false
-              cards:
-                - type: entities
-                  show_header_toggle: false
-                  entities:
-                    - label: Choose which irrigation valves to open during the cycle
-                      type: section
-                    - entity: input_boolean.irrigation_sprinkler_west
-                    - entity: input_boolean.irrigation_sprinkler_north
-                    - entity: input_boolean.irrigation_drips
-                    - label: Set cycle duration (seconds) and start
-                      type: section
-                    - entity: input_number.irrigation_set_time
-                    - entity: input_boolean.irrigration_start_stop
-                    - type: section
-                    - entity: timer.irrigation_timer_cycle_duration
-                    - type: section
-                - type: history-graph
-                  hours_to_show: 72
-                  entities:
-                    - entity: switch.irrigation_sprinkler_west
-                    - entity: switch.irrigation_sprinkler_north
-                    - entity: switch.irrigation_drips
+            service: browser_mod.popup
+            data:
+              style: |
+                --popup-max-width: 30vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     height: 60vh;
+              #     width: 30vw;
+              #   }
+              browser_id: THIS
+              title: Irrigation Valves 1-Time Cycle
+              content:
+                type: grid
+                columns: 1
+                square: false
+                cards:
+                  - type: entities
+                    show_header_toggle: false
+                    entities:
+                      - label: Choose which irrigation valves to open during the cycle
+                        type: section
+                      - entity: input_boolean.irrigation_sprinkler_west
+                      - entity: input_boolean.irrigation_sprinkler_north
+                      - entity: input_boolean.irrigation_drips
+                      - label: Set cycle duration (seconds) and start
+                        type: section
+                      - entity: input_number.irrigation_set_time
+                      - entity: input_boolean.irrigration_start_stop
+                      - type: section
+                      - entity: timer.irrigation_timer_cycle_duration
+                      - type: section
+                  - type: history-graph
+                    hours_to_show: 72
+                    entities:
+                      - entity: switch.irrigation_sprinkler_west
+                      - entity: switch.irrigation_sprinkler_north
+                      - entity: switch.irrigation_drips
         double_tap_action:
           action: more-info
         hold_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            title: Irrigation Valves
-            card:
-              entities:
-                - entity: switch.irrigation_sprinkler_west
-                - entity: switch.irrigation_sprinkler_north
-                - entity: switch.irrigation_drips
-              show_header_toggle: false
-              type: entities
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              title: Irrigation Valves
+              content:
+                entities:
+                  - entity: switch.irrigation_sprinkler_west
+                  - entity: switch.irrigation_sprinkler_north
+                  - entity: switch.irrigation_drips
+                show_header_toggle: false
+                type: entities
 
       - type: conditional
         conditions:
@@ -961,51 +979,54 @@ cards:
         tap_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 75vw;
-                height: 75;
-              }
-            title: Temperature & Humidity Sensors
-            card:
-              type: grid
-              columns: 1
-              square: false
-              cards:
-                - type: grid
-                  columns: 1
-                  square: false
-                  cards:
-                    - type: grid
-                      columns: 1
-                      square: false
-                      cards:
-                        - type: 'custom:slider-entity-row'
-                          entity: input_number.ui_water_boiler_graph_hours
-                          hide_state: false
-                    - type: 'custom:config-template-card'
-                      variables:
-                        HOURS: states['input_number.ui_water_boiler_graph_hours'].state
-                      entities:
-                        - input_number.ui_water_boiler_graph_hours
-                      card:
-                        type: history-graph
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 75vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 75vw;
+              #     height: 75vh;
+              #   }
+              title: Temperature & Humidity Sensors
+              content:
+                type: grid
+                columns: 1
+                square: false
+                cards:
+                  - type: grid
+                    columns: 1
+                    square: false
+                    cards:
+                      - type: grid
+                        columns: 1
+                        square: false
+                        cards:
+                          - type: 'custom:slider-entity-row'
+                            entity: input_number.ui_water_boiler_graph_hours
+                            hide_state: false
+                      - type: 'custom:config-template-card'
+                        variables:
+                          HOURS: states['input_number.ui_water_boiler_graph_hours'].state
                         entities:
-                          {% for entity, category, left, top in temperature_sensors %}
-                          {% if category == "room" %}
-                          - entity: sensor.{{ entity }}
-                          {% endif %}
-                          {% endfor %}
-                          {% for entity, category, left, top in humidity_sensors %}
-                          {% if category == "room" %}
-                          - entity: sensor.{{ entity }}
-                          {% endif %}
-                          {% endfor %}
-                        hours_to_show: "${ HOURS }"
-                        refresh_interval: 0
+                          - input_number.ui_water_boiler_graph_hours
+                        card:
+                          type: history-graph
+                          entities:
+                            {% for entity, category, left, top in temperature_sensors %}
+                            {% if category == "room" %}
+                            - entity: sensor.{{ entity }}
+                            {% endif %}
+                            {% endfor %}
+                            {% for entity, category, left, top in humidity_sensors %}
+                            {% if category == "room" %}
+                            - entity: sensor.{{ entity }}
+                            {% endif %}
+                            {% endfor %}
+                          hours_to_show: "${ HOURS }"
+                          refresh_interval: 0
         double_tap_action:
           action: none
         hold_action:
@@ -1041,69 +1062,75 @@ cards:
         tap_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 25vw;
-              }
-            title: Water Boiler
-            card:
-              type: grid
-              columns: 1
-              square: false
-              cards:
-                - type: button
-                  entity: switch.{{ entity }}
-                  show_icon: true
-                  show_name: false
-                  hold_action:
-                    action: more-info
-                  tap_action:
-                    action: toggle
-                - type: 'custom:slider-entity-row'
-                  entity: input_number.{{ entity }}_on_duration
-                  hide_state: false
-                - type: 'custom:time-picker-card'
-                  entity: input_datetime.{{ entity }}_start_time
-                  layout:
-                    embedded: true
-                    name: inside
-                    align_controls: right
-                - type: grid
-                  columns: 2
-                  square: false
-                  cards:
-                    - type: button
-                      entity: input_boolean.{{ entity }}
-                      show_name: false
-                      icon: mdi:power
-                    - type: button
-                      entity: input_boolean.{{ entity }}_one_time
-                      show_name: false
-                      icon: mdi:timer-outline
-                - type: entities
-                  # title: 1-Time Cycle
-                  show_header_toggle: false
-                  entities:
-                    - entity: timer.{{ entity }}_on_duration_timer
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 25vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 25vw;
+              #   }
+              title: Water Boiler
+              content:
+                type: grid
+                columns: 1
+                square: false
+                cards:
+                  - type: button
+                    entity: switch.{{ entity }}
+                    show_icon: true
+                    show_name: false
+                    hold_action:
+                      action: more-info
+                    tap_action:
+                      action: toggle
+                  - type: 'custom:slider-entity-row'
+                    entity: input_number.{{ entity }}_on_duration
+                    hide_state: false
+                  - type: 'custom:time-picker-card'
+                    entity: input_datetime.{{ entity }}_start_time
+                    layout:
+                      embedded: true
+                      name: inside
+                      align_controls: right
+                  - type: grid
+                    columns: 2
+                    square: false
+                    cards:
+                      - type: button
+                        entity: input_boolean.{{ entity }}
+                        show_name: false
+                        icon: mdi:power
+                      - type: button
+                        entity: input_boolean.{{ entity }}_one_time
+                        show_name: false
+                        icon: mdi:timer-outline
+                  - type: entities
+                    # title: 1-Time Cycle
+                    show_header_toggle: false
+                    entities:
+                      - entity: timer.{{ entity }}_on_duration_timer
         double_tap_action:
           action: more-info
         hold_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                height: 45vh;
-                width: 50vw;
-              }
-            title: {{ display_name }} Scheduler
-            card:
-              {{ create_schedulers_popup(entity, "DSD") }}
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 50vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     height: 45vh;
+              #     width: 50vw;
+              #   }
+              title: {{ display_name }} Scheduler
+              content:
+                {{ create_schedulers_popup(entity, "DSD") }}
 
       {{ create_schedulers_icons(entity, left, top) }}
 
@@ -1151,73 +1178,76 @@ cards:
         tap_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 75vw;
-                height: 75;
-              }
-            title: Water Boiler Temperature & Humidity
-            card:
-              type: grid
-              columns: 2
-              square: false
-              cards:
-                - type: grid
-                  columns: 1
-                  square: false
-                  cards:
-                    - type: grid
-                      columns: 1
-                      square: false
-                      cards:
-                        - type: 'custom:slider-entity-row'
-                          entity: input_number.ui_water_boiler_graph_hours
-                          hide_state: false
-                    - type: 'custom:config-template-card'
-                      variables:
-                        HOURS: states['input_number.ui_water_boiler_graph_hours'].state
-                      entities:
-                        - input_number.ui_water_boiler_graph_hours
-                      card:
-                        type: history-graph
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 75vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 75vw;
+              #     height: 75vh;
+              #   }
+              title: Water Boiler Temperature & Humidity
+              content:
+                type: grid
+                columns: 2
+                square: false
+                cards:
+                  - type: grid
+                    columns: 1
+                    square: false
+                    cards:
+                      - type: grid
+                        columns: 1
+                        square: false
+                        cards:
+                          - type: 'custom:slider-entity-row'
+                            entity: input_number.ui_water_boiler_graph_hours
+                            hide_state: false
+                      - type: 'custom:config-template-card'
+                        variables:
+                          HOURS: states['input_number.ui_water_boiler_graph_hours'].state
                         entities:
-                          - entity: sensor.water_boiler_temperature_temperature_difference_state
-                          - entity: sensor.water_boiler_temperature_panel_out
-                          - entity: sensor.water_boiler_temperature_in_from_panel
-                          - entity: sensor.water_boiler_temperature_out_to_panel
-                          - entity: sensor.water_boiler_temperature_temperature_difference
-                          - entity: binary_sensor.water_boiler_power_pump_controller_status
-                            name: Pump
-                          - entity: binary_sensor.water_boiler_power_wall_switch_status
-                            name: Switch
-                          - entity: sensor.water_boiler_power_adc
-                          - entity: sensor.water_boiler_temperature_water_level
-                          - entity: sensor.water_boiler_power_power_w
-                        hours_to_show: "${ HOURS }"
-                        refresh_interval: 0
-                - type: grid
-                  columns: 1
-                  square: false
-                  cards:
-                    - type: 'custom:config-template-card'
-                      variables:
-                        HOURS: states['input_number.ui_water_boiler_graph_hours'].state
-                      entities:
-                        - input_number.ui_water_boiler_graph_hours
-                      card:
-                        type: history-graph
+                          - input_number.ui_water_boiler_graph_hours
+                        card:
+                          type: history-graph
+                          entities:
+                            - entity: sensor.water_boiler_temperature_temperature_difference_state
+                            - entity: sensor.water_boiler_temperature_panel_out
+                            - entity: sensor.water_boiler_temperature_in_from_panel
+                            - entity: sensor.water_boiler_temperature_out_to_panel
+                            - entity: sensor.water_boiler_temperature_temperature_difference
+                            - entity: binary_sensor.water_boiler_power_pump_controller_status
+                              name: Pump
+                            - entity: binary_sensor.water_boiler_power_wall_switch_status
+                              name: Switch
+                            - entity: sensor.water_boiler_power_adc
+                            - entity: sensor.water_boiler_temperature_water_level
+                            - entity: sensor.water_boiler_power_power_w
+                          hours_to_show: "${ HOURS }"
+                          refresh_interval: 0
+                  - type: grid
+                    columns: 1
+                    square: false
+                    cards:
+                      - type: 'custom:config-template-card'
+                        variables:
+                          HOURS: states['input_number.ui_water_boiler_graph_hours'].state
                         entities:
-                          - entity: sensor.water_boiler_power_am2302_temperature
-                          - entity: sensor.water_boiler_power_si7021_temperature
-                          - entity: sensor.water_boiler_temperature_case_temperature
-                          - entity: sensor.water_boiler_power_am2302_humidity
-                          - entity: sensor.water_boiler_power_si7021_humidity
-                          - entity: sensor.water_boiler_temperature_case_humidity
-                        hours_to_show: "${ HOURS }"
-                        refresh_interval: 0
+                          - input_number.ui_water_boiler_graph_hours
+                        card:
+                          type: history-graph
+                          entities:
+                            - entity: sensor.water_boiler_power_am2302_temperature
+                            - entity: sensor.water_boiler_power_si7021_temperature
+                            - entity: sensor.water_boiler_temperature_case_temperature
+                            - entity: sensor.water_boiler_power_am2302_humidity
+                            - entity: sensor.water_boiler_power_si7021_humidity
+                            - entity: sensor.water_boiler_temperature_case_humidity
+                          hours_to_show: "${ HOURS }"
+                          refresh_interval: 0
         double_tap_action:
           action: none
         hold_action:
@@ -1247,39 +1277,45 @@ cards:
         tap_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 25vw;
-              }
-            title: Vacuum {{ entity.capitalize() }}
-            card:
-              type: custom:xiaomi-vacuum-map-card
-              map_source:
-                camera: camera.vacuum_{{ entity }}
-              calibration_source:
-                camera: true
-              entity: vacuum.vacuum_{{ entity }}
-              vacuum_platform: default
-              map_locked: true
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 30vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 25vw;
+              #   }
+              title: Vacuum {{ entity.capitalize() }}
+              content:
+                type: custom:xiaomi-vacuum-map-card
+                map_source:
+                  camera: camera.vacuum_{{ entity }}
+                calibration_source:
+                  camera: true
+                entity: vacuum.vacuum_{{ entity }}
+                vacuum_platform: default
+                map_locked: true
         double_tap_action:
           action: more-info
         hold_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                height: 35vh;
-                width: 50vw;
-              }
-            title: Vacuum {{ entity.capitalize() }} Scheduler
-            card:
-              {{ create_schedulers_popup("vacuum_" ~ entity, "DS") }}
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 50vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     height: 35vh;
+              #     width: 50vw;
+              #   }
+              title: Vacuum {{ entity.capitalize() }} Scheduler
+              content:
+                {{ create_schedulers_popup("vacuum_" ~ entity, "DS") }}
 
       {{ create_schedulers_icons("vacuum_" ~ entity, left, top) }}
       {% endfor %}
@@ -1304,37 +1340,43 @@ cards:
         tap_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            hide_header: true
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 80vw;
-                height: 82vh;
-              }
-            title: Logitech Media Server
-            card:
-              type: iframe
-              url: !secret squeezebox_url
-              aspect: 100%
+            service: browser_mod.popup
+            data:
+              hide_header: true
+              browser_id: THIS
+              style: |
+                --popup-max-width: 80vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 80vw;
+              #     height: 82vh;
+              #   }
+              title: Logitech Media Server
+              content:
+                type: iframe
+                url: !secret squeezebox_url
+                aspect: 100%
         hold_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            hide_header: true
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 80vw;
-                height: 82vh;
-              }
-            title: Logitech Media Server
-            card:
-              type: iframe
-              url: !secret squeezebox_url_regular
-              aspect: 100%
+            service: browser_mod.popup
+            data:
+              hide_header: true
+              browser_id: THIS
+              style: |
+                --popup-max-width: 80vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 80vw;
+              #     height: 82vh;
+              #   }
+              title: Logitech Media Server
+              content:
+                type: iframe
+                url: !secret squeezebox_url_regular
+                aspect: 100%
 
 ##     ## ##     ##    ###     ######  
 ##     ## ##     ##   ## ##   ##    ## 
@@ -1367,56 +1409,62 @@ cards:
         tap_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 25vw;
-              }
-            title: {{ entity.capitalize() }} Air Conditioning
-            card:
-              type: 'custom:simple-thermostat'
-              entity: climate.hvac_{{ entity }}
-              header: false
-              setpoints:
-              layout:
-                step: row
-                mode:
-                  names: false
-                  icons: true
-                  headings: false
-              decimals: 0
-              step_size: 1
-              hide:
-                state: true
-                temperature: true
-              control:
-                hvac: true
-                fan:
-                  "low":
-                    icon: mdi:fan-speed-1
-                  "mid":
-                    icon: mdi:fan-speed-2
-                  "high":
-                    icon: mdi:fan-speed-3
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 25vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 25vw;
+              #   }
+              title: {{ entity.capitalize() }} Air Conditioning
+              content:
+                type: 'custom:simple-thermostat'
+                entity: climate.hvac_{{ entity }}
+                header: false
+                setpoints:
+                layout:
+                  step: row
+                  mode:
+                    names: false
+                    icons: true
+                    headings: false
+                decimals: 0
+                step_size: 1
+                hide:
+                  state: true
+                  temperature: true
+                control:
+                  hvac: true
+                  fan:
+                    "low":
+                      icon: mdi:fan-speed-1
+                    "mid":
+                      icon: mdi:fan-speed-2
+                    "high":
+                      icon: mdi:fan-speed-3
 
         double_tap_action:
           action: more-info
         hold_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                height: 55vh;
-                width: 85vw;
-              }
-            title: {{ entity.capitalize() }} Air Conditioning
-            card:
-              {{ create_schedulers_popup("hvac_" ~ entity, "S_HVAC") }}
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 85vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     height: 55vh;
+              #     width: 85vw;
+              #   }
+              title: {{ entity.capitalize() }} Air Conditioning
+              content:
+                {{ create_schedulers_popup("hvac_" ~ entity, "S_HVAC") }}
 
       # Show temperature
       - type: state-label
@@ -1543,63 +1591,66 @@ cards:
             {% else %}
               action: fire-dom-event
               browser_mod:
-                command: popup
-                deviceID:
-                  - this
-                style: |
-                  :host .content {
-                    width: 40vw;
-                    height: 50vh;
-                  }
-                title: Details
-                card:
-                {% if (card_type == "entities") %}
-                  type: entities
-                  show_header_toggle: false
-                  entities:
-                  {% for number2, entity2 in statusbar_details %}
-                  {% if number2 == number %}
-                    - entity: {{ entity2 }}
-                  {% endif %}
-                  {% endfor %}
-                {% elif (card_type == "history-graph") %}
-                  type: history-graph
-                  entities:
-                  {% for number2, entity2 in statusbar_details %}
-                  {% if number2 == number %}
-                    - entity: {{ entity2 }}
-                  {% endif %}
-                  {% endfor %}
-                {% elif (card_type == "ha_updates") %}
-                  type: markdown
-                  entity_id: {{ entity }}
-                  {% raw %}
-                  content: |
-                    # Home Assistant updates:
-                    {% if states('group.updates') == "on" %}
-                      {% for updates in state_attr('group.updates', 'entity_id') %}
-                        {% if states(updates) == "on" %}
-                      - <img src="{{ state_attr(updates, 'entity_picture') }}" alt="-" width="15"/> **{{ state_attr(updates, 'title') }}** _{{ state_attr(updates, 'installed_version') }}_ -> _{{ state_attr(updates, 'latest_version') }}_
-                        {% endif %}
-                      {% endfor %}
-                    {% else %}
-                      - No updates
+                service: browser_mod.popup
+                data:
+                  browser_id: THIS
+                  style: |
+                    --popup-max-width: 40vw;
+                    --popup-border-color: white;
+                  # style: |
+                  #   :host .content {
+                  #     width: 40vw;
+                  #     height: 50vh;
+                  #   }
+                  title: Details
+                  content:
+                  {% if (card_type == "entities") %}
+                    type: entities
+                    show_header_toggle: false
+                    entities:
+                    {% for number2, entity2 in statusbar_details %}
+                    {% if number2 == number %}
+                      - entity: {{ entity2 }}
                     {% endif %}
-                    ---
-                    # HACS updates:
-                    {% if states('sensor.hacs') != "0" %}
-                      {% for repo in state_attr('sensor.hacs', 'repositories') %}
-                      - **{{ repo.display_name }}** _{{ repo["installed_version"] }}_ -> _{{ repo["available_version"] }}_
-                      {% endfor %}
-                    {% else %}
-                      - No updates
+                    {% endfor %}
+                  {% elif (card_type == "history-graph") %}
+                    type: history-graph
+                    entities:
+                    {% for number2, entity2 in statusbar_details %}
+                    {% if number2 == number %}
+                      - entity: {{ entity2 }}
                     {% endif %}
-                  {% endraw %}
-                {% else %}
-                  type: markdown
-                  content: "**Card type not defined**"
-                {% endif %}
-              {% endif %}
+                    {% endfor %}
+                  {% elif (card_type == "ha_updates") %}
+                    type: markdown
+                    entity_id: {{ entity }}
+                    {% raw %}
+                    content: |
+                      # Home Assistant updates:
+                      {% if states('group.updates') == "on" %}
+                        {% for updates in state_attr('group.updates', 'entity_id') %}
+                          {% if states(updates) == "on" %}
+                        - <img src="{{ state_attr(updates, 'entity_picture') }}" alt="-" width="15"/> **{{ state_attr(updates, 'title') }}** _{{ state_attr(updates, 'installed_version') }}_ -> _{{ state_attr(updates, 'latest_version') }}_
+                          {% endif %}
+                        {% endfor %}
+                      {% else %}
+                        - No updates
+                      {% endif %}
+                      ---
+                      # HACS updates:
+                      {% if states('sensor.hacs') != "0" %}
+                        {% for repo in state_attr('sensor.hacs', 'repositories') %}
+                        - **{{ repo.display_name }}** _{{ repo["installed_version"] }}_ -> _{{ repo["available_version"] }}_
+                        {% endfor %}
+                      {% else %}
+                        - No updates
+                      {% endif %}
+                    {% endraw %}
+                  {% else %}
+                    type: markdown
+                    content: "**Card type not defined**"
+                  {% endif %}
+            {% endif %}
             style:
               color: {{ statusbar_color }}
               left: {{ statusbar_left.value }}%
@@ -1627,42 +1678,49 @@ cards:
         tap_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 85vw;
-                height: 50vh;
-              }
-            title: Settings
-            card:
-              type: grid
-              {% set num_settings_columns = 3 %}
-              columns: {{ num_settings_columns }}
-              square: false
-              cards:
-                {% for current_column in ['1', '2', '3'] %}
-                - type: entities
-                  show_header_toggle: false
-                  entities:
-                    {% for entity, column, section, label, type in settings_entities %}
-                      {% if column == current_column %}
-                        {% if section == "y" %}
-                    - type: section
-                      label: {{ label }}
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 85vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 85vw;
+              #     height: 50vh;
+              #   }
+              title: Settings
+              content:
+                type: grid
+                {% set num_settings_columns = 3 %}
+                columns: {{ num_settings_columns }}
+                square: false
+                cards:
+                  {% for current_column in ['1', '2', '3'] %}
+                  - type: entities
+                    show_header_toggle: false
+                    entities:
+                      {% for entity, column, section, label, type in settings_entities %}
+                        {% if column == current_column %}
+                          {% if section == "y" %}
+                      - type: section
+                        label: {{ label }}
+                          {% endif %}
+                          {%if type == "slider" %}
+                      - type: 'custom:slider-entity-row'
+                        entity: {{ entity }}
+                        hide_state: false
+                          {% else %}
+                      - entity: {{ entity }}
+                          {% endif %}
                         {% endif %}
-                        {%if type == "slider" %}
-                    - type: 'custom:slider-entity-row'
-                      entity: {{ entity }}
-                      hide_state: false
-                        {% else %}
-                    - entity: {{ entity }}
-                        {% endif %}
-                      {% endif %}
-                    {% endfor %}
-                    - type: section
-                {% endfor %}
+                      {% endfor %}
+                      - type: section
+                  {% endfor %}
+        double_tap_action:
+          action: none
+        hold_action:
+          action: none
 
 ##     ## ##    ## ########     ###    #### ########  
 ##     ## ###   ## ##     ##   ## ##    ##  ##     ## 
@@ -1686,20 +1744,23 @@ cards:
         tap_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            hide_header: true
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 80vw;
-                height: 85vh;
-              }
-            title: UnRAID Server
-            card:
-              type: iframe
-              url: http://192.168.1.104/Dashboard
-              aspect: 100%
+            service: browser_mod.popup
+            data:
+              hide_header: true
+              browser_id: THIS
+              style: |
+                --popup-max-width: 80vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 80vw;
+              #     height: 85vh;
+              #   }
+              title: UnRAID Server
+              content:
+                type: iframe
+                url: http://192.168.1.104/Dashboard
+                aspect: 100%
         double_tap_action:
           action: none
         hold_action:
@@ -1726,37 +1787,40 @@ cards:
         tap_action:
           action: fire-dom-event
           browser_mod:
-            command: popup
-            deviceID:
-              - this
-            style: |
-              :host .content {
-                width: 40vw;
-              }
-            title: Water Consumption
-            card:
-              type: grid
-              columns: 1
-              square: false
-              cards:
-                - type: history-graph
-                  entities:
-                    - entity: sensor.water_meter_16452690_today_s_consumption
-                    - entity: sensor.water_consumption_hourly
-                  #hours_to_show: 12
-                  refresh_interval: 0
-                - type: history-graph
-                  entities:
-                    - entity: sensor.water_meter_16452690_consumption_predication
-                    - entity: sensor.water_meter_16452690_monthly_consumption
-                    - entity: sensor.water_consumption_monthly_prediction
-                  #hours_to_show: 12
-                  refresh_interval: 0
-                - type: history-graph
-                  entities:
-                    - entity: sensor.water_meter_16452690_last_reading
-                  #hours_to_show: 12
-                  refresh_interval: 0
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-max-width: 40vw;
+                --popup-border-color: white;
+              # style: |
+              #   :host .content {
+              #     width: 40vw;
+              #   }
+              title: Water Consumption
+              content:
+                type: grid
+                columns: 1
+                square: false
+                cards:
+                  - type: history-graph
+                    entities:
+                      - entity: sensor.water_meter_16452690_today_s_consumption
+                      - entity: sensor.water_consumption_hourly
+                    #hours_to_show: 12
+                    refresh_interval: 0
+                  - type: history-graph
+                    entities:
+                      - entity: sensor.water_meter_16452690_consumption_predication
+                      - entity: sensor.water_meter_16452690_monthly_consumption
+                      - entity: sensor.water_consumption_monthly_prediction
+                    #hours_to_show: 12
+                    refresh_interval: 0
+                  - type: history-graph
+                    entities:
+                      - entity: sensor.water_meter_16452690_last_reading
+                    #hours_to_show: 12
+                    refresh_interval: 0
         double_tap_action:
           action: none
         hold_action:
@@ -1842,14 +1906,15 @@ cards:
         tap_action:
           action: fire-dom-event
           browser_mod:
-            command: lovelace_reload
-            deviceID:
-              - this
+            service: browser_mod.javascript #lovelace_reload
+            data:
+              code: lovelace_reload()
+              browser_id: THIS
         double_tap_action:
           action: fire-dom-event
           browser_mod:
-            command: window_reload
-            deviceID:
-              - this
+            service: browser_mod.refresh #window_reload
+            data:
+              browser_id: THIS
         hold_action:
           action: none
