@@ -145,11 +145,11 @@
                             ("3", "sensor.water_consumption_hourly_limit_exceeded"),
                             ("3", "sensor.water_consumption_daily_limit_exceeded"),
                             ("3", "sensor.water_consumption_monthly_limit_exceeded"),
-                            ("3", "sensor.water_consumption_monthly_prediction_limit_exceeded"),
-                            ("3", "sensor.water_consumption_hourly"),
+                            ("3", "sensor.water_consumption_monthly_forecast_limit_exceeded"),
+                            ("3", "sensor.water_consupmtion_hourly"),
                             ("3", "sensor.water_meter_16452690_today_s_consumption"),
                             ("3", "sensor.water_meter_16452690_monthly_consumption"),
-                            ("3", "sensor.water_consumption_monthly_prediction")] %}
+                            ("3", "sensor.water_meter_16452690_consumption_predication")] %}
 
 #--------------------------------------------------------------------------------------------------
 # Settings
@@ -165,7 +165,7 @@
                             ("input_number.water_consumption_hourly_limit"             , "1", "y", "Water Consumption"     , "slider"),
                             ("input_number.water_consumption_daily_limit"              , "1", "n", ""                      , "slider"),
                             ("input_number.water_consumption_monthly_limit"            , "1", "n", ""                      , "slider"),
-                            ("input_number.water_consumption_monthly_prediciton_limit" , "1", "n", ""                      , "slider"),
+                            ("input_number.water_consumption_monthly_forecast_limit"   , "1", "n", ""                      , "slider"),
                             ("input_number.boiler_disable_schedulers_temperature"      , "2", "y", "Water Boiler"          , "slider"),
                             ("script.1586449615879"                                    , "3", "y", "Home Assistant Control", "entity"),
                             ("input_boolean.ui_hide_room_temperatures"                 , "3", "y", "Hide"                  , "entity"),
@@ -453,6 +453,21 @@ cards:
           - entity: input_boolean.ui_hide_weather
             state_not: 'on'
         elements:
+          # - type: custom:clock-weather-card
+          #   entity: weather.accuweather
+          #   sun_entity: sun.sun
+          #   weather_icon_type: fill
+          #   animated_icon: false
+          #   forecast_days: 5
+          #   locale: he
+          #   time_format: 24
+          #   hide_today_section: false
+          #   hide_forecast_section: false
+          #   style:
+          #     #border: 1px solid red
+          #     left: -3% #-3% 0%
+          #     top: -5%  #-3% 0%
+          #     transform: 'translate(50%, 50%) scale(1.5, 1.5)'
           - type: custom:weather-card
             #entity: weather.darksky_daily
             entity: weather.accuweather
@@ -491,14 +506,20 @@ cards:
                   #   }
                   title: Hourly Weather Forecast
                   content:
-                    type: 'custom:weather-card'
+                    type: custom:hourly-weather
                     entity: weather.darksky_hourly
-                    hourly_forecast: true
-                    forecast: true
-                    number_of_forecasts: '18'
-                    details: false
-                    current: false
-                    icons: /local/icons/weather_icons/static/
+                    num_segments: '24'
+                    icons: true
+                    show_precipitation_amounts: true
+                    show_wind: false
+                    # type: 'custom:weather-card'
+                    # entity: weather.darksky_hourly
+                    # hourly_forecast: true
+                    # forecast: true
+                    # number_of_forecasts: '18'
+                    # details: false
+                    # current: false
+                    # icons: /local/icons/weather_icons/static/
             double_tap_action:
               action: none
             hold_action:
@@ -583,6 +604,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: white;
               # style: |
@@ -675,6 +697,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 20vw;
                 --popup-max-width: 20vw;
                 --popup-border-color: white;
               # style: |
@@ -743,6 +766,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 25vw;
                 --popup-max-width: 25vw;
                 --popup-border-color: white;
               # style: |
@@ -837,6 +861,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
                 --popup-border-color: white;
               # style: |
@@ -873,6 +898,7 @@ cards:
             service: browser_mod.popup
             data:
               style: |
+                --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: white;
               # style: |
@@ -983,6 +1009,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 75vw;
                 --popup-max-width: 75vw;
                 --popup-border-color: white;
               # style: |
@@ -1066,6 +1093,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 25vw;
                 --popup-max-width: 25vw;
                 --popup-border-color: white;
               # style: |
@@ -1121,6 +1149,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
                 --popup-border-color: white;
               # style: |
@@ -1182,7 +1211,8 @@ cards:
             data:
               browser_id: THIS
               style: |
-                --popup-max-width: 75vw;
+                --popup-min-width: 80vw;
+                --popup-max-width: 80vw;
                 --popup-border-color: white;
               # style: |
               #   :host .content {
@@ -1281,6 +1311,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: white;
               # style: |
@@ -1306,6 +1337,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
                 --popup-border-color: white;
               # style: |
@@ -1345,6 +1377,7 @@ cards:
               hide_header: true
               browser_id: THIS
               style: |
+                --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
                 --popup-border-color: white;
               # style: |
@@ -1365,6 +1398,7 @@ cards:
               hide_header: true
               browser_id: THIS
               style: |
+                --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
                 --popup-border-color: white;
               # style: |
@@ -1413,6 +1447,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 25vw;
                 --popup-max-width: 25vw;
                 --popup-border-color: white;
               # style: |
@@ -1455,6 +1490,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 85vw;
                 --popup-max-width: 85vw;
                 --popup-border-color: white;
               # style: |
@@ -1595,7 +1631,8 @@ cards:
                 data:
                   browser_id: THIS
                   style: |
-                    --popup-max-width: 40vw;
+                    --popup-min-width: 50vw;
+                    --popup-max-width: 50vw;
                     --popup-border-color: white;
                   # style: |
                   #   :host .content {
@@ -1682,6 +1719,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 85vw;
                 --popup-max-width: 85vw;
                 --popup-border-color: white;
               # style: |
@@ -1749,6 +1787,7 @@ cards:
               hide_header: true
               browser_id: THIS
               style: |
+                --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
                 --popup-border-color: white;
               # style: |
@@ -1776,7 +1815,7 @@ cards:
 # WATER
 
       - type: state-icon
-        entity: sensor.water_meter_16452690_last_reading
+        entity: sensor.citymind_16452690_meter_last_read
         icon: mdi:water-pump
         style:
           background-color: {{ background_color }}
@@ -1791,6 +1830,7 @@ cards:
             data:
               browser_id: THIS
               style: |
+                --popup-min-width: 40vw;
                 --popup-max-width: 40vw;
                 --popup-border-color: white;
               # style: |
@@ -1805,20 +1845,19 @@ cards:
                 cards:
                   - type: history-graph
                     entities:
-                      - entity: sensor.water_meter_16452690_today_s_consumption
-                      - entity: sensor.water_consumption_hourly
+                      - entity: sensor.citymind_16452690_meter_today_s_consumption
+                      - entity: sensor.water_consupmtion_hourly
                     #hours_to_show: 12
                     refresh_interval: 0
                   - type: history-graph
                     entities:
-                      - entity: sensor.water_meter_16452690_consumption_predication
-                      - entity: sensor.water_meter_16452690_monthly_consumption
-                      - entity: sensor.water_consumption_monthly_prediction
+                      - entity: sensor.citymind_16452690_meter_consumption_forcast
+                      - entity: sensor.citymind_16452690_meter_monthly_consumption
                     #hours_to_show: 12
                     refresh_interval: 0
                   - type: history-graph
                     entities:
-                      - entity: sensor.water_meter_16452690_last_reading
+                      - entity: sensor.citymind_16452690_meter_last_read
                     #hours_to_show: 12
                     refresh_interval: 0
         double_tap_action:
