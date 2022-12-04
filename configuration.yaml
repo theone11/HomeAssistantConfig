@@ -212,13 +212,13 @@ tts:
 smartir:
   check_updates: false
 
-browser_mod:
-  prefix: "browser_"
-  # disable:
-  #   - all
-  disable:
-    - light
-    - media_player
+# browser_mod:
+#   prefix: "browser_"
+#   # disable:
+#   #   - all
+#   disable:
+#     - light
+#     - media_player
 
 #google:
 #  client_id: !secret google_client_id
@@ -275,3 +275,5 @@ group:
       - update.samba_backup_update
       - update.samba_share_update
       - update.studio_code_server_update
+      - update.terminal_ssh_update
+      

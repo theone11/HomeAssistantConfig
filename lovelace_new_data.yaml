@@ -133,15 +133,15 @@
 {% set statusbar_left_offset = -1.5 %}
 {% set statusbar_scaleX, statusbar_scaleY = 0.8, 0.8 %}
 
-#                           number,        entity                                        , state_t_f, state,      icon,             card_type
-{% set statusbar_entities = [("1", "sensor.update_available"                                   , "t", "1",  "mdi:cloud-download", "ha_updates"),
-                             ("2", "sensor.hp_deskjet_4620_series_ink_low"                     , "f", "0" , "mdi:printer-alert" , "entities"),
-                             ("3", "sensor.water_consumption_limit_exceeded"                   , "f", "0" , "mdi:water-alert"   , "history-graph")] %}
+#                           number,        entity                            , state_t_f, state,      icon,             card_type
+{% set statusbar_entities = [("1", "sensor.update_available"                 , "t", "1",  "mdi:cloud-download", "ha_updates"),
+                             ("2", "sensor.mfc_j470dw_ink_low"               , "f", "0" , "mdi:printer-alert" , "entities"),
+                             ("3", "sensor.water_consumption_limit_exceeded" , "f", "0" , "mdi:water-alert"   , "history-graph")] %}
 
-{% set statusbar_details = [("2", "sensor.hp_deskjet_4620_series_black_ink"),
-                            ("2", "sensor.hp_deskjet_4620_series_yellow_ink"),
-                            ("2", "sensor.hp_deskjet_4620_series_magenta_ink"),
-                            ("2", "sensor.hp_deskjet_4620_series_cyan_ink"),
+{% set statusbar_details = [("2", "sensor.mfc_j470dw_black_ink_remaining"),
+                            ("2", "sensor.mfc_j470dw_cyan_ink_remaining"),
+                            ("2", "sensor.mfc_j470dw_magenta_ink_remaining"),
+                            ("2", "sensor.mfc_j470dw_yellow_ink_remaining"),
                             ("3", "sensor.water_consumption_hourly_limit_exceeded"),
                             ("3", "sensor.water_consumption_daily_limit_exceeded"),
                             ("3", "sensor.water_consumption_monthly_limit_exceeded"),
@@ -160,19 +160,19 @@
 {% set settings_color = 'gray' %}
 {% set settings_left, settings_top = 98.5, 1 %}
 {% set settings_scaleX, settings_scaleY = 0.8, 0.8 %}
-#                             entity                                              , column, section, label                 , type
-{% set settings_entities = [("input_number.hp_deskjet_4620_series_ink_low_limit"       , "1", "y", "Printers"              , "slider"),
-                            ("input_number.water_consumption_hourly_limit"             , "1", "y", "Water Consumption"     , "slider"),
-                            ("input_number.water_consumption_daily_limit"              , "1", "n", ""                      , "slider"),
-                            ("input_number.water_consumption_monthly_limit"            , "1", "n", ""                      , "slider"),
-                            ("input_number.water_consumption_monthly_forecast_limit"   , "1", "n", ""                      , "slider"),
-                            ("input_number.boiler_disable_schedulers_temperature"      , "2", "y", "Water Boiler"          , "slider"),
-                            ("script.1586449615879"                                    , "3", "y", "Home Assistant Control", "entity"),
-                            ("input_boolean.ui_hide_room_temperatures"                 , "3", "y", "Hide"                  , "entity"),
-                            ("input_boolean.ui_hide_water_boiler_temperatures"         , "3", "n", ""                      , "entity"),
-                            ("input_boolean.ui_hide_weather          "                 , "3", "n", ""                      , "entity"),
-                            ("input_boolean.ui_hide_calendar         "                 , "3", "n", ""                      , "entity"),
-                            ("input_boolean.ui_hide_navigation"                        , "3", "n", ""                      , "entity")] %}
+#                             entity                                                 , column, section, label                 , type
+{% set settings_entities = [("input_number.mfc_j470dw_ink_low_limit"                 , "1", "y", "Printers"              , "slider"),
+                            ("input_number.water_consumption_hourly_limit"           , "1", "y", "Water Consumption"     , "slider"),
+                            ("input_number.water_consumption_daily_limit"            , "1", "n", ""                      , "slider"),
+                            ("input_number.water_consumption_monthly_limit"          , "1", "n", ""                      , "slider"),
+                            ("input_number.water_consumption_monthly_forecast_limit" , "1", "n", ""                      , "slider"),
+                            ("input_number.boiler_disable_schedulers_temperature"    , "2", "y", "Water Boiler"          , "slider"),
+                            ("script.1586449615879"                                  , "3", "y", "Home Assistant Control", "entity"),
+                            ("input_boolean.ui_hide_room_temperatures"               , "3", "y", "Hide"                  , "entity"),
+                            ("input_boolean.ui_hide_water_boiler_temperatures"       , "3", "n", ""                      , "entity"),
+                            ("input_boolean.ui_hide_weather          "               , "3", "n", ""                      , "entity"),
+                            ("input_boolean.ui_hide_calendar         "               , "3", "n", ""                      , "entity"),
+                            ("input_boolean.ui_hide_navigation"                      , "3", "n", ""                      , "entity")] %}
 
 #--------------------------------------------------------------------------------------------------
 # Actions
@@ -196,6 +196,8 @@
                               ("noga_temperature"                      , "room"         , 45  , 59  ),
                               ("ella_temperature"                      , "room"         , 36  , 56  ),
                               ("tomer_temperature"                     , "room"         , 28  , 61.5),
+                              ("livingroom_tv_temperature"             , "room"         , 59  , 63  ),
+                              ("livingroom_corner"                     , "room"         , 71.5, 47  ),
                               ("water_boiler_temperature_panel_out"    , "water_boiler" , 3.5 , 52  ),
                               ("water_boiler_temperature_in_from_panel", "water_boiler" , 9.5 , 43  ),
                               ("water_boiler_temperature_out_to_panel" , "water_boiler" , 9.5 , 47  ),
@@ -221,6 +223,7 @@
 #                             entity                                                   , state, left, top, icon     , tap_action
 {% set conditional_entities = [("switch.roof_right_table_power_relay"                    , "on", 10 , 67, "power"   , "toggle"),
                                ("binary_sensor.water_boiler_power_pump_controller_status", "on", 8.5, 47, "pump"    , "none"  ),
+                               ("switch.water_boiler_temperature_pump_manual"            , "on", 8.5, 47, "pump"    , "none"  ),
                                ("switch.main_bathroom_heater"                            , "on", 44 , 66, "radiator", "toggle"),
                                ("switch.master_bathroom_heater"                          , "on", 44 , 83, "radiator", "toggle")] %}
 
@@ -589,6 +592,7 @@ cards:
         image: /local/images/floorplan/transparent_square.png
         style:
           #border: 1px solid red
+          width: 3%
           left: {{ left }}%
           top: {{ top }}%
           transform: rotate({{ deg }}deg) scale({{ scaleX }}, {{ scaleY }})
@@ -683,6 +687,8 @@ cards:
           open: /local/images/floorplan/shutters/square_open.png
           opening: /local/images/floorplan/shutters/square_opening.png
         style:
+          #border: 1px solid red
+          width: 1.6%
           left: {{ left }}%
           top: {{ top }}%
           transform: scale({{ scaleX }}, {{ scaleY }})
@@ -1093,8 +1099,8 @@ cards:
             data:
               browser_id: THIS
               style: |
-                --popup-min-width: 25vw;
-                --popup-max-width: 25vw;
+                --popup-min-width: 30vw;
+                --popup-max-width: 30vw;
                 --popup-border-color: white;
               # style: |
               #   :host .content {
@@ -1249,10 +1255,12 @@ cards:
                             - entity: sensor.water_boiler_temperature_in_from_panel
                             - entity: sensor.water_boiler_temperature_out_to_panel
                             - entity: sensor.water_boiler_temperature_temperature_difference
+                            - entity: switch.water_boiler_temperature_pump_manual
+                              name: Pump Control
                             - entity: binary_sensor.water_boiler_power_pump_controller_status
-                              name: Pump
+                              name: Pump Feedback
                             - entity: binary_sensor.water_boiler_power_wall_switch_status
-                              name: Switch
+                              name: Wall Switch Feedback
                             - entity: sensor.water_boiler_power_adc
                             - entity: sensor.water_boiler_temperature_water_level
                             - entity: sensor.water_boiler_power_power_w
@@ -1374,7 +1382,6 @@ cards:
           browser_mod:
             service: browser_mod.popup
             data:
-              hide_header: true
               browser_id: THIS
               style: |
                 --popup-min-width: 80vw;
@@ -1385,7 +1392,6 @@ cards:
               #     width: 80vw;
               #     height: 82vh;
               #   }
-              title: Logitech Media Server
               content:
                 type: iframe
                 url: !secret squeezebox_url
@@ -1395,7 +1401,6 @@ cards:
           browser_mod:
             service: browser_mod.popup
             data:
-              hide_header: true
               browser_id: THIS
               style: |
                 --popup-min-width: 80vw;
@@ -1406,7 +1411,6 @@ cards:
               #     width: 80vw;
               #     height: 82vh;
               #   }
-              title: Logitech Media Server
               content:
                 type: iframe
                 url: !secret squeezebox_url_regular
@@ -1719,8 +1723,8 @@ cards:
             data:
               browser_id: THIS
               style: |
-                --popup-min-width: 85vw;
-                --popup-max-width: 85vw;
+                --popup-min-width: 50vw;
+                --popup-max-width: 50vw;
                 --popup-border-color: white;
               # style: |
               #   :host .content {
@@ -1729,31 +1733,32 @@ cards:
               #   }
               title: Settings
               content:
-                type: grid
+                type: custom:tabbed-card
+                tabs:
                 {% set num_settings_columns = 3 %}
-                columns: {{ num_settings_columns }}
-                square: false
-                cards:
                   {% for current_column in ['1', '2', '3'] %}
-                  - type: entities
-                    show_header_toggle: false
-                    entities:
-                      {% for entity, column, section, label, type in settings_entities %}
-                        {% if column == current_column %}
-                          {% if section == "y" %}
-                      - type: section
-                        label: {{ label }}
+                  - attributes:
+                      label: {{current_column}}
+                    card:
+                      type: entities
+                      show_header_toggle: false
+                      entities:
+                        {% for entity, column, section, label, type in settings_entities %}
+                          {% if column == current_column %}
+                            {% if section == "y" %}
+                        - type: section
+                          label: {{ label }}
+                            {% endif %}
+                            {%if type == "slider" %}
+                        - type: 'custom:slider-entity-row'
+                          entity: {{ entity }}
+                          hide_state: false
+                            {% else %}
+                        - entity: {{ entity }}
+                            {% endif %}
                           {% endif %}
-                          {%if type == "slider" %}
-                      - type: 'custom:slider-entity-row'
-                        entity: {{ entity }}
-                        hide_state: false
-                          {% else %}
-                      - entity: {{ entity }}
-                          {% endif %}
-                        {% endif %}
-                      {% endfor %}
-                      - type: section
+                        {% endfor %}
+                        - type: section
                   {% endfor %}
         double_tap_action:
           action: none
