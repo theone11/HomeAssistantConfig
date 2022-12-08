@@ -220,12 +220,13 @@
 #  - Will only be displayed if condition "state" active
 #--------------------------------------------------------------------------------------------------
 {% set conditional_color = "red" %}
-#                             entity                                                   , state, left, top, icon     , tap_action
-{% set conditional_entities = [("switch.roof_right_table_power_relay"                    , "on", 10 , 67, "power"   , "toggle"),
-                               ("binary_sensor.water_boiler_power_pump_controller_status", "on", 8.5, 47, "pump"    , "none"  ),
-                               ("switch.water_boiler_temperature_pump_manual"            , "on", 8.5, 47, "pump"    , "none"  ),
-                               ("switch.main_bathroom_heater"                            , "on", 44 , 66, "radiator", "toggle"),
-                               ("switch.master_bathroom_heater"                          , "on", 44 , 83, "radiator", "toggle")] %}
+#                             entity                                                     , state, left, top, icon        , tap_action
+{% set conditional_entities = [("switch.roof_right_table_power_relay"                    , "on", 10 , 67, "power"        , "toggle"),
+                               ("binary_sensor.water_boiler_power_pump_controller_status", "on", 8.5, 47, "pump"         , "none"  ),
+                               ("switch.water_boiler_temperature_pump_manual"            , "on", 8.5, 47, "pump"         , "none"  ),
+                               ("binary_sensor.water_boiler_power_wall_switch_status"    , "on", 11,  45, "water-boiler" , "none"  ),
+                               ("switch.main_bathroom_heater"                            , "on", 44 , 66, "radiator"     , "toggle"),
+                               ("switch.master_bathroom_heater"                          , "on", 44 , 83, "radiator"     , "toggle")] %}
 
 ##     ##    ###     ######  ########   #######   ######  
 ###   ###   ## ##   ##    ## ##     ## ##     ## ##    ## 
