@@ -492,8 +492,8 @@ cards:
               #border: 1px solid red
               left: 0%
               top: 0%
-              width: 27.25%
-              height: 35%
+              width: 23.8%
+              height: 31.2%
               transform: 'translate(0%, 0%) scale(1, 1)'
             tap_action:
               action: fire-dom-event
@@ -1260,9 +1260,11 @@ cards:
                               name: Pump Control
                             - entity: binary_sensor.water_boiler_power_pump_controller_status
                               name: Pump Feedback
+                            - entity: switch.boiler_switch
+                              name: Wall Switch
                             - entity: binary_sensor.water_boiler_power_wall_switch_status
                               name: Wall Switch Feedback
-                            - entity: sensor.water_boiler_power_adc
+                            # - entity: sensor.water_boiler_power_adc
                             - entity: sensor.water_boiler_temperature_water_level
                             - entity: sensor.water_boiler_power_power_w
                           hours_to_show: "${ HOURS }"
@@ -1567,6 +1569,7 @@ cards:
             style:
               left: {{ navi_left }}%
               top: {{ navi_top.value }}%
+              width: 4%
               transform: translate(-50%, -50%) scale({{ navi_scaleX }}, {{ navi_scaleY }})
             tap_action:
               action: none

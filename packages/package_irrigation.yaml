@@ -2,32 +2,6 @@
 ########## E N T I T I E S ##########
 #####################################
 
-# switch:
-#   - platform: command_line
-#     switches:
-#       irrigation_sprinkler_west:
-#         command_on: "/usr/bin/curl -X GET http://admin:admin@192.168.1.20/FF0101"
-#         command_off: "/usr/bin/curl -X GET http://admin:admin@192.168.1.20/FF0100"
-#         command_state: "/usr/bin/curl http://admin:admin@192.168.1.20/status.xml 2>%1 | grep -o -P '(?<=<relay1>).*(?=</relay1>)'"
-#         value_template: '{{ value == "1" }}'
-#         friendly_name: West Sprinklers
-#         # icon: mdi:sprinkler
-#       irrigation_sprinkler_north:
-#         command_on: "/usr/bin/curl -X GET http://admin:admin@192.168.1.20/FF0201"
-#         command_off: "/usr/bin/curl -X GET http://admin:admin@192.168.1.20/FF0200"
-#         command_state: "/usr/bin/curl http://admin:admin@192.168.1.20/status.xml 2>%1 | grep -o -P '(?<=<relay2>).*(?=</relay2>)'"
-#         value_template: '{{ value == "1" }}'
-#         friendly_name: North Sprinklers
-#         # icon: mdi:sprinkler
-#       irrigation_drips:
-#         command_on: "/usr/bin/curl -X GET http://admin:admin@192.168.1.20/FF0301"
-#         command_off: "/usr/bin/curl -X GET http://admin:admin@192.168.1.20/FF0300"
-#         command_state: "/usr/bin/curl http://admin:admin@192.168.1.20/status.xml 2>%1 | grep -o -P '(?<=<relay3>).*(?=</relay3>)'"
-#         value_template: '{{ value == "1" }}'
-#         friendly_name: Drips
-#         # icon: mdi:water
-
-
 sensor:
   - platform: template
     sensors:
