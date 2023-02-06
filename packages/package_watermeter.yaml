@@ -44,7 +44,7 @@ sensor:
       water_consumption_monthly_forecast_limit_exceeded:
         icon_template: mdi:water-alert
         value_template: >
-          {% if ((states('sensor.citymind_16452690_meter_consumption_forcast') == 'unavailable') or (states('sensor.citymind_16452690_meter_consumption_forcast') == 'unknown') or (states('sensor.water_consumption_monthly_forecast') | float(default=0)) < (states('input_number.water_consumption_monthly_forecast_limit') | float(default=0))) %}
+          {% if ((states('sensor.citymind_16452690_meter_consumption_forecast') == 'unavailable') or (states('sensor.citymind_16452690_meter_consumption_forecast') == 'unknown') or (states('sensor.water_consumption_monthly_forecast') | float(default=0)) < (states('input_number.water_consumption_monthly_forecast_limit') | float(default=0))) %}
             0
           {% else %}
             1
@@ -53,7 +53,7 @@ sensor:
       # water_consumption_monthly_forecast:
       #   icon_template: mdi:water
       #   value_template: >
-      #     {{ state_attr('sensor.citymind_16452690_meter_consumption_forcast', 'Forecast') | replace(" m³", "") | float(default=0) }}
+      #     {{ state_attr('sensor.citymind_16452690_meter_consumption_forecast', 'Forecast') | replace(" m³", "") | float(default=0) }}
 
 utility_meter:
   # water_consumption_daily:
@@ -134,7 +134,7 @@ automation:
     description: Water Consumption Monthly Forecast Limit
     trigger:
       platform: template
-      value_template: "{{ (states('sensor.citymind_16452690_meter_consumption_forcast') | float(default=0)) >= (states('input_number.water_consumption_monthly_forecast_limit') | float(default=0)) }}"
+      value_template: "{{ (states('sensor.citymind_16452690_meter_consumption_forecast') | float(default=0)) >= (states('input_number.water_consumption_monthly_forecast_limit') | float(default=0)) }}"
     condition: []
     action:
       - service: notify.email

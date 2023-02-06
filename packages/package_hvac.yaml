@@ -29,12 +29,12 @@ climate:
     name: HVAC Livingroom
     unique_id: hvac_livingroom
     device_code: 1620
-    controller_data: remote.livingroom_remote
+    controller_data: remote.livingroom
     temperature_sensor: sensor.livingroom_temperature
 
   - platform: smartir
     name: HVAC Hallway
     unique_id: hvac_hallway
     device_code: 1620
-    controller_data: remote.hallway_remote
+    controller_data: remote.hallway
     temperature_sensor: sensor.hallway_temperature

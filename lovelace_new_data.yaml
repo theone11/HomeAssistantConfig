@@ -125,6 +125,14 @@
 {% set navigations = ["kfar_yona", "petach_tikva", "work_aviva", "work_dan"] %}
 
 #--------------------------------------------------------------------------------------------------
+# Cameras
+#--------------------------------------------------------------------------------------------------
+#                   entity            , type   , left, top, icon, display_name)
+{% set cameras = [("camera_1_generic" , "generic", 67, 92, "", "Camera 1"),
+                 ("camera_1_mjpeg"    , "generic", 69, 92, "", "Camera 1"),
+                 ("camera_1_mediaprofile_000"  , "generic", 71, 92, "mdi:cctv", "Camera 1")] %}
+
+#--------------------------------------------------------------------------------------------------
 # Statusbar
 #  - Icons are placed from right to left
 #--------------------------------------------------------------------------------------------------
@@ -1607,6 +1615,50 @@ cards:
           {% set navi_top.value = navi_top.value - navi_top_offset %}
           {% endfor %}
 
+
+ ######     ###    ##     ## ######## ########     ###     ######  
+##    ##   ## ##   ###   ### ##       ##     ##   ## ##   ##    ## 
+##        ##   ##  #### #### ##       ##     ##  ##   ##  ##       
+##       ##     ## ## ### ## ######   ########  ##     ##  ######  
+##       ######### ##     ## ##       ##   ##   #########       ## 
+##    ## ##     ## ##     ## ##       ##    ##  ##     ## ##    ## 
+ ######  ##     ## ##     ## ######## ##     ## ##     ##  ######  
+# CAMERAS
+
+      # {% for entity, type, left, top, icon, display_name in cameras %}
+
+      # - type: state-icon
+      #   entity: camera.{{ entity }}
+      #   icon: {{ icon }}
+      #   style:
+      #     background-color: {{ background_color }}
+      #     border-radius: {{ border_radius }}%
+      #     left: {{ left }}%
+      #     top: {{ top }}%
+      #     transform: translate(-50%, -50%) scale({{ scaleX }}, {{ scaleY }})
+      #   tap_action:
+      #     action: fire-dom-event
+      #     browser_mod:
+      #       service: browser_mod.popup
+      #       data:
+      #         browser_id: THIS
+      #         style: |
+      #           --popup-min-width: 40vw;
+      #           --popup-max-width: 40vw;
+      #           --popup-border-color: white;
+      #         title: {{ entity.capitalize() }}
+      #         content:
+      #           type: picture-entity
+      #           entity: camera.{{ entity }}
+      #           show_state: false
+      #           show_name: false
+      #           camera_view: live
+      #   double_tap_action:
+      #     action: more-info
+      #   hold_action:
+      #     action: more-info
+      # {% endfor %}
+
  ######  ########    ###    ######## ##     ##  ######        ########     ###    ########  
 ##    ##    ##      ## ##      ##    ##     ## ##    ##       ##     ##   ## ##   ##     ## 
 ##          ##     ##   ##     ##    ##     ## ##             ##     ##  ##   ##  ##     ## 
@@ -1860,7 +1912,7 @@ cards:
                     refresh_interval: 0
                   - type: history-graph
                     entities:
-                      - entity: sensor.citymind_16452690_meter_consumption_forcast
+                      - entity: sensor.citymind_16452690_meter_consumption_forecast
                       - entity: sensor.citymind_16452690_meter_monthly_consumption
                     #hours_to_show: 12
                     refresh_interval: 0
