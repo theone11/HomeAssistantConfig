@@ -35,18 +35,18 @@ sensor:
       vacuum_bottom_problem:
         icon_template: mdi:robot-vacuum
         value_template: >
-          {% if (states('vacuum.vacuum_bottom') == 'unknown') or (states('vacuum.vacuum_bottom') == 'unavailable') %}
-            {{ 1 }}
-          {% else %}
+          {% if has_value('vacuum.vacuum_bottom') %}
             {{ 0 }}
+          {% else %}
+            {{ 1 }}
           {% endif %}
       vacuum_top_problem:
         icon_template: mdi:robot-vacuum
         value_template: >
-          {% if (states('vacuum.vacuum_top') == 'unknown') or (states('vacuum.vacuum_top') == 'unavailable') %}
-            {{ 1 }}
-          {% else %}
+          {% if has_value('vacuum.vacuum_top') %}
             {{ 0 }}
+          {% else %}
+            {{ 1 }}
           {% endif %}
 
 

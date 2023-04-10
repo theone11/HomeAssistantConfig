@@ -22,7 +22,7 @@ sensor:
                            'sensor.mfc_j470dw_yellow_ink_remaining'] %}
           {% set mfc_j470dw_ink_low = namespace(count=0) %}
           {% for entity_id in devices %}
-            {% if ((states(entity_id) != 'unavailable') and (states(entity_id) | int) <= (states('input_number.mfc_j470dw_ink_low_limit') | int)) %}
+            {% if (has_value(entity_id)) and ((states(entity_id) | int) <= (states('input_number.mfc_j470dw_ink_low_limit') | int)) %}
               {% set mfc_j470dw_ink_low.count = mfc_j470dw_ink_low.count + 1 %}
             {% endif %}
           {% endfor %}

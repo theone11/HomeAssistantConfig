@@ -9,18 +9,18 @@ sensor:
       hvac_livingroom_problem:
         icon_template: mdi:air-conditioner
         value_template: >
-          {% if (states('sensor.livingroom_temperature') == 'unknown') or (states('sensor.livingroom_temperature') == 'unavailable') %}
-            {{ 1 }}
-          {% else %}
+          {% if (has_value('sensor.livingroom_temperature')) %}
             {{ 0 }}
+          {% else %}
+            {{ 1 }}
           {% endif %}
       hvac_hallway_problem:
         icon_template: mdi:air-conditioner
         value_template: >
-          {% if (states('sensor.hallway_temperature') == 'unknown') or (states('sensor.hallway_temperature') == 'unavailable') %}
-            {{ 1 }}
-          {% else %}
+          {% if (has_value('sensor.hallway_temperature')) %}
             {{ 0 }}
+          {% else %}
+            {{ 1 }}
           {% endif %}
 
 climate:

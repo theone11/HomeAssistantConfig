@@ -204,12 +204,12 @@
                               ("noga_temperature"                      , "room"         , 45  , 59  ),
                               ("ella_temperature"                      , "room"         , 36  , 56  ),
                               ("tomer_temperature"                     , "room"         , 28  , 61.5),
-                              ("livingroom_tv_temperature"             , "room"         , 59  , 63  ),
-                              ("livingroom_corner"                     , "room"         , 71.5, 47  ),
                               ("water_boiler_temperature_panel_out"    , "water_boiler" , 3.5 , 52  ),
                               ("water_boiler_temperature_in_from_panel", "water_boiler" , 9.5 , 43  ),
                               ("water_boiler_temperature_out_to_panel" , "water_boiler" , 9.5 , 47  ),
-                              ("livingroom_temperature"                , "room"         , 71.5, 46  ),
+                              ("livingroom_tv_temperature"             , "room"         , 59  , 63  ),
+                              ("livingroom_corner_temperature"         , "room"         , 71.5, 47  ),
+                              ("livingroom_temperature"                , "room"         , 71.5, 45.5),
                               ("hallway_temperature"                   , "room"         , 36.6, 65.5)] %}
 
 #                              entity                 , category       , left, top
@@ -343,6 +343,18 @@
                             icon: mdi:numeric-{{ number }}-box-outline
                             show_name: true
                             show_icon: true
+                            show_state: false
+                          {% endfor %}
+                      - type: grid
+                        columns: 7
+                        square: false
+                        cards:
+                          {% for day, number, name, name_he in days %}
+                          - type: entity
+                            entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
+                            name: {{ name_he }}
+                            icon: mdi:numeric-{{ number }}-box-outline
+                            state_color: true
                           {% endfor %}
                       {% endif %}
                       - type: entities
@@ -484,7 +496,6 @@ cards:
           #     top: -5%  #-3% 0%
           #     transform: 'translate(50%, 50%) scale(1.5, 1.5)'
           - type: custom:weather-card
-            #entity: weather.darksky_daily
             entity: weather.accuweather
             icons: "/local/icons/weather_icons/static/"
             current: true
@@ -498,7 +509,7 @@ cards:
               transform: 'translate(0%, 0%) scale(0.9, 0.9)'
           - type: image
             image: /local/images/floorplan/transparent_square.png
-            entity: weather.darksky_hourly
+            entity: weather.openweathermap
             style:
               #border: 1px solid red
               left: 0%
@@ -522,13 +533,14 @@ cards:
                   title: Hourly Weather Forecast
                   content:
                     type: custom:hourly-weather
-                    entity: weather.darksky_hourly
-                    num_segments: '24'
+                    entity: weather.openweathermap
+                    num_segments: '36'
                     icons: true
+                    show_precipitation_probability: true
                     show_precipitation_amounts: true
                     show_wind: false
                     # type: 'custom:weather-card'
-                    # entity: weather.darksky_hourly
+                    # entity: weather.openweathermap
                     # hourly_forecast: true
                     # forecast: true
                     # number_of_forecasts: '18'
@@ -931,6 +943,37 @@ cards:
                 columns: 1
                 square: false
                 cards:
+                  - type: grid
+                    columns: 3
+                    square: false
+                    title: Choose which irrigation valves to open during the cycle
+                    cards:
+                      - type: button
+                        entity: input_boolean.irrigation_sprinkler_west
+                        showname: true
+                      - type: button
+                        entity: input_boolean.irrigation_sprinkler_north
+                        showname: true
+                      - type: button
+                        entity: input_boolean.irrigation_drips
+                        showname: true
+                  - type: grid
+                    columns: 3
+                    square: false
+                    title: Choose which irrigation valves to open during the cycle
+                    cards:
+                      - type: tile
+                        entity: input_boolean.irrigation_sprinkler_west
+                        color: primary
+                        vertical: true
+                      - type: tile
+                        entity: input_boolean.irrigation_sprinkler_north
+                        color: primary
+                        vertical: true
+                      - type: tile
+                        entity: input_boolean.irrigation_drips
+                        color: primary
+                        vertical: true
                   - type: entities
                     show_header_toggle: false
                     entities:
@@ -942,7 +985,7 @@ cards:
                       - label: Set cycle duration (seconds) and start
                         type: section
                       - entity: input_number.irrigation_set_time
-                      - entity: input_boolean.irrigration_start_stop
+                      - entity: input_boolean.irrigation_immediate
                       - type: section
                       - entity: timer.irrigation_timer_cycle_duration
                       - type: section
@@ -952,6 +995,45 @@ cards:
                       - entity: switch.irrigation_sprinkler_west
                       - entity: switch.irrigation_sprinkler_north
                       - entity: switch.irrigation_drips
+                  # - type: grid
+                  #   columns: 3
+                  #   square: false
+                  #   cards:
+                  #     - type: button
+                  #       entity: input_boolean.irrigation_sprinkler_west
+                  #       show_name: true
+                  #       icon: mdi:sprinkler
+                  #     - type: button
+                  #       entity: input_boolean.irrigation_sprinkler_north
+                  #       show_name: true
+                  #       icon: mdi:sprinkler
+                  #     - type: button
+                  #       entity: input_boolean.irrigation_drips
+                  #       show_name: true
+                  #       icon: mdi:water
+                  # - type: grid
+                  #   columns: 2
+                  #   square: false
+                  #   cards:
+                  #     - type: button
+                  #       entity: input_boolean.irrigation_immediate
+                  #       show_name: false
+                  #       icon: mdi:power
+                  #     - type: button
+                  #       entity: input_boolean.irrigation_one_time
+                  #       show_name: false
+                  #       icon: mdi:timer-outline
+                  # - type: entities
+                  #   # title: 1-Time Cycle
+                  #   show_header_toggle: false
+                  #   entities:
+                  #     - entity: timer.irrigation_timer_cycle_duration
+                  # - type: history-graph
+                  #   hours_to_show: 72
+                  #   entities:
+                  #     - entity: switch.irrigation_sprinkler_west
+                  #     - entity: switch.irrigation_sprinkler_north
+                  #     - entity: switch.irrigation_drips
         double_tap_action:
           action: more-info
         hold_action:
@@ -1118,7 +1200,7 @@ cards:
               #   :host .content {
               #     width: 25vw;
               #   }
-              title: Water Boiler
+              title: Water Boiler 1-Time Cycle
               content:
                 type: grid
                 columns: 1
@@ -1146,7 +1228,7 @@ cards:
                     square: false
                     cards:
                       - type: button
-                        entity: input_boolean.{{ entity }}
+                        entity: input_boolean.{{ entity }}_immediate
                         show_name: false
                         icon: mdi:power
                       - type: button

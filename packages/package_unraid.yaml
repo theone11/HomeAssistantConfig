@@ -16,10 +16,10 @@ sensor:
       unraid_problem:
         icon_template: mdi:server
         value_template: >
-          {% if (states('binary_sensor.unraid') == 'unknown') or (states('binary_sensor.unraid') == 'unavailable') %}
-            {{ 1 }}
-          {% else %}
+          {% if has_value('binary_sensor.unraid') %}
             {{ 0 }}
+          {% else %}
+            {{ 1 }}
           {% endif %}
 
 ###########################################

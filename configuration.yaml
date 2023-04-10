@@ -37,7 +37,6 @@ recorder:
       - input_select.*_stop_hour*
       - input_select.*_start_minute*
       - input_select.*_stop_minute*
-      - sensor.dark_sky*
       - sensor.date*
       - sensor.time*
       - sensor.nut_ups*
@@ -118,21 +117,6 @@ panel_iframe:
   #   url: !secret octoprint_url
   #   require_admin: true
   
-weather:
-
-  # Dark Sky Dialy
-  # - platform: darksky
-  #   api_key: !secret darksky_api_key
-  #   name: 'DarkSky Daily'
-  #   mode: daily
-
-  # Dark Sky Hourly
-  - platform: darksky
-    api_key: !secret darksky_api_key
-    name: 'DarkSky Hourly'
-    mode: hourly
-
-
 sensor:
 
 # Time & Date
@@ -145,41 +129,6 @@ sensor:
 #     - 'time_utc'
 #     - 'beat'
 
-  - platform: darksky
-    api_key: !secret darksky_api_key
-    forecast:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-    monitored_conditions:
-      - icon
-      - summary
-      # - nearest_storm_distance
-      # - nearest_storm_bearing
-      - humidity
-      - temperature
-      - temperature_high
-      - temperature_low
-      - apparent_temperature
-      # - apparent_temperature_high
-      # - apparent_temperature_low
-      - wind_speed
-      - wind_bearing
-      - precip_type
-      - precip_probability
-      # - precip_accumulation
-      - precip_intensity
-      # - precip_intensity_max
-      # - uv_index
-      - daily_summary
-      # - pressure
-      - visibility
-    scan_interval:
-      minutes: 120
-
   - platform: template
     sensors:
       update_available:
@@ -191,19 +140,6 @@ sensor:
             {{ 0 }}
           {% endif %}
 
-# Sensor to track available updates for supervisor & addons
-  # - platform: command_line
-  #   name: Supervisor updates
-  #   command: 'curl http://supervisor/supervisor/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"newest_version":.data.version_latest,"current_version":.data.version,"update_available":.data.update_available,"addons":[.data.addons[] | select(.update_available)]}'''
-  #   value_template: "{{ value_json.addons | length }}"
-  #   unit_of_measurement: pending update(s)
-  #   json_attributes:
-  #   - update_available
-  #   - newest_version
-  #   - current_version
-  #   - addons
-
-
 # Text to speech
 tts:
   - platform: google_translate
@@ -211,23 +147,6 @@ tts:
 
 smartir:
   check_updates: false
-
-# browser_mod:
-#   prefix: "browser_"
-#   # disable:
-#   #   - all
-#   disable:
-#     - light
-#     - media_player
-
-#google:
-#  client_id: !secret google_client_id
-#  client_secret: !secret google_client_secret
-
-#tuya:
-#  username: !secret tuya_username
-#  password: !secret password
-#  country_code: !secret tuya_country_code
 
 #logger:
 #  default: info

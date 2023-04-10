@@ -3,16 +3,12 @@
 #####################################
 
 input_boolean:
-  boiler_switch:
+  boiler_switch_immediate:
     name: Water Boiler Immediate
     icon: mdi:water-boiler
 
   boiler_switch_one_time:
     name: Water Boiler One Time
-    icon: mdi:water-boiler
-
-  boiler_disable_schedulers:
-    name: Water Boiler Disable Schedulers
     icon: mdi:water-boiler
 
 input_number:
@@ -43,10 +39,10 @@ sensor:
       boiler_switch_problem:
         icon_template: mdi:water-boiler-off
         value_template: >
-          {% if (states('switch.boiler_switch') == 'unknown') or (states('switch.boiler_switch') == 'unavailable') %}
-            {{ 1 }}
-          {% else %}
+          {% if (has_value('switch.boiler_switch')) %}
             {{ 0 }}
+          {% else %}
+            {{ 1 }}
           {% endif %}
 
 input_datetime:
@@ -82,7 +78,7 @@ automation:
     description: BLA BLA BLA
     trigger:
       platform: state
-      entity_id: input_boolean.boiler_switch
+      entity_id: input_boolean.boiler_switch_immediate
       to: "on"
     condition: []
     action:
@@ -133,7 +129,7 @@ automation:
       entity_id: switch.boiler_switch
       to: "off"
     - platform: state
-      entity_id: input_boolean.boiler_switch
+      entity_id: input_boolean.boiler_switch_immediate
       to: "off"
     - platform: state
       entity_id: input_boolean.boiler_switch_one_time
@@ -146,7 +142,7 @@ automation:
     - service: switch.turn_off
       entity_id: switch.boiler_switch
     - service: input_boolean.turn_off
-      entity_id: input_boolean.boiler_switch
+      entity_id: input_boolean.boiler_switch_immediate
     - service: input_boolean.turn_off
       entity_id: input_boolean.boiler_switch_one_time
 

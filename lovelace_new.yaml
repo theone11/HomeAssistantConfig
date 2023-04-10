@@ -2,19 +2,8 @@
 
 kiosk_mode:
   hide_header: true
-  hide_menubutton: true
-  hide_overflow: true
-
-# custom_header:
-#   #hide_header: true
-#   hide_unused: true
-#   hide_help: true
-#   header_text: '{{ time }} - {{ dayNameLong }} - {{ date }}'
-#   button_text:
-#     #options: '{{ time }} - {{ dayNameLong }} - {{ date }}'
-#   voice_hide: true
-#   compact_mode: true
-#   locale: he-IL
+#  hide_menubutton: true
+#  hide_overflow: true
 
 title: Home
 

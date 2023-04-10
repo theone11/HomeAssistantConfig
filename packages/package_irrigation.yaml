@@ -8,31 +8,30 @@ sensor:
       irrigation_sprinkler_west_problem:
         icon_template: mdi:sprinkler
         value_template: >
-          {% if (states('switch.irrigation_sprinkler_west') == 'unknown') or (states('switch.irrigation_sprinkler_west') == 'unavailable') %}
-            {{ 1 }}
-          {% else %}
+          {% if has_value('switch.irrigation_sprinkler_west') %}
             {{ 0 }}
+          {% else %}
+            {{ 1 }}
           {% endif %}
       irrigation_sprinkler_north_problem:
         icon_template: mdi:sprinkler
         value_template: >
-          {% if (states('switch.irrigation_sprinkler_north') == 'unknown') or (states('switch.irrigation_sprinkler_north') == 'unavailable') %}
-            {{ 1 }}
-          {% else %}
+          {% if has_value('switch.irrigation_sprinkler_north') %}
             {{ 0 }}
+          {% else %}
+            {{ 1 }}
           {% endif %}
       irrigation_drips_problem:
         icon_template: mdi:water
         value_template: >
-          {% if (states('switch.irrigation_drips') == 'unknown') or (states('switch.irrigation_drips') == 'unavailable') %}
-            {{ 1 }}
-          {% else %}
+          {% if has_value('switch.irrigation_drips') %}
             {{ 0 }}
+          {% else %}
+            {{ 1 }}
           {% endif %}
 
-
 group:
-  irrigation:
+  irrigation:                   # Used for UI button
     name: Irrigation Valves
     icon: mdi:sprinkler
     all: false
@@ -40,7 +39,6 @@ group:
       - switch.irrigation_sprinkler_west
       - switch.irrigation_sprinkler_north
       - switch.irrigation_drips
-
 
 input_number:
   irrigation_set_time:
@@ -50,7 +48,6 @@ input_number:
     min: 60
     max: 1800
     step: 60
-
 
 input_boolean:
   irrigation_sprinkler_north:
@@ -62,19 +59,17 @@ input_boolean:
   irrigation_drips:
     name: Drips
     icon: mdi:water
-  irrigration_start_stop:
-    name: Start/Stop
+  irrigation_immediate:
+    name: Irrigation Immediate
     icon: mdi:power
   irrigation_one_time:
-    name: One Time
+    name: Irrigation One Time
     icon: mdi:timer-outline
-
 
 timer:
   irrigation_timer_cycle_duration:
     name: Time Left
     icon: mdi:timer-outline
-
 
 input_datetime:
   irrigation_start_time:
@@ -105,55 +100,91 @@ automation:
     - entity_id: switch.irrigation_drips
       service: switch.turn_off
 
-  # Trigger - Turning ON Timer Start/Stop Switch
+  # Trigger - Turning ON Immediate Switch
   # Conditions - NONE
   # Actions 
-  #         - Run start script with parameter all irrigation valves control entities, Wait 1 second, Check if script has finished (off)
-  - alias: Irrigation Start Cycle (paramaters)
-    description: 'Irrigation Start Cycle'
+  - alias: Irrigation 1-Time Immediate Start Cycle
+    description: 'Irrigation 1-Time Immediate Start Cycle'
     trigger:
-    - entity_id: input_boolean.irrigration_start_stop
+    - platform: state
+      entity_id: input_boolean.irrigation_immediate
       from: 'off'
-      platform: state
       to: 'on'
     condition: []
     action:
-    - data:
-        variables:
-          check_entity1: 'input_boolean.irrigation_sprinkler_west'
-          control_entity1: 'switch.irrigation_sprinkler_west'
-          check_entity2: 'input_boolean.irrigation_sprinkler_north'
-          control_entity2: 'switch.irrigation_sprinkler_north'
-          check_entity3: 'input_boolean.irrigation_drips'
-          control_entity3: 'switch.irrigation_drips'
-      entity_id: script.start_irrigation_cycle
-      service: script.turn_on
-    - delay: '00:00:01'
-    - wait_template: "{{ is_state('script.start_irrigation_cycle', 'off') }}"
-    - data: {}
-      entity_id: input_boolean.irrigration_start_stop
-      service: input_boolean.turn_off
+      - service: notify.file_debug
+        data_template:
+          message: "Starting 1-Time Immediate start_irrigation_cycle script #"
+      - service: script.turn_on
+        entity_id: script.start_irrigation_cycle
+      - delay: '00:00:01'
+      - wait_template: "{{ is_state('script.start_irrigation_cycle', 'off') }}"
+      - service: notify.file_debug
+        data_template:
+          message: "Completed 1-Time Immediate start_irrigation_cycle script #"
+
+  # Trigger - Turning ON Timer Scheduled Switch
+  # Conditions - NONE
+  # Actions 
+  - alias: Irrigation 1-Time Scheduled Start Cycle
+    description: 'Irrigation 1-Time Scheduled Start Cycle'
+    trigger:
+    - platform: time
+      at: input_datetime.irrigation_start_time
+    condition:
+      condition: state
+      entity_id: input_boolean.irrigation_one_time
+      state: 'on'
+    action:
+      - service: notify.file_debug
+        data_template:
+          message: "Starting 1-Time Scheduled start_irrigation_cycle script #"
+      - service: script.turn_on
+        entity_id: script.start_irrigation_cycle
+      - delay: '00:00:01'
+      - wait_template: "{{ is_state('script.start_irrigation_cycle', 'off') }}"
+      - service: notify.file_debug
+        data_template:
+          message: "Completed 1-Time Scheduled start_irrigation_cycle script #"
 
   # Trigger - Turning OFF Timer Start/Stop Switch
   # Conditions - NONE
   # Actions 
   #         - Run stop script with parameter all irrigation valves control entities
-  - alias: Irrigation Stop Cycle (parameters)
+  - alias: Irrigation Stop Cycle
     description: 'Irrigation Stop Cycle'
     trigger:
-    - entity_id: input_boolean.irrigration_start_stop
-      from: 'on'
-      platform: state
+    - platform: state
+      entity_id: input_boolean.irrigation_immediate
+      to: 'off'
+    - platform: state
+      entity_id: input_boolean.irrigation_one_time
       to: 'off'
     condition: []
     action:
-    - data:
-        variables:
-          control_entity1: 'switch.irrigation_sprinkler_west'
-          control_entity2: 'switch.irrigation_sprinkler_north'
-          control_entity3: 'switch.irrigation_drips'
-      entity_id: script.stop_irrigation_cycle
-      service: script.turn_on
+      - service: notify.file_debug
+        data:
+          message: "stop_irrigation_cycle - Initiated"
+      - service: script.turn_off
+        entity_id: script.start_irrigation_cycle
+      - service: timer.cancel
+        entity_id: timer.irrigation_timer_cycle_duration
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.irrigation_immediate
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.irrigation_one_time
+      - repeat:
+          for_each:
+            - "irrigation_sprinkler_west"
+            - "irrigation_sprinkler_north"
+            - "irrigation_drips"
+          sequence:
+            - service: switch.turn_off
+              target:
+                entity_id: "switch.{{ repeat.item }}"
+      - service: notify.file_debug
+        data:
+          message: "stop_irrigation_cycle - Completed"
 
 ###################################
 ########## S C R I P T S ##########
@@ -162,90 +193,36 @@ automation:
 script:
 # ---------------------
   start_irrigation_cycle:
-    alias: Start irrigation Cycle (Parameters)
+    mode: restart
     sequence:
-    - data_template:
-        message: "start_irrigation_cycle - initiated - {{ states(check_entity1) }} {{ states(control_entity1) }} {{ states(check_entity2) }} {{ states(control_entity2) }} {{ states(check_entity3) }} {{ states(control_entity3) }}"
-      service: notify.file_debug
-    - data_template:
-        variables:
-          check_entity: "{{ check_entity1 }}"
-          control_entity: "{{ control_entity1 }}"
-      entity_id: script.cycle_irrigation_valve
-      service: script.turn_on
-    - delay: '00:00:01'
-    - wait_template: "{{ is_state('script.cycle_irrigation_valve', 'off') }}"
-
-    - data_template:
-        variables:
-          check_entity: '{{ check_entity2 }}'
-          control_entity: '{{ control_entity2 }}'
-      entity_id: script.cycle_irrigation_valve
-      service: script.turn_on
-    - delay: '00:00:01'
-    - wait_template: "{{ is_state('script.cycle_irrigation_valve', 'off') }}"
-
-    - data_template:
-        variables:
-          check_entity: '{{ check_entity3 }}'
-          control_entity: '{{ control_entity3 }}'
-      entity_id: script.cycle_irrigation_valve
-      service: script.turn_on
-    - delay: '00:00:01'
-    - wait_template: "{{ is_state('script.cycle_irrigation_valve', 'off') }}"
-    - data:
-        message: "start_irrigation_cycle - completed"
-      service: notify.file_debug
-
-  # ---------------------
-  cycle_irrigation_valve:
-    alias: irrigation Valve ON/OFF Cycle
-    sequence:
-    - data_template:
-        message: "cycle_irrigation_valve - Initiated # - {{ states(check_entity) }} {{ (is_state(check_entity, 'on')) }} {{ state_attr(check_entity, 'friendly_name') }} {{ state_attr(control_entity, 'friendly_name') }}"
-      service: notify.file_debug
-    - condition: template
-      value_template: "{{ (is_state(check_entity, 'on')) }}"
-    - data_template:
-        entity_id: "{{ control_entity }}"
-      service: switch.turn_on
-    - data_template:
-        entity_id: timer.irrigation_timer_cycle_duration
-        duration: "{{ states('input_number.irrigation_set_time') | int | timestamp_custom('%H:%M:%S',False) }}"
-      service: timer.start
-    - wait_template: "{{ is_state('timer.irrigation_timer_cycle_duration', 'idle' ) }}"
-    - data_template:
-        entity_id: "{{ control_entity }}"
-      service: switch.turn_off
-    - data:
-        message: "cycle_irrigation_valve - Completed"
-      service: notify.file_debug
-
-  # --------------------
-  stop_irrigation_cycle:
-    alias: Stop irrigation Cycle (Parameters)
-    sequence:
-    - data:
-        message: "stop_irrigation_cycle - Initiated"
-      service: notify.file_debug
-    - data: {}
-      entity_id: script.start_irrigation_cycle
-      service: script.turn_off
-    - data: {}
-      entity_id: script.cycle_irrigation_valve
-      service: script.turn_off
-    - data_template:
-        entity_id: timer.irrigation_timer_cycle_duration
-      service: timer.cancel
-    - data_template:
-        entity_id: "{{ control_entity1 }}"
-      service: switch.turn_off
-    - data_template:
-        entity_id: "{{ control_entity2 }}"
-      service: switch.turn_off
-    - data_template:
-        entity_id: "{{ control_entity3 }}"
-      service: switch.turn_off
-    - data:
-        message: "stop_irrigation_cycle - Completed"
-      service: notify.file_debug
+      - repeat:
+          for_each:
+            - "irrigation_sprinkler_west"
+            - "irrigation_sprinkler_north"
+            - "irrigation_drips"
+          sequence:
+            - if:
+                - condition: template
+                  value_template: "{{ is_state('input_boolean.' ~ repeat.item, 'on') }}"
+              then:
+                - service: switch.turn_on
+                  target:
+                    entity_id: "switch.{{ repeat.item }}"
+                - service: notify.file_debug
+                  data_template:
+                    message: "cycle_irrigation_valve {{ repeat.item }} - Turned ON #"
+                - service: timer.start
+                  entity_id: timer.irrigation_timer_cycle_duration
+                  data_template:
+                    duration: "{{ states('input_number.irrigation_set_time') | int | timestamp_custom('%H:%M:%S',False) }}" 
+                - wait_template: "{{ is_state('timer.irrigation_timer_cycle_duration', 'idle' ) }}"
+                - service: switch.turn_off
+                  target:
+                    entity_id: "switch.{{ repeat.item }}"
+                - service: notify.file_debug
+                  data_template:
+                    message: "cycle_irrigation_valve {{ repeat.item }} - Turned OFF #"
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.irrigation_immediate
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.irrigation_one_time
