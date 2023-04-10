@@ -1,0 +1,10 @@
+substitutions:
+  device_name: garden-shed-light
+  friendly_name: "Garden Shed Light"
+  static_ip: 192.168.1.40
+
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+packages:
+  common: !include zzz_common_files/common.yaml
+  family: !include zzz_common_files/common_lightswitch_wfws01.yaml

@@ -1,0 +1,61 @@
+substitutions:
+  platform: ESP8266
+  board: esp8285
+  arduino_version: 2.4.2
+  esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
+  hide_restart_switch: "FALSE"
+
+##############################################################
+#   Sonoff Mini
+##############################################################
+# Blue LED        : GPIO13 inverted
+# Button:         : GPIO00
+# Relay & Red LED : GPIO12
+# Switch Input    : GPIO04 Inverted
+# Spare           : GPIO16
+##############################################################
+
+status_led:
+  pin:
+    number: GPIO13
+    inverted: True
+
+binary_sensor:
+  - platform: gpio
+    id: button_input
+    name: "${friendly_name} Button"
+    pin:
+      number: GPIO00
+      inverted: TRUE
+    internal: true
+    filters:
+      - delayed_off: 50ms
+    on_click:
+    - min_length: ${reset_hold_min}s
+      max_length: ${reset_hold_max}s
+      then:
+        - switch.turn_on: restart_device
+
+  - platform: gpio
+    name: "${friendly_name} Switch"
+    id: switch_input
+    pin:
+      number: GPIO04
+      # inverted: TRUE
+    internal: true
+    filters:
+      - delayed_off: 50ms
+    on_state:
+      - light.toggle: light_output
+
+output:
+- platform: gpio
+  id: relay
+  pin: GPIO12
+
+light:
+- platform: binary
+  id: light_output
+  name: "${friendly_name}"
+  output: relay
+  restore_mode: ALWAYS_OFF

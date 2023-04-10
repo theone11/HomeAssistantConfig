@@ -1,0 +1,22 @@
+substitutions:
+  platform: ESP8266
+  board: esp01_1m
+  device_name: playroom_dimmer_wfds01
+  friendly_name: "Playroom Light Dimmer Ceiling"
+  esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
+  hide_extra_info: "TRUE" # "TRUE" / "FALSE"
+  
+  # Blue LED and Reset Timing
+  blue_led_hold_min: "5"
+  blue_led_hold_max: "10"
+  reset_hold_min: "20"
+  reset_hold_max: "60"
+
+  # Applicable for Curtain Switches
+  duration_open: "xx" # Actually xx
+  duration_close: "xx" # Actually xx
+  
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+<<: !include zzz_common_files/common.yaml
+<<: !include zzz_common_files/common_dimmerswitch_wfds01.yaml

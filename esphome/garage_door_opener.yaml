@@ -1,0 +1,90 @@
+substitutions:
+  platform: ESP8266
+  board: esp01_1m
+  device_name: garage-door-opener
+  friendly_name: "Garage Door"
+  static_ip: 192.168.1.51
+  esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
+  hide_restart_switch: "FALSE" # "TRUE" / "FALSE"
+  
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+packages:
+  common: !include zzz_common_files/common.yaml
+
+##############################################################
+#   Sonoff SV
+##############################################################
+#
+# Status LED:              GPIO13
+# Button:                  GPIO00 (Flash Button)
+# Ultrasonic HC-SR04 Echo: GPIO03 (RX)
+# Ultrasonic HC-SR04 Trig: GPIO01 (TX)
+# Reed Switch Close:       GPIO04
+# Reed Switch Open:        GPIO05
+# Spare:                   GPIO14
+#
+##############################################################
+
+status_led:
+  pin:
+    number: GPIO13
+    inverted: False
+
+binary_sensor:
+  - platform: gpio
+    id: open_sensor
+    pin:
+      number: GPIO4
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "${friendly_name} Close"
+    device_class: garage_door
+  - platform: gpio
+    id: close_sensor
+    pin:
+      number: GPIO5
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "${friendly_name} Open"
+    device_class: garage_door
+
+sensor:
+  - platform: ultrasonic
+    id: ultrasonic_sensor1
+    trigger_pin: GPIO01
+    echo_pin: GPIO03
+    name: "${friendly_name} Distance"
+    update_interval: 2s
+    # filters:
+    #   filter_out: nan
+    # timeout: 9m
+
+switch:
+  - platform: gpio
+    pin: GPIO12
+    id: relay
+  - platform: template
+    id: relay_momentary
+    name: "${friendly_name} Button"
+    icon: "mdi:gate"
+    turn_on_action:
+    - switch.turn_on: relay
+    - delay: 500ms
+    - switch.turn_off: relay
+
+cover:
+  - platform: endstop
+    name: "${friendly_name}"
+    device_class: garage
+    max_duration: 40sec
+    open_action:
+      - switch.turn_on: relay_momentary
+    open_duration: 30sec
+    open_endstop: open_sensor
+    close_action:
+      - switch.turn_on: relay_momentary
+    close_duration: 30sec
+    close_endstop: close_sensor
+    stop_action:
+      - switch.turn_on: relay_momentary

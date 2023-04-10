@@ -1,0 +1,122 @@
+substitutions:
+  platform: ESP8266
+  board: d1_mini_pro #esp12e #esp01_1m
+  device_name: work_display_wemosd1minipro
+  friendly_name: "Work Display"
+  static_ip: 192.168.1.99
+  esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
+  hide_extra_info: "TRUE" # "TRUE" / "FALSE"
+
+  # Blue LED and Reset Timing
+  blue_led_hold_min: "5"
+  blue_led_hold_max: "10"
+  reset_hold_min: "20"
+  reset_hold_max: "60"
+
+  # Applicable for Curtain Switches
+  duration_open: "xx" # Actually xx
+  duration_close: "xx" # Actually xx
+  
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+<<: !include zzz_common_files/common.yaml
+
+##############################################################
+#   WF-CS01 Curtain Switch functionality * numbers are GPIO#
+##############################################################
+#
+# Status LED: GPIO02
+#
+# DHT22/AM2302 Temperature & Humidity sensor: GPIO00
+# SI7021 Temperature & Humidity sensor: I2C SDA-GPIO04 SCL-GPIO05 (address 0x40)
+# Water Sensor: A0
+#
+##############################################################
+
+status_led:
+  pin:
+    number: GPIO02
+    inverted: True
+
+output:
+  - platform: esp8266_pwm
+    pin: GPIO02
+    inverted: true
+    frequency: 1 Hz
+    id: gpio02
+
+i2c:
+  id: bus_a
+  sda: GPIO04 #D2
+  scl: GPIO05 #D1
+  scan: True
+  frequency: 400kHz
+
+sensor:
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal Sensor"
+    update_interval: 60s
+    internal: true
+
+  - platform: uptime
+    id: uptime_sensor
+    name: "${friendly_name} Uptime Sensor"
+    internal: true
+
+  # - platform: dht
+  #   model: AM2302
+  #   pin: GPIO00
+  #   temperature:
+  #     name: "${friendly_name} AM2302 Temperature"
+  #   humidity:
+  #     name: "${friendly_name} AM2302 Humidity"
+  #   update_interval: 15s
+
+  # - platform: htu21d
+  #   i2c_id: bus_a
+  #   address: 0x40
+  #   temperature:
+  #     name: "${friendly_name} SI7021 Temperature"
+  #   humidity:
+  #     name: "${friendly_name} SI7021 Humidity"
+  #   update_interval: 15s
+
+interval:
+  - interval: 5sec
+    then:
+      - display.page.show_next: my_display
+      - component.update: my_display
+
+font:
+  - file: "zzz_resource_files/times.ttf"
+    id: my_font
+    size: 10
+
+image:
+  - file: "zzz_resource_files/hp_logo.jpg"
+    id: hp_logo
+    resize: 64x48
+
+display:
+  - platform: ssd1306_i2c
+    id: my_display
+    model: "SSD1306 64x48"
+    address: 0x3C
+    pages:
+      - id: page1
+        lambda: |-
+          it.image(0, 0, id(hp_logo));
+      - id: page2
+        lambda: |-
+          it.printf(0, 10, id(my_font), "Uptime");
+          it.printf(0, 30, id(my_font), "%lf s", id(uptime_sensor).state);
+      - id: page3
+        lambda: |-
+          it.rectangle(0, 0, 64, 48);
+          it.rectangle(1, 1, 63, 47);
+          it.rectangle(2, 2, 62, 46);
+          it.circle(17,19,10);
+          it.circle(33,19,10);
+          it.circle(49,19,10);
+          it.circle(26,31,10);
+          it.circle(40,31,10);

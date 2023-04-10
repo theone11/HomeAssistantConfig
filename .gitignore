@@ -18,6 +18,8 @@
 !www/images/floorplan/navigation
 !www/images/floorplan/shutters
 !www/images/radio_stations
+!esphome/
+!esphome/zzz*
 
 #!esphome
 #!esphome/zzz_common_files

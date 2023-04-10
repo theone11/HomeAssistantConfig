@@ -1,0 +1,110 @@
+substitutions:
+  platform: ESP8266
+  board: esp12e
+  device_name: wittycloud_3
+  friendly_name: "WittyCloud 3"
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+<<: !include zzz_common_files/common.yaml
+
+status_led:
+  pin:
+    number: GPIO2
+    inverted: True
+
+
+switch:
+  - platform: restart
+    id: restart_device
+    internal: True
+    icon: mdi:restart
+
+
+sensor:
+  - platform: adc
+    pin: A0
+    name: "${friendly_name} Illuminance"
+    unit_of_measurement: lux
+    update_interval: 15s
+    filters:
+      lambda: 'return (x * 3.3 / 10000.0) * 2000000.0;'
+
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal Sensor"
+    update_interval: 60s
+
+  - platform: uptime
+    name: "${friendly_name} Uptime Sensor"
+    
+    
+binary_sensor:
+  - platform: gpio
+    device_class: power
+    name: "${friendly_name} Input 1"
+    pin:
+      number: GPIO5
+      mode: INPUT_PULLUP
+      inverted: FALSE
+    filters:
+      - delayed_on: 10ms
+
+  - platform: gpio
+    device_class: power
+    name: "${friendly_name} Input 2"
+    pin:
+      number: GPIO14
+      mode: INPUT_PULLUP
+      inverted: FALSE
+    filters:
+      - delayed_on: 10ms
+
+#  - platform: gpio
+#    device_class: power
+#    name: "${friendly_name} Input 3"
+#    pin:
+#      number: GPIO15
+#      mode: INPUT_PULLUP
+#      inverted: FALSE
+#    filters:
+#      - delayed_on: 10ms
+
+  - platform: gpio
+    name: "${friendly_name} Push-Button"
+    pin:
+      number: GPIO4
+      inverted: True
+    filters:
+      - delayed_on: 10ms
+    on_click:
+      min_length: 10s
+      max_length: 60s
+      then:
+        - switch.turn_on: restart_device
+
+  - platform: status
+    name: "${friendly_name} Status"
+
+
+light:
+  - platform: rgb
+    name: "${friendly_name} Onboard LED"
+    red: output_component1
+    green: output_component2
+    blue: output_component3
+
+
+output:
+  - platform: esp8266_pwm
+    id: output_component1
+    pin: GPIO15
+    max_power: 100%
+
+  - platform: esp8266_pwm
+    id: output_component2
+    pin: GPIO12
+    max_power: 100%
+
+  - platform: esp8266_pwm
+    id: output_component3
+    pin: GPIO13
+    max_power: 100%

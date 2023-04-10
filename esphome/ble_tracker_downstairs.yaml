@@ -1,0 +1,54 @@
+substitutions:
+  platform: ESP32
+  board: nodemcu-32s
+  device_name: ble-tracker-downstairs
+  friendly_name: "BLE Tracker Downstairs"
+  static_ip: 192.168.1.75
+  hide_restart_switch: "FALSE" # "TRUE" / "FALSE"
+  
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+packages:
+  common: !include zzz_common_files/common_esp32.yaml
+
+##############################################################
+#   Custom Boiler Power functionality
+##############################################################
+#
+# Status LED: GPIO02
+#
+# Spare : Dx GPIOxx ()
+#
+##############################################################
+
+status_led:
+  pin:
+    number: GPIO02
+    inverted: True
+
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 2000ms
+    window: 1500ms
+bluetooth_proxy:
+
+# sensor:
+#   - platform: xiaomi_lywsd03mmc
+#     mac_address: "A4:C1:38:CA:0C:2F" # #1
+#     bindkey: "7956915a4bbf3daa28c0fa6ad8b9c140"
+#     temperature:
+#       name: "Livingroom TV Temperature"
+#     humidity:
+#       name: "Livingroom TV Humidity"
+#     battery_level:
+#       name: "Livingroom TV Battery Level"
+
+#   - platform: xiaomi_lywsd03mmc
+#     mac_address: "A4:C1:38:3B:9C:2F" # #2
+#     bindkey: "910f1a5160335a5670100e89e2bfafac"
+#     temperature:
+#       name: "Livingroom Corner Temperature"
+#     humidity:
+#       name: "Livingroom Corner Humidity"
+#     battery_level:
+#       name: "Livingroom Corner Battery Level"

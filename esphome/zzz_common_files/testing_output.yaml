@@ -1,0 +1,47 @@
+#All ESP8266 outputs
+
+switch:
+
+  - platform: gpio
+    id: output_gpio01
+    pin: GPIO01
+
+  - platform: gpio
+    id: output_gpio03
+    pin: GPIO03
+
+  - platform: gpio
+    id: output_gpio05
+    pin: GPIO05
+
+  - platform: gpio
+    id: output_gpio04
+    pin: GPIO04
+
+  - platform: gpio
+    id: output_gpio00
+    pin: GPIO00
+
+  - platform: gpio
+    id: output_gpio02
+    pin: GPIO02
+
+  - platform: gpio
+    id: output_gpio14
+    pin: GPIO14
+
+  - platform: gpio
+    id: output_gpio13
+    pin: GPIO13
+
+  - platform: gpio
+    id: output_gpio12
+    pin: GPIO12
+
+  - platform: gpio
+    id: output_gpio15
+    pin: GPIO15
+
+  - platform: gpio
+    id: output_gpio16
+    pin: GPIO16

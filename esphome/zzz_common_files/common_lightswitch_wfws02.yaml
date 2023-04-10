@@ -1,0 +1,120 @@
+substitutions:
+  platform: ESP8266
+  board: esp01_1m
+  esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
+
+##############################################################
+#   WF-WS02 Double Wall Light Switch
+##############################################################
+#
+#   * Numbers are GPIO#
+#
+#          |  TOP  | BOTTOM |            Green LED - 00
+#   -------------------------            Blue LED  - ??
+#   Button |   12  |   05   |
+#   -------------------------
+#   LED    |   16  |   02   |
+#   -------------------------
+#   Relay  |   13  |   15   |
+#          |   L1  |   L3   |
+#
+##############################################################
+
+status_led:
+  pin:
+    number: GPIO00
+    inverted: False
+
+
+binary_sensor:
+
+  - platform: gpio
+    id: button_top
+    internal: TRUE
+    pin:
+      number: GPIO12
+      inverted: TRUE
+      mode: INPUT_PULLUP
+    filters:
+      - delayed_on: 50ms
+    on_press:
+      - light.toggle: light_output_top
+    on_click:
+    # - min_length: ${blue_led_hold_min}s
+    #   max_length: ${blue_led_hold_max}s
+    #   then:
+    #     - switch.toggle: blue_led
+    - min_length: ${reset_hold_min}s
+      max_length: ${reset_hold_max}s
+      then:
+        - switch.turn_on: restart_device
+
+  - platform: gpio
+    id: button_bottom
+    internal: TRUE
+    pin:
+      number: GPIO05
+      inverted: TRUE
+      mode: INPUT_PULLUP
+    filters:
+      - delayed_on: 50ms
+    on_press:
+      - light.toggle: light_output_bottom
+    on_click:
+    # - min_length: ${blue_led_hold_min}s
+    #   max_length: ${blue_led_hold_max}s
+    #   then:
+    #     - switch.toggle: blue_led
+    - min_length: ${reset_hold_min}s
+      max_length: ${reset_hold_max}s
+      then:
+        - switch.turn_on: restart_device
+
+
+switch:
+
+  - platform: gpio
+    id: red_led_top
+    internal: true
+    pin: GPIO16
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    id: red_led_bottom
+    internal: true
+    pin: GPIO02
+    restore_mode: ALWAYS_OFF
+
+
+output:
+
+  - platform: gpio
+    id: relay_l1_top
+    pin: GPIO13
+
+  - platform: gpio
+    id: relay_l3_bottom
+    pin: GPIO15
+
+
+light:
+
+  - platform: binary
+    id: light_output_top
+    name: "${friendly_name} Top"
+    output: relay_l1_top
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+    - switch.turn_on: red_led_top
+    on_turn_off:
+    - switch.turn_off: red_led_top
+
+  - platform: binary
+    id: light_output_bottom
+    name: "${friendly_name} Bottom"
+    output: relay_l3_bottom
+    restore_mode: ALWAYS_OFF
+    on_turn_on:
+    - switch.turn_on: red_led_bottom
+    on_turn_off:
+    - switch.turn_off: red_led_bottom

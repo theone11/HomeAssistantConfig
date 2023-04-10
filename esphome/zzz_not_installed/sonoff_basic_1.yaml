@@ -1,0 +1,55 @@
+substitutions:
+  platform: ESP8266
+  board: esp01_1m
+  device_name: sonoff_basic_1
+  friendly_name: "Sonoff Basic #1"
+  esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
+  hide_extra_info: "TRUE" # "TRUE" / "FALSE"
+
+  # Blue LED and Reset Timing
+  blue_led_hold_min: "5"
+  blue_led_hold_max: "10"
+  reset_hold_min: "20"
+  reset_hold_max: "60"
+
+  # Applicable for Curtain Switches
+  duration_open: "xx" # Actually xx
+  duration_close: "xx" # Actually xx
+
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+<<: !include zzz_common_files/common.yaml
+
+status_led:
+  pin:
+    number: GPIO13
+    inverted: yes
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    name: "${friendly_name} Button"
+    filters:
+      - delayed_on: 50ms
+    on_press:
+      - switch.toggle: relay
+    on_click:
+      - min_length: ${reset_hold_min}s
+        max_length: ${reset_hold_max}s
+        then:
+          - switch.turn_on: restart_device
+
+switch:
+  - platform: gpio
+    name: "${friendly_name} Relay"
+    pin: GPIO12
+    id: relay
+    restore_mode: ALWAYS_OFF
+
+  - platform: restart
+    id: restart_device
+    internal: True
+    icon: mdi:restart

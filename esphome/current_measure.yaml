@@ -1,0 +1,151 @@
+substitutions:
+  platform: ESP8266
+  board: d1_mini
+  device_name: current-measure
+  friendly_name: "Current Measure"
+  static_ip: 192.168.1.52
+  esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
+  
+  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
+
+packages:
+  common: !include zzz_common_files/common.yaml
+
+##############################################################
+#   Wemos D1 Mini * numbers are GPIO#
+##############################################################
+#
+# Status LED:              GPIO02
+# SDA:                  GPIO04 (D2)
+# SCL:                  GPIO05 (D1)
+#
+##############################################################
+
+status_led:
+  pin:
+    number: GPIO02
+    inverted: True
+
+i2c:
+  sda: D2
+  scl: D1
+  frequency: 400kHz
+
+ads1115:
+  - address: 0x48
+    id: channel_01
+    continuous_mode: True
+  - address: 0x49
+    id: channel_23
+    continuous_mode: True
+  
+sensor:
+  - platform: ads1115
+    ads1115_id: channel_01
+    multiplexer: 'A0_A1'
+    gain: 1.024
+    name: "${friendly_name} Channel 0"
+    id: channel_0
+    update_interval: 10s
+
+  # - platform: ads1115
+  #   ads1115_id: channel_01
+  #   multiplexer: 'A2_A3'
+  #   gain: 1.024
+  #   name: "${friendly_name} Channel 1"
+  #   id: channel_1
+  #   update_interval: 2s
+
+  - platform: ads1115
+    ads1115_id: channel_23
+    multiplexer: 'A0_A1'
+    gain: 1.024
+    name: "${friendly_name} Channel 2"
+    id: channel_2
+    update_interval: 10s
+
+  # - platform: ads1115
+  #   ads1115_id: channel_01
+  #   multiplexer: 'A2_A3'
+  #   gain: 1.024
+  #   name: "${friendly_name} Channel 3"
+  #   id: channel_3
+  #   update_interval: 2s
+
+  - platform: ct_clamp
+    sensor: channel_0
+    name: "${friendly_name} Power 0 [W]" #" Current [A]"
+    id: power_0
+    unit_of_measurement: "W"
+    sample_duration: 200ms
+    update_interval: 5s
+    accuracy_decimals: 2
+    filters:
+      - calibrate_linear: # Using 227VAC as reference voltage to calcualte current based on bulb Wattage
+        - 0.00000 -> 0
+        - 0.00308 -> 60 #0.2643
+        - 0.00366 -> 75 #0.3304
+        #- 0.00000 -> 2500
+      - delta: 20
+
+  # - platform: ct_clamp
+  #   sensor: channel_1
+  #   name: "${friendly_name} Power 1 [W]" #" Current [A]"
+  #   id: power_1
+  #   unit_of_measurement: "W"
+  #   sample_duration: 200ms
+  #   update_interval: 5s
+  #   accuracy_decimals: 2
+  #   filters:
+  #     - calibrate_linear: # Using 227VAC as reference voltage to calcualte current based on bulb Wattage
+  #       - 0.00000 -> 0
+  #       - 0.00308 -> 60 #0.2643
+  #       - 0.00366 -> 75 #0.3304
+  #       #- 0.00000 -> 2500
+  #     - delta: 20
+
+  - platform: ct_clamp
+    sensor: channel_2
+    name: "${friendly_name} Power 2 [W]" #" Current [A]"
+    id: power_2
+    unit_of_measurement: "W"
+    sample_duration: 200ms
+    update_interval: 5s
+    accuracy_decimals: 2
+    filters:
+      - calibrate_linear: # Using 227VAC as reference voltage to calcualte current based on bulb Wattage
+        - 0.00000 -> 0
+        - 0.00308 -> 60 #0.2643
+        - 0.00366 -> 75 #0.3304
+        #- 0.00000 -> 2500
+      - delta: 20
+
+  # - platform: ct_clamp
+  #   sensor: channel_3
+  #   name: "${friendly_name} Power 3 [W]" #" Current [A]"
+  #   id: power_3
+  #   unit_of_measurement: "W"
+  #   sample_duration: 200ms
+  #   update_interval: 5s
+  #   accuracy_decimals: 2
+  #   filters:
+  #     - calibrate_linear: # Using 227VAC as reference voltage to calcualte current based on bulb Wattage
+  #       - 0.00000 -> 0
+  #       - 0.00308 -> 60 #0.2643
+  #       - 0.00366 -> 75 #0.3304
+  #       #- 0.00000 -> 2500
+  #     - delta: 20
+      
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 64x48"
+    #reset_pin: D0
+    address: 0x3C
+    lambda: |-
+      it.printf(0,  6, id(times), "CH0: %.2fW", id(power_0).state);
+      it.printf(0, 30, id(times), "CH2: %.2fW", id(power_2).state);
+
+font:
+  - file: "zzz_resource_files/times.ttf"
+    id: times
+    size: 9

@@ -1,0 +1,38 @@
+      if ((id(panel_out).state != NAN) and (id(in_from_panel).state != NAN) and (id(out_to_panel).state != NAN) and (id(sun_elevation).state != NAN))
+        if (id(panel_out).state < 20)                                 // Panel under 20C
+        //{
+          //id(temperature_difference_state).state = "Cold Panel";
+          return -10;
+        //}
+        else if (id(sun_elevation).state < 17)                        // Panel over 20C and Low sun elevation
+        //{                                                              // https://www.suncalc.org/#/31.9401,34.7953,16/2021.04.17/18:34/1/3
+          //id(temperature_difference_state).state = "Low Sun";
+          return -12;
+        //}
+        else if (id(panel_out).state > 45)                            // High sun elevation and Panel over 45C
+          if (id(panel_out).state > (id(in_from_panel).state) + 1)    //   Panel warmer than Boiler Top by at least 1C
+          //{ 
+            //id(temperature_difference_state).state = "Panel Hotter Top";
+            return 15;
+          //}
+          else                                                        //   Panel colder than Boiler Top
+            if (id(panel_out).state > (id(out_to_panel).state) + 1)   //     Panel warmer than Boiler Bottom by at least 1C
+            //{
+              //id(temperature_difference_state).state = "Panel Hotter Bottom";
+              return 17;
+            //}
+            else                                                      //     Panel colder than Boiler Top and Boiler Bottom
+            //{
+              //id(temperature_difference_state).state = "Panel Colder";
+              return -14;
+            //}
+        else                                                          // Panel under 45C
+        //{
+          //id(temperature_difference_state).state = "Panel <45C";
+          return (id(panel_out).state - id(in_from_panel).state);
+        //}
+      else                                                            // No temperature readings (NAN)
+      //{
+        //id(temperature_difference_state).state = "NAN Error";
+        return -16;
+      //}
