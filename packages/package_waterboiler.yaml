@@ -2,37 +2,6 @@
 ########## E N T I T I E S ##########
 #####################################
 
-input_boolean:
-  boiler_switch_immediate:
-    name: Water Boiler Immediate
-    icon: mdi:water-boiler
-
-  boiler_switch_one_time:
-    name: Water Boiler One Time
-    icon: mdi:water-boiler
-
-input_number:
-  boiler_switch_on_duration:
-    name: Duration
-    unit_of_measurement: "min"
-    #    initial: 30
-    min: 0
-    max: 240
-    step: 5
-
-  boiler_disable_schedulers_temperature:
-    name: Water Boiler Disable Schedulers Temperature
-    unit_of_measurement: "ºC"
-    #    initial: 25
-    min: 20
-    max: 60
-    step: 1
-
-timer:
-  boiler_switch_on_duration_timer:
-    name: Time Left
-    icon: mdi:timer-outline
-
 sensor:
   - platform: template
     sensors:
@@ -44,6 +13,35 @@ sensor:
           {% else %}
             {{ 1 }}
           {% endif %}
+
+input_number:
+  boiler_switch_on_duration:
+    name: Duration
+    unit_of_measurement: "min"
+    #    initial: 30
+    min: 0
+    max: 240
+    step: 5
+  boiler_disable_schedulers_temperature:
+    name: Water Boiler Disable Schedulers Temperature
+    unit_of_measurement: "ºC"
+    #    initial: 25
+    min: 40
+    max: 70
+    step: 1
+
+input_boolean:
+  boiler_switch_immediate:
+    name: Water Boiler Immediate
+    icon: mdi:water-boiler
+  boiler_switch_one_time:
+    name: Water Boiler One Time
+    icon: mdi:water-boiler
+
+timer:
+  boiler_switch_on_duration_timer:
+    name: Time Left
+    icon: mdi:timer-outline
 
 input_datetime:
   boiler_switch_start_time:

@@ -168,6 +168,7 @@
 {% set settings_color = 'gray' %}
 {% set settings_left, settings_top = 98.5, 1 %}
 {% set settings_scaleX, settings_scaleY = 0.8, 0.8 %}
+{% set settings_tab_names = ["Visual Limit", "Functional Limits", "Visual"] %}
 #                             entity                                                 , column, section, label                 , type
 {% set settings_entities = [("input_number.mfc_j470dw_ink_low_limit"                 , "1", "y", "Printers"              , "slider"),
                             ("input_number.water_consumption_hourly_limit"           , "1", "y", "Water Consumption"     , "slider"),
@@ -180,7 +181,14 @@
                             ("input_boolean.ui_hide_water_boiler_temperatures"       , "3", "n", ""                      , "entity"),
                             ("input_boolean.ui_hide_weather          "               , "3", "n", ""                      , "entity"),
                             ("input_boolean.ui_hide_calendar         "               , "3", "n", ""                      , "entity"),
-                            ("input_boolean.ui_hide_navigation"                      , "3", "n", ""                      , "entity")] %}
+                            ("input_boolean.ui_hide_navigation"                      , "3", "n", ""                      , "entity"),
+                            ("input_boolean.ui_show_timer_bar_or_time"               , "3", "y", "Visual Options"        , "entity")] %}
+
+#--------------------------------------------------------------------------------------------------
+# Clock
+#--------------------------------------------------------------------------------------------------
+{% set clock_left, clock_top = 87, -2 %}
+{% set clock_scaleX, clock_scaleY = 1.5, 1.5 %}
 
 #--------------------------------------------------------------------------------------------------
 # Actions
@@ -495,6 +503,7 @@ cards:
           #     left: -3% #-3% 0%
           #     top: -5%  #-3% 0%
           #     transform: 'translate(50%, 50%) scale(1.5, 1.5)'
+
           - type: custom:weather-card
             entity: weather.accuweather
             icons: "/local/icons/weather_icons/static/"
@@ -526,10 +535,6 @@ cards:
                   style: |
                     --popup-min-width: 80vw;
                     --popup-border-color: white;
-                  # style: |
-                  #   :host .content {
-                  #     width: 80vw;
-                  #   }
                   title: Hourly Weather Forecast
                   content:
                     type: custom:hourly-weather
@@ -539,14 +544,6 @@ cards:
                     show_precipitation_probability: true
                     show_precipitation_amounts: true
                     show_wind: false
-                    # type: 'custom:weather-card'
-                    # entity: weather.openweathermap
-                    # hourly_forecast: true
-                    # forecast: true
-                    # number_of_forecasts: '18'
-                    # details: false
-                    # current: false
-                    # icons: /local/icons/weather_icons/static/
             double_tap_action:
               action: none
             hold_action:
@@ -635,10 +632,6 @@ cards:
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 30vw;
-              #   }
               entity_id: light.kitchen_table_light_ambilight
           {% else %}
           action: more-info
@@ -730,10 +723,6 @@ cards:
                 --popup-min-width: 20vw;
                 --popup-max-width: 20vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 25vw;
-              #   }
               title: Cover
               content:
                 type: 'custom:vertical-slider-cover-card'
@@ -744,14 +733,6 @@ cards:
                 switchColor: closedColor
                 entities:
                   - entity: cover.{{ entity }}
-                # entities:
-                #   - entity: cover.{{ entity }}
-                #   - entity: cover.{{ entity }}
-                #     full_row: true
-                #     hide_state: true
-                #     type: 'custom:slider-entity-row'
-                # show_header_toggle: false
-                # type: entities
         type: image
       {% endif %}
       {% endfor %}
@@ -799,13 +780,8 @@ cards:
                 --popup-min-width: 25vw;
                 --popup-max-width: 25vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 25vw;
-              #   }
               title: {{ entity_group.capitalize() }} Shutters
               content:
-                # entities:
                 type: 'custom:vertical-slider-cover-card'
                 title: not_shown
                 showSidebar: false
@@ -816,14 +792,8 @@ cards:
                   {% for entity, group, left, top, scaleX, scaleY, tap_action in covers %}
                   {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) and (entity_group == group) %}
                   - entity: cover.{{ entity }}
-                  # - entity: cover.{{ entity }}
-                  #   full_row: true
-                  #   hide_state: true
-                  #   type: 'custom:slider-entity-row'
                   {% endif %}
                   {% endfor %}
-                # show_header_toggle: false
-                # type: entities
         type: state-icon
 
       - icon: {{ icon }}
@@ -894,11 +864,6 @@ cards:
                 --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     height: 45vh;
-              #     width: 50vw;
-              #   }
               title: {{ display_name }} Scheduler
               content:
                 {{ create_schedulers_popup(entity, "DSD") }}
@@ -931,11 +896,6 @@ cards:
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     height: 60vh;
-              #     width: 30vw;
-              #   }
               browser_id: THIS
               title: Irrigation Valves 1-Time Cycle
               content:
@@ -1056,14 +1016,20 @@ cards:
           - entity: timer.irrigation_timer_cycle_duration
             state_not: 'idle'
         elements:
-          - type: state-label
-            entity: timer.irrigation_timer_cycle_duration
-            attribute: remaining
+          - type: 'custom:config-template-card'
+            variables:
+              SHOW_BAR: states['input_boolean.ui_show_timer_bar_or_time'].state
+            entities:
+              - input_boolean.ui_show_timer_bar_or_time
+            card:
+              type: custom:timer-bar-card
+              entity: timer.irrigation_timer_cycle_duration
+              layout: full_row
+              text_width: "${ SHOW_BAR === 'on' ? '0%' : '100%' }"
             style:
-              color: red
               left: 53%
-              top: 33%
-              transform: 'translate(-50%, -50%)'
+              top: 33.5%
+              transform: "${ SHOW_BAR === 'on' ? 'translate(-50%, -50%) scale(2, 1)' : 'translate(-50%, -50%) scale(1, 1)' }"
 
 ######## ######## ##     ## ########  ######## ########     ###    ######## ##     ## ########  ########     ######  ######## ##    ##  ######   #######  ########   ######  
    ##    ##       ###   ### ##     ## ##       ##     ##   ## ##      ##    ##     ## ##     ## ##          ##    ## ##       ###   ## ##    ## ##     ## ##     ## ##    ## 
@@ -1112,11 +1078,6 @@ cards:
                 --popup-min-width: 75vw;
                 --popup-max-width: 75vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 75vw;
-              #     height: 75vh;
-              #   }
               title: Temperature & Humidity Sensors
               content:
                 type: grid
@@ -1196,10 +1157,6 @@ cards:
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 25vw;
-              #   }
               title: Water Boiler 1-Time Cycle
               content:
                 type: grid
@@ -1210,19 +1167,33 @@ cards:
                     entity: switch.{{ entity }}
                     show_icon: true
                     show_name: false
-                    hold_action:
-                      action: more-info
                     tap_action:
                       action: toggle
+                    hold_action:
+                      action: none
+                    double_tap_action:
+                      action: none
                   - type: 'custom:slider-entity-row'
                     entity: input_number.{{ entity }}_on_duration
                     hide_state: false
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: none
+                    double_tap_action:
+                      action: none
                   - type: 'custom:time-picker-card'
                     entity: input_datetime.{{ entity }}_start_time
                     layout:
                       embedded: true
                       name: inside
                       align_controls: right
+                    hold_action:
+                      action: none
+                    tap_action:
+                      action: none
+                    double_tap_action:
+                      action: none
                   - type: grid
                     columns: 2
                     square: false
@@ -1231,15 +1202,20 @@ cards:
                         entity: input_boolean.{{ entity }}_immediate
                         show_name: false
                         icon: mdi:power
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
                       - type: button
                         entity: input_boolean.{{ entity }}_one_time
                         show_name: false
                         icon: mdi:timer-outline
-                  - type: entities
-                    # title: 1-Time Cycle
-                    show_header_toggle: false
-                    entities:
-                      - entity: timer.{{ entity }}_on_duration_timer
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                  - type: custom:timer-bar-card
+                    entity: timer.{{ entity }}_on_duration_timer
         double_tap_action:
           action: more-info
         hold_action:
@@ -1252,11 +1228,6 @@ cards:
                 --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     height: 45vh;
-              #     width: 50vw;
-              #   }
               title: {{ display_name }} Scheduler
               content:
                 {{ create_schedulers_popup(entity, "DSD") }}
@@ -1267,6 +1238,8 @@ cards:
         conditions:
           - entity: input_boolean.{{ entity }}_one_time
             state: 'on'
+          - entity: timer.{{ entity }}_on_duration_timer
+            state_not: 'idle'
         elements:
           - type: state-label
             entity: input_datetime.boiler_switch_start_time
@@ -1275,20 +1248,27 @@ cards:
               left: {{ left }}%
               top: {{ top - timer_top_offset }}%
               transform: 'translate(-50%, -50%)'
-  
+
       - type: conditional
         conditions:
           - entity: timer.{{ entity }}_on_duration_timer
             state_not: 'idle'
         elements:
-          - type: state-label
-            entity: timer.{{ entity }}_on_duration_timer
-            attribute: remaining
+          - type: 'custom:config-template-card'
+            variables:
+              SHOW_BAR: states['input_boolean.ui_show_timer_bar_or_time'].state
+            entities:
+              - input_boolean.ui_show_timer_bar_or_time
+            card:
+              type: custom:timer-bar-card
+              entity: timer.{{ entity }}_on_duration_timer
+              layout: full_row
+              text_width: "${ SHOW_BAR === 'on' ? '0%' : '100%' }"
             style:
-              color: red
               left: {{ left }}%
               top: {{ top + timer_top_offset }}%
-              transform: 'translate(-50%, -50%)'
+              transform: "${ SHOW_BAR === 'on' ? 'translate(-50%, -50%) scale(1.5, 1)' : 'translate(-50%, -50%) scale(1, 1)' }"
+
       {% endfor %}
 
       # -----------------------------------------------
@@ -1314,11 +1294,6 @@ cards:
                 --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 75vw;
-              #     height: 75vh;
-              #   }
               title: Water Boiler Temperature & Humidity
               content:
                 type: grid
@@ -1418,10 +1393,6 @@ cards:
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 25vw;
-              #   }
               title: Vacuum {{ entity.capitalize() }}
               content:
                 type: custom:xiaomi-vacuum-map-card
@@ -1444,11 +1415,6 @@ cards:
                 --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     height: 35vh;
-              #     width: 50vw;
-              #   }
               title: Vacuum {{ entity.capitalize() }} Scheduler
               content:
                 {{ create_schedulers_popup("vacuum_" ~ entity, "DS") }}
@@ -1483,11 +1449,6 @@ cards:
                 --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 80vw;
-              #     height: 82vh;
-              #   }
               content:
                 type: iframe
                 url: !secret squeezebox_url
@@ -1502,11 +1463,6 @@ cards:
                 --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 80vw;
-              #     height: 82vh;
-              #   }
               content:
                 type: iframe
                 url: !secret squeezebox_url_regular
@@ -1550,37 +1506,41 @@ cards:
                 --popup-min-width: 25vw;
                 --popup-max-width: 25vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 25vw;
-              #   }
-              title: {{ entity.capitalize() }} Air Conditioning
               content:
-                type: 'custom:simple-thermostat'
-                entity: climate.hvac_{{ entity }}
-                header: false
-                setpoints:
-                layout:
-                  step: row
-                  mode:
-                    names: false
-                    icons: true
-                    headings: false
-                decimals: 0
-                step_size: 1
-                hide:
-                  state: true
-                  temperature: true
-                control:
-                  hvac: true
-                  fan:
-                    "low":
-                      icon: mdi:fan-speed-1
-                    "mid":
-                      icon: mdi:fan-speed-2
-                    "high":
-                      icon: mdi:fan-speed-3
-
+                type: custom:silent-remotes-card
+                remote: remote.{{ entity }}
+                commandsFilePath: /local/remotes/1620.json
+                theme: light
+                title: {{ entity.capitalize() }} AC
+                remoteType: ac
+                callServiceProps:
+                  domain: remote
+                  service: send_command
+              # title: {{ entity.capitalize() }} Air Conditioning
+                # type: 'custom:simple-thermostat'
+                # entity: climate.hvac_{{ entity }}
+                # header: false
+                # setpoints:
+                # layout:
+                #   step: row
+                #   mode:
+                #     names: false
+                #     icons: true
+                #     headings: false
+                # decimals: 0
+                # step_size: 1
+                # hide:
+                #   state: true
+                #   temperature: true
+                # control:
+                #   hvac: true
+                #   fan:
+                #     "low":
+                #       icon: mdi:fan-speed-1
+                #     "mid":
+                #       icon: mdi:fan-speed-2
+                #     "high":
+                #       icon: mdi:fan-speed-3
         double_tap_action:
           action: more-info
         hold_action:
@@ -1593,11 +1553,6 @@ cards:
                 --popup-min-width: 85vw;
                 --popup-max-width: 85vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     height: 55vh;
-              #     width: 85vw;
-              #   }
               title: {{ entity.capitalize() }} Air Conditioning
               content:
                 {{ create_schedulers_popup("hvac_" ~ entity, "S_HVAC") }}
@@ -1779,11 +1734,6 @@ cards:
                     --popup-min-width: 50vw;
                     --popup-max-width: 50vw;
                     --popup-border-color: white;
-                  # style: |
-                  #   :host .content {
-                  #     width: 40vw;
-                  #     height: 50vh;
-                  #   }
                   title: Details
                   content:
                   {% if (card_type == "entities") %}
@@ -1867,19 +1817,13 @@ cards:
                 --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 85vw;
-              #     height: 50vh;
-              #   }
               title: Settings
               content:
                 type: custom:tabbed-card
                 tabs:
-                {% set num_settings_columns = 3 %}
                   {% for current_column in ['1', '2', '3'] %}
                   - attributes:
-                      label: {{current_column}}
+                      label: {{settings_tab_names[loop.index0]}}
                     card:
                       type: entities
                       show_header_toggle: false
@@ -1936,11 +1880,6 @@ cards:
                 --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 80vw;
-              #     height: 85vh;
-              #   }
               title: UnRAID Server
               content:
                 type: iframe
@@ -1979,10 +1918,6 @@ cards:
                 --popup-min-width: 40vw;
                 --popup-max-width: 40vw;
                 --popup-border-color: white;
-              # style: |
-              #   :host .content {
-              #     width: 40vw;
-              #   }
               title: Water Consumption
               content:
                 type: grid
@@ -2037,6 +1972,31 @@ cards:
           action: more-info
         {% set actions_left.value = actions_left.value + actions_left_offset %}
       {% endfor %}
+
+ ######  ##        #######   ######  ##    ## 
+##    ## ##       ##     ## ##    ## ##   ##  
+##       ##       ##     ## ##       ##  ##   
+##       ##       ##     ## ##       #####    
+##       ##       ##     ## ##       ##  ##   
+##    ## ##       ##     ## ##    ## ##   ##  
+ ######  ########  #######   ######  ##    ## 
+# CLOCK
+
+      - type: custom:digital-clock
+        locale: he
+        dateFormat:
+          weekday: short
+          day: 2-digit
+          month: long
+        timeFormat:
+          hour: 2-digit
+          minute: 2-digit
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: {{ clock_left }}%
+          top: {{ clock_top }}%
+          transform: translate(0%, 100%) scale({{ clock_scaleX }}, {{clock_scaleY }})
 
  ######   #######  ##    ## ########  #### ######## ####  #######  ##    ##    ###    ##          ######## ##    ## ######## #### ######## #### ########  ######  
 ##    ## ##     ## ###   ## ##     ##  ##     ##     ##  ##     ## ###   ##   ## ##   ##          ##       ###   ##    ##     ##     ##     ##  ##       ##    ## 

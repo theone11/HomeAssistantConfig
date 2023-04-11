@@ -181,6 +181,9 @@ input_boolean:
   ui_hide_navigation:
     name: Navigation
     icon: mdi:navigation
+  ui_show_timer_bar_or_time:
+    name: Timer Progress Bar
+    icon: mdi:progress-clock
 
 group:
   updates:
