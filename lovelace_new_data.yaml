@@ -454,7 +454,8 @@ cards:
 
       {% for entity, group, left, top, scaleX, scaleY, deg in lights %}
       {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) %}
-      - entity: light.{{ entity }}
+      - type: image
+        entity: light.{{ entity }}
         state_image:
           'unavailable': /local/images/floorplan/transparent_square.png
           'off': /local/images/floorplan/transparent_square.png
@@ -469,7 +470,6 @@ cards:
           action: none
         hold_action:
           action: none
-        type: image
       {% endif %}
       {% endfor %}
 
@@ -609,7 +609,8 @@ cards:
 
       {% for entity, group, left, top, scaleX, scaleY, deg in lights %}
       {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) %}
-      - entity: light.{{ entity }}
+      - type: image
+        entity: light.{{ entity }}
         image: /local/images/floorplan/transparent_square.png
         style:
           #border: 1px solid red
@@ -636,7 +637,6 @@ cards:
           {% else %}
           action: more-info
           {% endif %}
-        type: image
       {%- endif %}
       {% endfor %}
 
@@ -650,7 +650,8 @@ cards:
 
       {{ create_warning_background(entity_group ~ "_lights_problem", "light." ~ entity_group ~ "_lights", left, top) }}
 
-      - entity: light.{{ entity_group }}_lights
+      - type: state-icon
+        entity: light.{{ entity_group }}_lights
         style:
           background-color: {{ background_color }}
           border-radius: {{ border_radius }}%
@@ -677,7 +678,6 @@ cards:
                   {% endfor %}
                 show_header_toggle: false
                 type: entities
-        type: state-icon
       {% endfor %}
 
  ######   #######  ##     ## ######## ########   ######  
@@ -697,7 +697,8 @@ cards:
 
       {% for entity, group, left, top, scaleX, scaleY, tap_action in covers %}
       {% if ((loop.index0 == 0) or ((loop.previtem is defined) and (entity != loop.previtem))) %}
-      - entity: cover.{{ entity }}
+      - type: image
+        entity: cover.{{ entity }}
         state_image:
           closed: /local/images/floorplan/shutters/square_closed.png
           closing: /local/images/floorplan/shutters/square_closing.png
@@ -733,7 +734,6 @@ cards:
                 switchColor: closedColor
                 entities:
                   - entity: cover.{{ entity }}
-        type: image
       {% endif %}
       {% endfor %}
 
@@ -749,7 +749,8 @@ cards:
 
       {% set services = [('open_cover', 'mdi:arrow-up-bold'), ('stop_cover', 'mdi:stop'), ('close_cover', 'mdi:arrow-down-bold')] %}
       {% for service, icon in services %}
-      - entity: cover.{{ entity_group }}_shutters
+      - type: state-icon
+        entity: cover.{{ entity_group }}_shutters
         state_color: false
         style:
           background-color: {{ background_color }}
@@ -794,11 +795,10 @@ cards:
                   - entity: cover.{{ entity }}
                   {% endif %}
                   {% endfor %}
-        type: state-icon
 
-      - icon: {{ icon }}
-        type: icon
+      - type: icon
         entity: cover.{{ entity_group }}
+        icon: {{ icon }}
         style:
           {% if service == "open_cover" %}
           left: {{ left }}%
@@ -843,7 +843,8 @@ cards:
 
       {{ create_warning_background(entity ~ "_problem", type ~ "." ~ entity, left, top) }}
 
-      - entity: {{ type }}.{{ entity }}
+      - type: state-icon
+        entity: {{ type }}.{{ entity }}
         style:
           background-color: {{ background_color }}
           border-radius: {{ border_radius }}%
@@ -867,8 +868,6 @@ cards:
               title: {{ display_name }} Scheduler
               content:
                 {{ create_schedulers_popup(entity, "DSD") }}
-        type: state-icon
-
       {{ create_schedulers_icons(entity, left, top) }}
 
       {% endfor %}
