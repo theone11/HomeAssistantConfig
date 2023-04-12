@@ -31,7 +31,7 @@ sensor:
           {% else %}
             1
           {% endif %}
-    
+
       water_consumption_monthly_limit_exceeded:
         icon_template: mdi:water-alert
         value_template: >
@@ -64,7 +64,6 @@ utility_meter:
     name: Water Consupmtion Hourly
     source: sensor.citymind_16452690_meter_last_read
     cycle: hourly
-    
 
 input_number:
   water_consumption_monthly_forecast_limit:
@@ -91,7 +90,6 @@ input_number:
     max: 3
     step: 0.1
 
-
 ###########################################
 ########## A U T O M A T I O N S ##########
 ###########################################
@@ -105,7 +103,7 @@ automation:
     condition: []
     action:
       - service: notify.email
-        data_template:
+        data:
           message: Daily water consumption {{ states('sensor.sensor.citymind_16452690_meter_today_s_consumption') }}[m^3] reached/exceeded limit {{ input_number.water_consumption_daily_limit }}[m^3]
 
   - alias: Water Consumption Hourly Limit Exceeded
@@ -116,7 +114,7 @@ automation:
     condition: []
     action:
       - service: notify.email
-        data_template:
+        data:
           message: Hourly water consumption {{ states('sensor.water_consumption_hourly') }}[m^3] reached/exceeded limit {{ input_number.water_consumption_hourly_limit }}[m^3]
 
   - alias: Water Consumption Monthly Limit
@@ -127,7 +125,7 @@ automation:
     condition: []
     action:
       - service: notify.email
-        data_template:
+        data:
           message: Monthly forecast is {{ states('sensor.citymind_16452690_meter_monthly_consumption') }}[m^3] reached/exceeded limit {{ input_number.water_consumption_monthly_limit }}[m^3]
 
   - alias: Water Consumption Monthly Forecast Limit
@@ -138,9 +136,8 @@ automation:
     condition: []
     action:
       - service: notify.email
-        data_template:
+        data:
           message: Monthly forecast is {{ states('sensor.water_consumption_monthly_forecast') }}[m^3] reached/exceeded limit {{ input_number.water_consumption_monthly_forecast_limit }}[m^3]
-
 ###################################
 ########## S C R I P T S ##########
 ###################################

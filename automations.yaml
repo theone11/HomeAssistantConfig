@@ -7,7 +7,7 @@
       to: 'on'
   action:
     - service: notify.email
-      data_template:
+      data:
         title: "Home Assistant"
         message: "Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version') }} is available."
 
@@ -23,7 +23,7 @@
       value_template: "{{ (states(trigger.entity_id) | float) != 0}}"
   action:
     service: notify.email
-    data_template:
+    data:
       title: "Home Assistant - Updates pending in HACS"
       message: >-
         {% for repo in state_attr(trigger.entity_id, 'repositories') %}

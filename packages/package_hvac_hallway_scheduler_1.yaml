@@ -27,19 +27,18 @@ climate:
 ###########################################
 
 automation:
-
   # Trigger    - Start Time 1
-  # Conditions - 
+  # Conditions -
   # Actions    - turn on HVAC
   - alias: hvac_hallway_start1
     #description: HVAC Hallway Start 1
-    trigger: 
+    trigger:
       platform: time
       at: input_datetime.hvac_hallway_start_time1
     condition:
       - condition: state
         entity_id: input_boolean.hvac_hallway_scheduler_enable1
-        state: 'on'
+        state: "on"
     action:
       - service: notify.file_debug
         data:
@@ -49,7 +48,7 @@ automation:
           entity_id: climate.hvac_hallway
           fan_mode: "{{ state_attr('climate.hvac_hallway_virtual_1', 'fan_mode') }}"
       - service: climate.set_temperature
-        data_template:
+        data:
           entity_id: climate.hvac_hallway
           temperature: "{{ state_attr('climate.hvac_hallway_virtual_1', 'temperature') | float }}"
           hvac_mode: "{{ states('climate.hvac_hallway_virtual_1') }}"

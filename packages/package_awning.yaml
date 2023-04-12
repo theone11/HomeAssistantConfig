@@ -21,50 +21,49 @@ input_boolean:
 ###########################################
 
 automation:
-
-  # Trigger    - 
-  # Conditions - 
-  # Actions    - 
+  # Trigger    -
+  # Conditions -
+  # Actions    -
   - alias: Backyard Awning
-    description: 'Open/Close Backyard Awning'
+    description: "Open/Close Backyard Awning"
     trigger:
-    - entity_id: input_boolean.backyard_awning_open_full
-      from: 'off'
-      platform: state
-      to: 'on'
-    - entity_id: input_boolean.backyard_awning_open_half
-      from: 'off'
-      platform: state
-      to: 'on'
-    - entity_id: input_boolean.backyard_awning_close_full
-      from: 'off'
-      platform: state
-      to: 'on'
-    - entity_id: input_boolean.backyard_awning_close_half
-      from: 'off'
-      platform: state
-      to: 'on'
+      - entity_id: input_boolean.backyard_awning_open_full
+        from: "off"
+        platform: state
+        to: "on"
+      - entity_id: input_boolean.backyard_awning_open_half
+        from: "off"
+        platform: state
+        to: "on"
+      - entity_id: input_boolean.backyard_awning_close_full
+        from: "off"
+        platform: state
+        to: "on"
+      - entity_id: input_boolean.backyard_awning_close_half
+        from: "off"
+        platform: state
+        to: "on"
     condition: []
     action:
-    - service: notify.file_debug
-      data_template:
-        message: "{{ state_attr(trigger.entity_id, 'friendly_name') }}"
-    - service: remote.send_command
-      data_template:
-        entity_id: remote.hallway
-        device: backyard_awning
-        command: >
-          {%- if trigger.entity_id == 'input_boolean.backyard_awning_open_full' -%}
-            open_full
-          {%- elif trigger.entity_id == 'input_boolean.backyard_awning_open_half' -%}
-            open_half
-          {%- elif trigger.entity_id == 'input_boolean.backyard_awning_close_full' -%}
-            close_full
-          {%- elif trigger.entity_id == 'input_boolean.backyard_awning_close_half' -%}
-            close_half
-          {% endif %}
-    - delay:
-        milliseconds: 250
-    - service: input_boolean.turn_off
-      data_template:
-        entity_id: "{{ trigger.entity_id }}"
+      - service: notify.file_debug
+        data:
+          message: "{{ state_attr(trigger.entity_id, 'friendly_name') }}"
+      - service: remote.send_command
+        data:
+          entity_id: remote.hallway
+          device: backyard_awning
+          command: >
+            {%- if trigger.entity_id == 'input_boolean.backyard_awning_open_full' -%}
+              open_full
+            {%- elif trigger.entity_id == 'input_boolean.backyard_awning_open_half' -%}
+              open_half
+            {%- elif trigger.entity_id == 'input_boolean.backyard_awning_close_full' -%}
+              close_full
+            {%- elif trigger.entity_id == 'input_boolean.backyard_awning_close_half' -%}
+              close_half
+            {% endif %}
+      - delay:
+          milliseconds: 250
+      - service: input_boolean.turn_off
+        data:
+          entity_id: "{{ trigger.entity_id }}"

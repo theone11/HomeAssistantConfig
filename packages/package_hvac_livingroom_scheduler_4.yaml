@@ -21,25 +21,24 @@ climate:
     controller_data: remote.livingroom_remote
     # temperature_sensor:
     delay: 10
-    
+
 ###########################################
 ########## A U T O M A T I O N S ##########
 ###########################################
 
 automation:
-
   # Trigger    - Start Time 4
-  # Conditions - 
+  # Conditions -
   # Actions    - turn on HVAC
   - alias: hvac_livingroom_start4
     #description: HVAC livingroom Start 4
-    trigger: 
+    trigger:
       platform: time
       at: input_datetime.hvac_livingroom_start_time4
     condition:
       - condition: state
         entity_id: input_boolean.hvac_livingroom_scheduler_enable4
-        state: 'on'
+        state: "on"
     action:
       - service: notify.file_debug
         data:
@@ -49,7 +48,7 @@ automation:
           entity_id: climate.hvac_livingroom
           fan_mode: "{{ state_attr('climate.hvac_livingroom_virtual_4', 'fan_mode') }}"
       - service: climate.set_temperature
-        data_template:
+        data:
           entity_id: climate.hvac_livingroom
           temperature: "{{ state_attr('climate.hvac_livingroom_virtual_4', 'temperature') | float }}"
           hvac_mode: "{{ states('climate.hvac_livingroom_virtual_4') }}"
