@@ -72,7 +72,13 @@ automation:
     action:
       - service: switch.turn_on
         entity_id: switch.irrigation_sprinkler_north
-      - delay:
-          minutes: "{{ states('input_number.irrigation_sprinkler_north_timer_duration2') | int }}"
+      # - delay:
+      #     minutes: "{{ states('input_number.irrigation_sprinkler_north_timer_duration2') | int }}"
+      - service: timer.start
+        target:
+          entity_id: timer.irrigation_sprinkler_north
+        data:
+          duration: "{{ ((states('input_number.irrigation_sprinkler_north_timer_duration2') | int) * 60) | timestamp_custom('%H:%M:%S',False) }}"
+      - wait_template: "{{ is_state('timer.irrigation_sprinkler_north', 'idle' ) }}"
       - service: switch.turn_off
         entity_id: switch.irrigation_sprinkler_north
