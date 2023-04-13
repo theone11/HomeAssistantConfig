@@ -67,8 +67,17 @@ input_boolean:
     icon: mdi:timer-outline
 
 timer:
-  irrigation_timer_cycle_duration:
-    name: Time Left
+  # irrigation_timer_cycle_duration:
+  #   name: Time Left
+  #   icon: mdi:timer-outline
+  irrigation_sprinkler_north: # For schedulers
+    # name: Time Left
+    icon: mdi:timer-outline
+  irrigation_sprinkler_west: # For schedulers
+    # name: Time Left
+    icon: mdi:timer-outline
+  irrigation_drips: # For schedulers
+    # name: Time Left
     icon: mdi:timer-outline
 
 input_datetime:
@@ -166,8 +175,6 @@ automation:
           message: "stop_irrigation_cycle - Initiated"
       - service: script.turn_off
         entity_id: script.start_irrigation_cycle
-      - service: timer.cancel
-        entity_id: timer.irrigation_timer_cycle_duration
       - service: input_boolean.turn_off
         entity_id: input_boolean.irrigation_immediate
       - service: input_boolean.turn_off
@@ -178,6 +185,9 @@ automation:
             - "irrigation_sprinkler_north"
             - "irrigation_drips"
           sequence:
+            - service: timer.cancel
+              target:
+                entity_id: "timer.{{ repeat.item }}"
             - service: switch.turn_off
               target:
                 entity_id: "switch.{{ repeat.item }}"
@@ -211,10 +221,11 @@ script:
                   data:
                     message: "cycle_irrigation_valve {{ repeat.item }} - Turned ON #"
                 - service: timer.start
-                  entity_id: timer.irrigation_timer_cycle_duration
+                  target:
+                    entity_id: "timer.{{ repeat.item }}"
                   data:
                     duration: "{{ states('input_number.irrigation_set_time') | int | timestamp_custom('%H:%M:%S',False) }}"
-                - wait_template: "{{ is_state('timer.irrigation_timer_cycle_duration', 'idle' ) }}"
+                - wait_template: "{{ is_state('timer.' ~ repeat.item, 'idle' ) }}"
                 - service: switch.turn_off
                   target:
                     entity_id: "switch.{{ repeat.item }}"

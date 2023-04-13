@@ -875,6 +875,27 @@ cards:
                 {{ create_schedulers_popup(entity, "DSD") }}
       {{ create_schedulers_icons(entity, left, top) }}
 
+      - type: conditional
+        conditions:
+          - entity: timer.{{ entity }}
+            state_not: 'idle'
+        elements:
+          - type: 'custom:config-template-card'
+            variables:
+              SHOW_BAR: states['input_boolean.ui_show_timer_bar_or_time'].state
+            entities:
+              - input_boolean.ui_show_timer_bar_or_time
+            card:
+              type: custom:timer-bar-card
+              entity: timer.{{ entity }}
+              layout: full_row
+              text_width: "${ SHOW_BAR === 'on' ? '0%' : '100%' }"
+            style:
+              width: 2%
+              left: {{ left }}%
+              top: {{ top + timer_top_offset }}%
+              transform: "${ SHOW_BAR === 'on' ? 'translate(-50%, -50%) scale(2, 1)' : 'translate(-50%, -50%) scale(1, 1)' }"
+
       {% endfor %}
 
       # -------------------------------------
@@ -952,7 +973,9 @@ cards:
                       - entity: input_number.irrigation_set_time
                       - entity: input_boolean.irrigation_immediate
                       - type: section
-                      - entity: timer.irrigation_timer_cycle_duration
+                      - entity: timer.irrigation_sprinkler_west
+                      - entity: timer.irrigation_sprinkler_north
+                      - entity: timer.irrigation_drips
                       - type: section
                   - type: history-graph
                     hours_to_show: 72
@@ -992,7 +1015,9 @@ cards:
                   #   # title: 1-Time Cycle
                   #   show_header_toggle: false
                   #   entities:
-                  #     - entity: timer.irrigation_timer_cycle_duration
+                  #     - entity: timer..irrigation_sprinkler_west
+                  #     - entity: timer..irrigation_sprinkler_north
+                  #     - entity: timer..irrigation_drips
                   # - type: history-graph
                   #   hours_to_show: 72
                   #   entities:
@@ -1015,27 +1040,6 @@ cards:
                   - entity: switch.irrigation_drips
                 show_header_toggle: false
                 type: entities
-
-      - type: conditional
-        conditions:
-          - entity: timer.irrigation_timer_cycle_duration
-            state_not: 'idle'
-        elements:
-          - type: 'custom:config-template-card'
-            variables:
-              SHOW_BAR: states['input_boolean.ui_show_timer_bar_or_time'].state
-            entities:
-              - input_boolean.ui_show_timer_bar_or_time
-            card:
-              type: custom:timer-bar-card
-              entity: timer.irrigation_timer_cycle_duration
-              layout: full_row
-              text_width: "${ SHOW_BAR === 'on' ? '0%' : '100%' }"
-            style:
-              width: 2%
-              left: 53%
-              top: 33.5%
-              transform: "${ SHOW_BAR === 'on' ? 'translate(-50%, -50%) scale(2, 1)' : 'translate(-50%, -50%) scale(1, 1)' }"
 
 ######## ######## ##     ## ########  ######## ########     ###    ######## ##     ## ########  ########     ######  ######## ##    ##  ######   #######  ########   ######  
    ##    ##       ###   ### ##     ## ##       ##     ##   ## ##      ##    ##     ## ##     ## ##          ##    ## ##       ###   ## ##    ## ##     ## ##     ## ##    ## 
