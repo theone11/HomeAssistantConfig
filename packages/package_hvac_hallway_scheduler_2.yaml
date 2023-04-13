@@ -54,3 +54,10 @@ automation:
           hvac_mode: "{{ states('climate.hvac_hallway_virtual_2') }}"
       - service: input_boolean.turn_off
         entity_id: input_boolean.hvac_hallway_scheduler_enable2
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+# # ---------------------

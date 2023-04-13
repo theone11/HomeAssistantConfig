@@ -43,6 +43,7 @@ automation:
       - service: notify.email
         data:
           message: Printer ink level below limit. Black={{ sensor.mfc_j470dw_black_ink_remaining }}%, Cyan={{ sensor.mfc_j470dw_cyan_ink_remaining }}%, Magenta={{ sensor.mfc_j470dw_magenta_ink_remaining }}%, Yellow={{ sensor.mfc_j470dw_yellow_ink_remaining }}%
+
 ###################################
 ########## S C R I P T S ##########
 ###################################

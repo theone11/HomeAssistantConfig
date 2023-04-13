@@ -28,13 +28,11 @@ input_boolean:
     name: Saturday
     icon: mdi:calendar-today
 
-
 input_datetime:
   irrigation_sprinkler_north_start_time1:
     name: Start Time
     has_date: false
     has_time: true
-
 
 input_number:
   irrigation_sprinkler_north_timer_duration1:
@@ -43,7 +41,6 @@ input_number:
     min: 0
     max: 30
     step: 5
-
 
 ###########################################
 ########## A U T O M A T I O N S ##########
@@ -72,8 +69,6 @@ automation:
     action:
       - service: switch.turn_on
         entity_id: switch.irrigation_sprinkler_north
-      # - delay:
-      #     minutes: "{{ states('input_number.irrigation_sprinkler_north_timer_duration1') | int }}"
       - service: timer.start
         target:
           entity_id: timer.irrigation_sprinkler_north
@@ -82,3 +77,10 @@ automation:
       - wait_template: "{{ is_state('timer.irrigation_sprinkler_north', 'idle' ) }}"
       - service: switch.turn_off
         entity_id: switch.irrigation_sprinkler_north
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+# # ---------------------

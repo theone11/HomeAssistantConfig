@@ -54,3 +54,10 @@ automation:
           hvac_mode: "{{ states('climate.hvac_livingroom_virtual_4') }}"
       - service: input_boolean.turn_off
         entity_id: input_boolean.hvac_livingroom_scheduler_enable4
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+# # ---------------------

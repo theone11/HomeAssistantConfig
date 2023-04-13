@@ -69,7 +69,6 @@ automation:
           {% set entity_id = 'input_boolean.boiler_switch_day_'+today_name+'1' %}
           {{ is_state(entity_id, 'on') }}
       - condition: numeric_state
-        #entity_id: sensor.accuweather_realfeel_temperature_max_0d
         entity_id: sensor.water_boiler_temperature_in_from_panel
         below: input_number.boiler_disable_schedulers_temperature
     action:
@@ -80,10 +79,7 @@ automation:
           entity_id: timer.boiler_switch_on_duration_timer
           duration:
             minutes: "{{ states('input_number.boiler_switch_timer_duration1') | int }}"
-      # - delay:
-      #     minutes: "{{ states('input_number.boiler_switch_timer_duration1') | int }}"
-      # - service: switch.turn_off
-      #   entity_id: switch.boiler_switch
+
 ###################################
 ########## S C R I P T S ##########
 ###################################

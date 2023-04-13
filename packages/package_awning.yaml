@@ -67,3 +67,10 @@ automation:
       - service: input_boolean.turn_off
         data:
           entity_id: "{{ trigger.entity_id }}"
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+# # ---------------------

@@ -13,7 +13,6 @@ input_boolean:
 
 automation:
 
-###########################################
   # Trigger    - Goodnight Button OFF -> ON (input_boolean.goodnight)
   # Conditions - 
   # Actions    - Run script.goodnight
@@ -29,7 +28,6 @@ automation:
     - service: script.turn_on
       entity_id: script.goodnight
 
-###########################################
   # Trigger    - Goodnight Button ON -> OFF (input_boolean.away)
   # Conditions - 
   # Actions    - 

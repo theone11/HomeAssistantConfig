@@ -28,13 +28,11 @@ input_boolean:
     name: Saturday
     icon: mdi:calendar-today
 
-
 input_datetime:
   vacuum_bottom_start_time2:
     name: Start Time
     has_date: false
     has_time: true
-
 
 ###########################################
 ########## A U T O M A T I O N S ##########
@@ -63,7 +61,6 @@ automation:
     action:
       - service: vacuum.start
         entity_id: vacuum.vacuum_bottom
-
 
 ###################################
 ########## S C R I P T S ##########

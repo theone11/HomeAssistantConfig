@@ -67,9 +67,6 @@ input_boolean:
     icon: mdi:timer-outline
 
 timer:
-  # irrigation_timer_cycle_duration:
-  #   name: Time Left
-  #   icon: mdi:timer-outline
   irrigation_sprinkler_north: # For schedulers
     # name: Time Left
     icon: mdi:timer-outline

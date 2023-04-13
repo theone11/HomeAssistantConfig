@@ -154,7 +154,7 @@
                             ("3", "sensor.water_consumption_daily_limit_exceeded"),
                             ("3", "sensor.water_consumption_monthly_limit_exceeded"),
                             ("3", "sensor.water_consumption_monthly_forecast_limit_exceeded"),
-                            ("3", "sensor.water_consupmtion_hourly"),
+                            ("3", "sensor.water_consumption_hourly"),
                             ("3", "sensor.water_meter_16452690_today_s_consumption"),
                             ("3", "sensor.water_meter_16452690_monthly_consumption"),
                             ("3", "sensor.water_meter_16452690_consumption_predication")] %}
@@ -1941,7 +1941,7 @@ cards:
                   - type: history-graph
                     entities:
                       - entity: sensor.citymind_16452690_meter_today_s_consumption
-                      - entity: sensor.water_consupmtion_hourly
+                      - entity: sensor.water_consumption_hourly
                     #hours_to_show: 12
                     refresh_interval: 10
                   - type: history-graph

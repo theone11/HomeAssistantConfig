@@ -3,7 +3,6 @@
 #####################################
 
 sensor:
-
   - platform: template
     sensors:
       hvac_livingroom_problem:
@@ -24,7 +23,6 @@ sensor:
           {% endif %}
 
 climate:
-
   - platform: smartir
     name: HVAC Livingroom
     unique_id: hvac_livingroom
@@ -38,3 +36,16 @@ climate:
     device_code: 1620
     controller_data: remote.hallway
     temperature_sensor: sensor.hallway_temperature
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+# automation:
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+# # ---------------------

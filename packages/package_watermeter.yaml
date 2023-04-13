@@ -5,63 +5,54 @@
 sensor:
   - platform: template
     sensors:
-      water_consumption_limit_exceeded:
-        icon_template: mdi:water-alert
-        value_template: >
-          {% if ( (states('sensor.water_consumption_daily_limit_exceeded') == '1') or (states('sensor.water_consumption_hourly_limit_exceeded') == '1') or (states('sensor.water_consumption_monthly_limit_exceeded') == '1') or (states('sensor.water_consumption_monthly_forecast_limit_exceeded') == '1') ) %}
-            1
-          {% else %}
-            0
-          {% endif %}
-
       water_consumption_daily_limit_exceeded:
         icon_template: mdi:water-alert
         value_template: >
-          {% if ((states('sensor.citymind_16452690_meter_today_s_consumption') == 'unavailable') or (states('sensor.citymind_16452690_meter_today_s_consumption') == 'unknown') or (states('sensor.citymind_16452690_meter_today_s_consumption') | float(default=0)) < (states('input_number.water_consumption_daily_limit') | float(default=0))) %}
-            0
+          {% if has_value('sensor.citymind_16452690_meter_today_s_consumption') and ((states('sensor.citymind_16452690_meter_today_s_consumption') | float(default=0)) > (states('input_number.water_consumption_daily_limit') | float(default=0))) %}
+            'on'
           {% else %}
-            1
+            'off'
           {% endif %}
 
       water_consumption_hourly_limit_exceeded:
         icon_template: mdi:water-alert
         value_template: >
-          {% if ((states('sensor.water_consumption_hourly') == 'unavailable') or (states('sensor.water_consumption_hourly') == 'unknown') or (states('sensor.water_consumption_hourly') | float(default=0)) < (states('input_number.water_consumption_hourly_limit') | float(default=0))) %}
-            0
+          {% if has_value('sensor.water_consumption_hourly') and ((states('sensor.water_consumption_hourly') | float(default=0)) > (states('input_number.water_consumption_hourly_limit') | float(default=0))) %}
+            'on'
           {% else %}
-            1
+            'off'
           {% endif %}
 
       water_consumption_monthly_limit_exceeded:
         icon_template: mdi:water-alert
         value_template: >
-          {% if ((states('sensor.citymind_16452690_meter_monthly_consumption') == 'unavailable') or (states('sensor.citymind_16452690_meter_monthly_consumption') == 'unknown') or  (states('sensor.citymind_16452690_meter_monthly_consumption') | float(default=0)) < (states('input_number.water_consumption_monthly_limit') | float(default=0))) %}
-            0
+          {% if has_value('sensor.citymind_16452690_meter_monthly_consumption') and ((states('sensor.citymind_16452690_meter_monthly_consumption') | float(default=0)) > (states('input_number.water_consumption_monthly_limit') | float(default=0))) %}
+            'on'
           {% else %}
-            1
+            'off'
           {% endif %}
 
       water_consumption_monthly_forecast_limit_exceeded:
         icon_template: mdi:water-alert
         value_template: >
-          {% if ((states('sensor.citymind_16452690_meter_consumption_forecast') == 'unavailable') or (states('sensor.citymind_16452690_meter_consumption_forecast') == 'unknown') or (states('sensor.water_consumption_monthly_forecast') | float(default=0)) < (states('input_number.water_consumption_monthly_forecast_limit') | float(default=0))) %}
-            0
+          {% if has_value('sensor.citymind_16452690_meter_consumption_forecast') and ((states('sensor.water_consumption_monthly_forecast') | float(default=0)) > (states('input_number.water_consumption_monthly_forecast_limit') | float(default=0))) %}
+            'on'
           {% else %}
-            1
+            'off'
           {% endif %}
 
-      # water_consumption_monthly_forecast:
-      #   icon_template: mdi:water
-      #   value_template: >
-      #     {{ state_attr('sensor.citymind_16452690_meter_consumption_forecast', 'Forecast') | replace(" m³", "") | float(default=0) }}
+      water_consumption_limit_exceeded:
+        icon_template: mdi:water-alert
+        value_template: >
+          {% if ( (states('sensor.water_consumption_daily_limit_exceeded') == 'on') or (states('sensor.water_consumption_hourly_limit_exceeded') == 'on') or (states('sensor.water_consumption_monthly_limit_exceeded') == 'on') or (states('sensor.water_consumption_monthly_forecast_limit_exceeded') == 'on') ) %}
+            1
+          {% else %}
+            0
+          {% endif %}
 
 utility_meter:
-  # water_consumption_daily:
-  #   source: sensor.citymind_16452690_meter_last_read
-  #   cycle: daily
-
   water_consumption_hourly:
-    name: Water Consupmtion Hourly
+    name: Water Consumption Hourly
     source: sensor.citymind_16452690_meter_last_read
     cycle: hourly
 
@@ -98,8 +89,9 @@ automation:
   - alias: Water Consumption Daily Limit Exceeded
     description: Water Consumption Daily Limit Exceeded
     trigger:
-      platform: template
-      value_template: "{{ (states('sensor.citymind_16452690_meter_today_s_consumption') | float(default=0)) >= (states('input_number.water_consumption_daily_limit') | float(default=0)) }}"
+      platform: state
+      entity_id: sensor.water_consumption_daily_limit_exceeded
+      to: 'on'
     condition: []
     action:
       - service: notify.email
@@ -109,8 +101,9 @@ automation:
   - alias: Water Consumption Hourly Limit Exceeded
     description: Water Consumption Hourly Limit Exceeded
     trigger:
-      platform: template
-      value_template: "{{ (states('sensor.water_consumption_hourly') | float(default=0)) >= (states('input_number.water_consumption_hourly_limit') | float(default=0)) }}"
+      platform: state
+      entity_id: sensor.water_consumption_hourly_limit_exceeded
+      to: 'on'
     condition: []
     action:
       - service: notify.email
@@ -120,8 +113,9 @@ automation:
   - alias: Water Consumption Monthly Limit
     description: Water Consumption Monthly Limit
     trigger:
-      platform: template
-      value_template: "{{ (states('sensor.citymind_16452690_meter_monthly_consumption') | float(default=0)) >= (states('input_number.water_consumption_monthly_limit') | float(default=0)) }}"
+      platform: state
+      entity_id: sensor.water_consumption_monthly_limit_exceeded
+      to: 'on'
     condition: []
     action:
       - service: notify.email
@@ -131,13 +125,15 @@ automation:
   - alias: Water Consumption Monthly Forecast Limit
     description: Water Consumption Monthly Forecast Limit
     trigger:
-      platform: template
-      value_template: "{{ (states('sensor.citymind_16452690_meter_consumption_forecast') | float(default=0)) >= (states('input_number.water_consumption_monthly_forecast_limit') | float(default=0)) }}"
+      platform: state
+      entity_id: sensor.water_consumption_monthly_forecast_limit_exceeded
+      to: 'on'
     condition: []
     action:
       - service: notify.email
         data:
           message: Monthly forecast is {{ states('sensor.water_consumption_monthly_forecast') }}[m^3] reached/exceeded limit {{ input_number.water_consumption_monthly_forecast_limit }}[m^3]
+
 ###################################
 ########## S C R I P T S ##########
 ###################################

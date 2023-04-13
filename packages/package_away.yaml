@@ -13,7 +13,6 @@ input_boolean:
 
 automation:
 
-###########################################
   # Trigger    - Away Button OFF -> ON (input_boolean.away)
   # Conditions - 
   # Actions    - Run script.away
@@ -29,7 +28,6 @@ automation:
     - service: script.turn_on
       entity_id: script.away
 
-###########################################
   # Trigger    - Sunset
   # Conditions - Away button ON
   # Actions    - Set away lights ON
@@ -48,7 +46,6 @@ automation:
         entity_id: light.kitchen_table_light
         brightness: 127
 
-###########################################
   # Trigger    - Sunrise
   # Conditions - Away button ON
   # Actions    - Set away lights OFF
@@ -65,7 +62,6 @@ automation:
     - service: light.turn_off
       entity_id: light.kitchen_table_light
 
-###########################################
   # Trigger    - Away Button ON -> OFF (input_boolean.away)
   # Conditions - 
   # Actions    - Turn ON kitchen lights
