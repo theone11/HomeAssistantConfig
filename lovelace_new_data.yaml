@@ -1081,8 +1081,8 @@ cards:
             data:
               browser_id: THIS
               style: |
-                --popup-min-width: 75vw;
-                --popup-max-width: 75vw;
+                --popup-min-width: 50vw;
+                --popup-max-width: 50vw;
                 --popup-border-color: gray;
                 --popup-background-color: #101010;
               title: Temperature & Humidity Sensors
@@ -1091,37 +1091,29 @@ cards:
                 columns: 1
                 square: false
                 cards:
-                  - type: grid
-                    columns: 1
-                    square: false
-                    cards:
-                      - type: grid
-                        columns: 1
-                        square: false
-                        cards:
-                          - type: 'custom:slider-entity-row'
-                            entity: input_number.ui_water_boiler_graph_hours
-                            hide_state: false
-                      - type: 'custom:config-template-card'
-                        variables:
-                          HOURS: states['input_number.ui_water_boiler_graph_hours'].state
-                        entities:
-                          - input_number.ui_water_boiler_graph_hours
-                        card:
-                          type: history-graph
-                          entities:
-                            {% for entity, category, left, top in temperature_sensors %}
-                            {% if category == "room" %}
-                            - entity: sensor.{{ entity }}
-                            {% endif %}
-                            {% endfor %}
-                            {% for entity, category, left, top in humidity_sensors %}
-                            {% if category == "room" %}
-                            - entity: sensor.{{ entity }}
-                            {% endif %}
-                            {% endfor %}
-                          hours_to_show: "${ HOURS }"
-                          refresh_interval: 0
+                  - type: 'custom:slider-entity-row'
+                    entity: input_number.ui_water_boiler_graph_hours
+                    hide_state: false
+                  - type: 'custom:config-template-card'
+                    variables:
+                      HOURS: states['input_number.ui_water_boiler_graph_hours'].state
+                    entities:
+                      - input_number.ui_water_boiler_graph_hours
+                    card:
+                      type: history-graph
+                      entities:
+                        {% for entity, category, left, top in temperature_sensors %}
+                        {% if category == "room" %}
+                        - entity: sensor.{{ entity }}
+                        {% endif %}
+                        {% endfor %}
+                        {% for entity, category, left, top in humidity_sensors %}
+                        {% if category == "room" %}
+                        - entity: sensor.{{ entity }}
+                        {% endif %}
+                        {% endfor %}
+                      hours_to_show: "${ HOURS }"
+                      refresh_interval: 10
         double_tap_action:
           action: none
         hold_action:
@@ -1315,13 +1307,9 @@ cards:
                     columns: 1
                     square: false
                     cards:
-                      - type: grid
-                        columns: 1
-                        square: false
-                        cards:
-                          - type: 'custom:slider-entity-row'
-                            entity: input_number.ui_water_boiler_graph_hours
-                            hide_state: false
+                      - type: 'custom:slider-entity-row'
+                        entity: input_number.ui_water_boiler_graph_hours
+                        hide_state: false
                       - type: 'custom:config-template-card'
                         variables:
                           HOURS: states['input_number.ui_water_boiler_graph_hours'].state
@@ -1347,7 +1335,7 @@ cards:
                             - entity: sensor.water_boiler_temperature_water_level
                             - entity: sensor.water_boiler_power_power_w
                           hours_to_show: "${ HOURS }"
-                          refresh_interval: 0
+                          refresh_interval: 10
                   - type: grid
                     columns: 1
                     square: false
@@ -1367,7 +1355,7 @@ cards:
                             - entity: sensor.water_boiler_power_si7021_humidity
                             - entity: sensor.water_boiler_temperature_case_humidity
                           hours_to_show: "${ HOURS }"
-                          refresh_interval: 0
+                          refresh_interval: 10
         double_tap_action:
           action: none
         hold_action:
@@ -1951,18 +1939,18 @@ cards:
                       - entity: sensor.citymind_16452690_meter_today_s_consumption
                       - entity: sensor.water_consupmtion_hourly
                     #hours_to_show: 12
-                    refresh_interval: 0
+                    refresh_interval: 10
                   - type: history-graph
                     entities:
                       - entity: sensor.citymind_16452690_meter_consumption_forecast
                       - entity: sensor.citymind_16452690_meter_monthly_consumption
                     #hours_to_show: 12
-                    refresh_interval: 0
+                    refresh_interval: 10
                   - type: history-graph
                     entities:
                       - entity: sensor.citymind_16452690_meter_last_read
                     #hours_to_show: 12
-                    refresh_interval: 0
+                    refresh_interval: 10
         double_tap_action:
           action: none
         hold_action:
