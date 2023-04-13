@@ -535,7 +535,7 @@ cards:
                   style: |
                     --popup-min-width: 80vw;
                     --popup-border-color: gray;
-                    --popup-background-color: #202020;
+                    --popup-background-color: #101010;
                   title: Hourly Weather Forecast
                   content:
                     type: custom:hourly-weather
@@ -634,7 +634,7 @@ cards:
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               entity_id: light.kitchen_table_light_ambilight
           {% else %}
           action: more-info
@@ -726,7 +726,7 @@ cards:
                 --popup-min-width: 20vw;
                 --popup-max-width: 20vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: Cover
               content:
                 type: 'custom:vertical-slider-cover-card'
@@ -784,7 +784,7 @@ cards:
                 --popup-min-width: 25vw;
                 --popup-max-width: 25vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: {{ entity_group.capitalize() }} Shutters
               content:
                 type: 'custom:vertical-slider-cover-card'
@@ -869,7 +869,7 @@ cards:
                 --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: {{ display_name }} Scheduler
               content:
                 {{ create_schedulers_popup(entity, "DSD") }}
@@ -900,7 +900,7 @@ cards:
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               browser_id: THIS
               title: Irrigation Valves 1-Time Cycle
               content:
@@ -1084,7 +1084,7 @@ cards:
                 --popup-min-width: 75vw;
                 --popup-max-width: 75vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: Temperature & Humidity Sensors
               content:
                 type: grid
@@ -1164,7 +1164,7 @@ cards:
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: Water Boiler 1-Time Cycle
               content:
                 type: grid
@@ -1236,7 +1236,7 @@ cards:
                 --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: {{ display_name }} Scheduler
               content:
                 {{ create_schedulers_popup(entity, "DSD") }}
@@ -1304,7 +1304,7 @@ cards:
                 --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: Water Boiler Temperature & Humidity
               content:
                 type: grid
@@ -1404,7 +1404,7 @@ cards:
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: Vacuum {{ entity.capitalize() }}
               content:
                 type: custom:xiaomi-vacuum-map-card
@@ -1427,7 +1427,7 @@ cards:
                 --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: Vacuum {{ entity.capitalize() }} Scheduler
               content:
                 {{ create_schedulers_popup("vacuum_" ~ entity, "DS") }}
@@ -1462,7 +1462,7 @@ cards:
                 --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               content:
                 type: iframe
                 url: !secret squeezebox_url
@@ -1477,7 +1477,7 @@ cards:
                 --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               content:
                 type: iframe
                 url: !secret squeezebox_url_regular
@@ -1521,7 +1521,7 @@ cards:
                 --popup-min-width: 25vw;
                 --popup-max-width: 25vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               content:
                 type: custom:silent-remotes-card
                 remote: remote.{{ entity }}
@@ -1569,7 +1569,7 @@ cards:
                 --popup-min-width: 85vw;
                 --popup-max-width: 85vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: {{ entity.capitalize() }} Air Conditioning
               content:
                 {{ create_schedulers_popup("hvac_" ~ entity, "S_HVAC") }}
@@ -1703,7 +1703,7 @@ cards:
       #           --popup-min-width: 40vw;
       #           --popup-max-width: 40vw;
       #           --popup-border-color: gray;
-      #           --popup-background-color: #202020;
+      #           --popup-background-color: #101010;
       #         title: {{ entity.capitalize() }}
       #         content:
       #           type: picture-entity
@@ -1752,7 +1752,7 @@ cards:
                     --popup-min-width: 50vw;
                     --popup-max-width: 50vw;
                     --popup-border-color: gray;
-                    --popup-background-color: #202020;
+                    --popup-background-color: #101010;
                   title: Details
                   content:
                   {% if (card_type == "entities") %}
@@ -1836,7 +1836,7 @@ cards:
                 --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: Settings
               content:
                 type: custom:tabbed-card
@@ -1900,7 +1900,7 @@ cards:
                 --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: UnRAID Server
               content:
                 type: iframe
@@ -1939,7 +1939,7 @@ cards:
                 --popup-min-width: 40vw;
                 --popup-max-width: 40vw;
                 --popup-border-color: gray;
-                --popup-background-color: #202020;
+                --popup-background-color: #101010;
               title: Water Consumption
               content:
                 type: grid
