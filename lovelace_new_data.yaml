@@ -345,7 +345,7 @@
                         square: false
                         cards:
                           {% for day, number, name, name_he in days %}
-                          - type: button
+                          - type: custom:button-card
                             entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
                             name: {{ name_he }}
                             icon: mdi:numeric-{{ number }}-box-outline
@@ -934,13 +934,13 @@ cards:
                     square: false
                     title: Choose which irrigation valves to open during the cycle
                     cards:
-                      - type: button
+                      - type: custom:button-card
                         entity: input_boolean.irrigation_sprinkler_west
                         showname: true
-                      - type: button
+                      - type: custom:button-card
                         entity: input_boolean.irrigation_sprinkler_north
                         showname: true
-                      - type: button
+                      - type: custom:button-card
                         entity: input_boolean.irrigation_drips
                         showname: true
                   - type: grid
@@ -987,15 +987,15 @@ cards:
                   #   columns: 3
                   #   square: false
                   #   cards:
-                  #     - type: button
+                  #     - type: custom:button-card
                   #       entity: input_boolean.irrigation_sprinkler_west
                   #       show_name: true
                   #       icon: mdi:sprinkler
-                  #     - type: button
+                  #     - type: custom:button-card
                   #       entity: input_boolean.irrigation_sprinkler_north
                   #       show_name: true
                   #       icon: mdi:sprinkler
-                  #     - type: button
+                  #     - type: custom:button-card
                   #       entity: input_boolean.irrigation_drips
                   #       show_name: true
                   #       icon: mdi:water
@@ -1003,11 +1003,11 @@ cards:
                   #   columns: 2
                   #   square: false
                   #   cards:
-                  #     - type: button
+                  #     - type: custom:button-card
                   #       entity: input_boolean.irrigation_immediate
                   #       show_name: false
                   #       icon: mdi:power
-                  #     - type: button
+                  #     - type: custom:button-card
                   #       entity: input_boolean.irrigation_one_time
                   #       show_name: false
                   #       icon: mdi:timer-outline
@@ -1167,7 +1167,7 @@ cards:
                 columns: 1
                 square: false
                 cards:
-                  - type: button
+                  - type: custom:button-card
                     entity: switch.{{ entity }}
                     show_icon: true
                     show_name: false
@@ -1202,7 +1202,7 @@ cards:
                     columns: 2
                     square: false
                     cards:
-                      - type: button
+                      - type: custom:button-card
                         entity: input_boolean.{{ entity }}_immediate
                         show_name: false
                         icon: mdi:power
@@ -1210,7 +1210,7 @@ cards:
                           action: none
                         double_tap_action:
                           action: none
-                      - type: button
+                      - type: custom:button-card
                         entity: input_boolean.{{ entity }}_one_time
                         show_name: false
                         icon: mdi:timer-outline

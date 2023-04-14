@@ -27,33 +27,15 @@ climate:
 ###########################################
 
 automation:
-  # Trigger    - Start Time 4
-  # Conditions -
-  # Actions    - turn on HVAC
-  - alias: hvac_livingroom_start4
-    #description: HVAC livingroom Start 4
-    trigger:
-      platform: time
-      at: input_datetime.hvac_livingroom_start_time4
-    condition:
-      - condition: state
-        entity_id: input_boolean.hvac_livingroom_scheduler_enable4
-        state: "on"
-    action:
-      - service: notify.file_debug
-        data:
-          message: "HVAC Livingroom 4 - {{ states('input_boolean.hvac_livingroom_scheduler_enable4') }} - {{ state_attr('climate.hvac_livingroom_virtual_4', 'temperature') }}/{{ state_attr('climate.hvac_livingroom_virtual_4', 'fan_mode') }}/{{ states('climate.hvac_livingroom_virtual_4') }}"
-      - service: climate.set_fan_mode
-        data:
-          entity_id: climate.hvac_livingroom
-          fan_mode: "{{ state_attr('climate.hvac_livingroom_virtual_4', 'fan_mode') }}"
-      - service: climate.set_temperature
-        data:
-          entity_id: climate.hvac_livingroom
-          temperature: "{{ state_attr('climate.hvac_livingroom_virtual_4', 'temperature') | float }}"
-          hvac_mode: "{{ states('climate.hvac_livingroom_virtual_4') }}"
-      - service: input_boolean.turn_off
-        entity_id: input_boolean.hvac_livingroom_scheduler_enable4
+  description: "HVAC Livingroom Scheduler 4"
+  alias: hvac_livingroom_scheduler4
+  use_blueprint:
+    path: blueprint_hvac_scheduler.yaml
+    input:
+      start_time: input_datetime.hvac_livingroom_start_time4
+      scheduler_enable: input_boolean.hvac_livingroom_scheduler_enable4
+      virtual_climate: climate.hvac_livingroom_virtual_4
+      target_climate: climate.hvac_livingroom
 
 ###################################
 ########## S C R I P T S ##########

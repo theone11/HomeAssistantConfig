@@ -47,38 +47,17 @@ input_number:
 ###########################################
 
 automation:
-  # Trigger    - Start Time 1
-  # Conditions - Switch off, Enable on and day-of-week true
-  # Actions    - turn on water boiler, turn of duration timer (OLD delay timer duration 1, turn of water boiler)
-  - alias: boiler_switch_timer1
-    description: Water Boiler Timer
-    trigger:
-      platform: time
-      at: input_datetime.boiler_switch_start_time1
-    condition:
-      - condition: state
-        entity_id: switch.boiler_switch
-        state: "off"
-      - condition: state
-        entity_id: input_boolean.boiler_switch_scheduler_enable1
-        state: "on"
-      - condition: template
-        value_template: >
-          {% set sensor_names = [ 'monday', 'tuesday', 'wednesday','thursday','friday','saturday','sunday'] %}
-          {% set today_name = sensor_names[now().weekday()] %}
-          {% set entity_id = 'input_boolean.boiler_switch_day_'+today_name+'1' %}
-          {{ is_state(entity_id, 'on') }}
-      - condition: numeric_state
-        entity_id: sensor.water_boiler_temperature_in_from_panel
-        below: input_number.boiler_disable_schedulers_temperature
-    action:
-      - service: switch.turn_on
-        entity_id: switch.boiler_switch
-      - service: timer.start
-        data:
-          entity_id: timer.boiler_switch_on_duration_timer
-          duration:
-            minutes: "{{ states('input_number.boiler_switch_timer_duration1') | int }}"
+  description: "Water Boiler Scheduler 1"
+  alias: water_boiler_scheduler1
+  use_blueprint:
+    path: blueprint_waterboiler_scheduler.yaml
+    input:
+      start_time: input_datetime.boiler_switch_start_time1
+      scheduler_enable: input_boolean.boiler_switch_scheduler_enable1
+      switch: switch.boiler_switch
+      timer: timer.boiler_switch_on_duration_timer
+      duration: input_number.boiler_switch_timer_duration1
+      scheduler_number: 1
 
 ###################################
 ########## S C R I P T S ##########

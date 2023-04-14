@@ -27,33 +27,15 @@ climate:
 ###########################################
 
 automation:
-  # Trigger    - Start Time 3
-  # Conditions -
-  # Actions    - turn on HVAC
-  - alias: hvac_hallway_start3
-    #description: HVAC Hallway Start 3
-    trigger:
-      platform: time
-      at: input_datetime.hvac_hallway_start_time3
-    condition:
-      - condition: state
-        entity_id: input_boolean.hvac_hallway_scheduler_enable3
-        state: "on"
-    action:
-      - service: notify.file_debug
-        data:
-          message: "HVAC Hallway 3 - {{ states('input_boolean.hvac_hallway_scheduler_enable3') }} - {{ state_attr('climate.hvac_hallway_virtual_3', 'temperature') }}/{{ state_attr('climate.hvac_hallway_virtual_3', 'fan_mode') }}/{{ states('climate.hvac_hallway_virtual_3') }}"
-      - service: climate.set_fan_mode
-        data:
-          entity_id: climate.hvac_hallway
-          fan_mode: "{{ state_attr('climate.hvac_hallway_virtual_3', 'fan_mode') }}"
-      - service: climate.set_temperature
-        data:
-          entity_id: climate.hvac_hallway
-          temperature: "{{ state_attr('climate.hvac_hallway_virtual_3', 'temperature') | float }}"
-          hvac_mode: "{{ states('climate.hvac_hallway_virtual_3') }}"
-      - service: input_boolean.turn_off
-        entity_id: input_boolean.hvac_hallway_scheduler_enable3
+  description: "HVAC Hallway Scheduler 3"
+  alias: hvac_hallway_scheduler3
+  use_blueprint:
+    path: blueprint_hvac_scheduler.yaml
+    input:
+      start_time: input_datetime.hvac_hallway_start_time3
+      scheduler_enable: input_boolean.hvac_hallway_scheduler_enable3
+      virtual_climate: climate.hvac_hallway_virtual_3
+      target_climate: climate.hvac_hallway
 
 ###################################
 ########## S C R I P T S ##########

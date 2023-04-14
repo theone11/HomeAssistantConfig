@@ -1,0 +1,57 @@
+blueprint:
+  name: HVAC Scheduler
+  description: Set the temperature, fan_mode and mode of the HVAC at a specific time
+  domain: automation
+  input:
+    start_time:
+      name: Start Time
+      description: Trigger - The time the automation should start
+      selector:
+        entity:
+          domain: input_datetime
+    scheduler_enable:
+      name: Scheduler Enable
+      description: Condition - Enable the scheduler if 'on' (Must have 'on' state to work)
+      selector:
+        entity:
+          domain: input_boolean
+    virtual_climate:
+      name: Virtual Climate
+      description: The Climate entity from which the automation takes the HVAC settings
+      selector:
+        entity:
+          domain: climate
+    target_climate:
+      name: Target Climate
+      description: The target Climate entity that controls the actual HVAC
+      selector:
+        entity:
+          domain: climate
+mode: restart
+max_exceeded: silent
+variables:
+  virtual_climate: !input virtual_climate
+  scheduler_enable: !input scheduler_enable
+trigger:
+  platform: time
+  at: !input start_time
+condition:
+  - condition: state
+    entity_id: !input scheduler_enable
+    state: "on"
+action:
+  - service: notify.file_debug
+    data:
+      message: "{{ this.attributes.friendly_name }} - {{ states(scheduler_enable) }} - {{ state_attr(virtual_climate, 'temperature') }}/{{ state_attr(virtual_climate, 'fan_mode') }}/{{ states(virtual_climate) }}"
+  - service: climate.set_fan_mode
+    data:
+      entity_id: !input target_climate
+      fan_mode: "{{ state_attr(virtual_climate, 'fan_mode') }}"
+  - service: climate.set_temperature
+    data:
+      entity_id: climate.hvac_hallway
+      temperature: "{{ state_attr(virtual_climate, 'temperature') | float }}"
+      hvac_mode: "{{ states(virtual_climate) }}"
+  - service: input_boolean.turn_off
+    entity_id: !input scheduler_enable
+    

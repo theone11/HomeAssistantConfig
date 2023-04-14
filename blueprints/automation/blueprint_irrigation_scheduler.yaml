@@ -1,0 +1,71 @@
+blueprint:
+  name: Irrigation Scheduler
+  description: Turn on irrigation valve at a specific time
+  domain: automation
+  input:
+    start_time:
+      name: Start Time
+      description: Trigger - The time the automation should start
+      selector:
+        entity:
+          domain: input_datetime
+    scheduler_enable:
+      name: Scheduler Enable
+      description: Condition - Enable the scheduler if 'on' (Must have 'on' state to work)
+      selector:
+        entity:
+          domain: input_boolean
+    switch:
+      name: Switch
+      description: The irrigation switch to control
+      selector:
+        entity:
+          domain: switch
+    timer:
+      name: Timer
+      description: The timer to keep track of the duration
+      selector:
+        entity:
+          domain: timer
+    duration:
+      name: Duration
+      description: The duration of the cycle
+      selector:
+        entity:
+          domain: input_number
+    scheduler_number:
+      name: Scheduler Number
+      description: The scheduler number of the specific irrigation valve (1/2/...)
+mode: restart
+max_exceeded: silent
+variables:
+  scheduler_number: !input scheduler_number
+  duration: !input duration
+  timer: !input timer
+trigger: 
+  platform: time
+  at: !input start_time
+condition:
+  - condition: state
+    entity_id: !input scheduler_enable
+    state: 'on'
+  - condition: template
+    value_template: >
+      {% set sensor_names = [ 'monday', 'tuesday', 'wednesday','thursday','friday','saturday','sunday'] %}
+      {% set today_name = sensor_names[now().weekday()] %}
+      {% set entity_id = 'input_boolean.irrigation_drips_day_'+today_name+(scheduler_number|string) %}
+      {{ is_state(entity_id, 'on') }}
+action:
+  - service: notify.file_debug
+    data:
+      message: "{{ this.attributes.friendly_name }} Started - Running for {{ states(duration) | int }} minutes"
+  - service: switch.turn_on
+    entity_id: !input switch
+  - service: timer.start
+    data:
+      entity_id: !input timer
+      duration:
+        minutes: "{{ states(duration) | int }}"
+  - wait_template: "{{ is_state(timer, 'idle' ) }}"
+  - service: switch.turn_off
+    entity_id: !input switch

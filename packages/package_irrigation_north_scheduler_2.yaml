@@ -47,36 +47,17 @@ input_number:
 ###########################################
 
 automation:
-
-  # Trigger    - Start Time 2
-  # Conditions - Enable on and day-of-week true
-  # Actions    - turn on north sprinklers, delay timer duration 2, turn of water boiler
-  - alias: irrigation_sprinkler_north_timer2
-    description: Water Boiler Timer
-    trigger: 
-      platform: time
-      at: input_datetime.irrigation_sprinkler_north_start_time2
-    condition:
-      - condition: state
-        entity_id: input_boolean.irrigation_sprinkler_north_scheduler_enable2
-        state: 'on'
-      - condition: template
-        value_template: >
-          {% set sensor_names = [ 'monday', 'tuesday', 'wednesday','thursday','friday','saturday','sunday'] %}
-          {% set today_name = sensor_names[now().weekday()] %}
-          {% set entity_id = 'input_boolean.irrigation_sprinkler_north_day_'+today_name+'2' %}
-          {{ is_state(entity_id, 'on') }}
-    action:
-      - service: switch.turn_on
-        entity_id: switch.irrigation_sprinkler_north
-      - service: timer.start
-        target:
-          entity_id: timer.irrigation_sprinkler_north
-        data:
-          duration: "{{ ((states('input_number.irrigation_sprinkler_north_timer_duration2') | int) * 60) | timestamp_custom('%H:%M:%S',False) }}"
-      - wait_template: "{{ is_state('timer.irrigation_sprinkler_north', 'idle' ) }}"
-      - service: switch.turn_off
-        entity_id: switch.irrigation_sprinkler_north
+  description: "Irrigation Sprinkler North Scheduler 2"
+  alias: irrigation_sprinkler_north_scheduler2
+  use_blueprint:
+    path: blueprint_irrigation_scheduler.yaml
+    input:
+      start_time: input_datetime.irrigation_sprinkler_north_start_time2
+      scheduler_enable: input_boolean.irrigation_sprinkler_north_scheduler_enable2
+      switch: switch.irrigation_sprinkler_north
+      timer: timer.irrigation_sprinkler_north
+      duration: input_number.irrigation_sprinkler_north_timer_duration2
+      scheduler_number: 2
 
 ###################################
 ########## S C R I P T S ##########

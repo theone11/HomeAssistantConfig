@@ -9,6 +9,8 @@
 !*.jpg
 !*.ttf
 !*.png
+!blueprints
+!blueprints/*
 !packages
 !ScreenShots
 !www
