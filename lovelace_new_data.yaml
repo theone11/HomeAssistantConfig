@@ -261,6 +261,25 @@
 ##     ## ##     ##  ######  ##     ##  #######   ######  
 # MACROS
 
+{% macro disable_tap_hold_double_ws(tap, hold, double_tap, ws) -%}
+{% if tap == 1 %}
+{{"  "*ws}}tap_action:
+{{"  "*ws}}  action: none
+{% endif %}
+{% if hold == 1 %}
+{{"  "*ws}}hold_action:
+{{"  "*ws}}  action: none
+{% endif %}
+{% if double_tap == 1 %}
+{{"  "*ws}}double_tap_action:
+{{"  "*ws}}  action: none
+{% endif %}
+{%- endmacro %}
+
+#########################################################
+#########################################################
+#########################################################
+
 {% macro create_schedulers_icons(entity, left, top) -%}
 {% if (entity == "hvac_hallway") or (entity == "hvac_livingroom") %}
 {% set schedulers = ['1', '2', '3', '4'] %}
@@ -290,6 +309,7 @@
               {% endif %}
               transform: translate(-50%, -50%) scale({{ scheduler_scaleX }}, {{ scheduler_scaleY }})
             type: icon
+            {{ disable_tap_hold_double_ws(1, 1, 1, 6) }}
 {% endfor %}
 {%- endmacro %}
 
@@ -311,12 +331,7 @@
               left: {{ left }}%
               top: {{ top }}%
               transform: translate(-50%, -50%) scale({{ group_scaleX}}, {{ group_scaleY }})
-            tap_action:
-              action: none
-            double_tap_action:
-              action: none
-            hold_action:
-              action: none
+            {{ disable_tap_hold_double_ws(1, 1, 1, 6) }}
 {%- endmacro %}
 
 #########################################################
@@ -357,6 +372,7 @@
                             show_name: true
                             show_icon: true
                             show_state: false
+                            {{ disable_tap_hold_double_ws(0, 1, 1, 14) }}
                           {% endfor %}
                       {% endif %}
                       - type: entities
@@ -368,8 +384,10 @@
                           {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
                           # - type: section
                           - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+                            {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
                           - type: 'custom:time-picker-card'
                             entity: input_datetime.{{ entity }}_start_time{{ s }}
+                            {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
                             layout:
                               embedded: true
                               name: inside
@@ -378,6 +396,7 @@
                           {% if (scheduler_type == "S_HVAC") %}
                           # - type: section
                           - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+                            {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
                           - type: 'custom:simple-thermostat'
                             entity: climate.{{ entity }}_virtual_{{ s }}
                             header: false
@@ -404,6 +423,7 @@
                                   icon: mdi:fan-speed-3
                           - type: 'custom:time-picker-card'
                             entity: input_datetime.{{ entity }}_start_time{{ s }}
+                            {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
                             layout:
                               embedded: true
                               name: inside
@@ -413,6 +433,7 @@
                           - type: section
                           - type: 'custom:slider-entity-row'
                             entity: input_number.{{ entity }}_timer_duration{{ s }}
+                            {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
                             hide_state: false
                           {% endif %}
                   {% endfor %}
@@ -458,12 +479,7 @@ cards:
           left: 50%
           top: 50%
           width: 100%
-        tap_action:
-          action: none
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
+        {{ disable_tap_hold_double_ws(1, 1, 1, 4) }}
       {% endif %}
       {% endfor %}
 
@@ -539,10 +555,7 @@ cards:
                     show_precipitation_probability: true
                     show_precipitation_amounts: true
                     show_wind: false
-            double_tap_action:
-              action: none
-            hold_action:
-              action: none
+            {{ disable_tap_hold_double_ws(0, 1, 1, 6) }}
 
 ######     ###    ##       ######## ##    ## ########     ###    ########   
 ##    ##   ## ##   ##       ##       ###   ## ##     ##   ## ##   ##     ## 
@@ -815,10 +828,7 @@ cards:
           service: cover.{{ service }}
           service_data:
             entity_id:  cover.{{ entity_group }}_shutters
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
+        {{ disable_tap_hold_double_ws(0, 1, 1, 4) }}
       {% endfor %}
       {% endfor %}
 
@@ -884,6 +894,7 @@ cards:
               left: {{ group_irrigation_left }}%
               top: {{ group_irrigation_top + timer_top_offset }}%
               transform: 'translate(-50%, -50%)'
+            {{ disable_tap_hold_double_ws(1, 1, 1, 6) }}
 
       - type: conditional
         conditions:
@@ -905,6 +916,7 @@ cards:
               left: {{ left }}%
               top: {{ top + timer_top_offset }}%
               transform: "${ SHOW_BAR === 'on' ? 'translate(-50%, -50%) scale(2, 1)' : 'translate(-50%, -50%) scale(1, 1)' }"
+            {{ disable_tap_hold_double_ws(0, 1, 1, 6) }}
 
       {% endfor %}
 
@@ -957,24 +969,14 @@ cards:
                       - type: 'custom:slider-entity-row'
                         entity: input_number.irrigation_duration
                         hide_state: false
-                        hold_action:
-                          action: none
-                        tap_action:
-                          action: none
-                        double_tap_action:
-                          action: none
+                        {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
                       - type: 'custom:time-picker-card'
                         entity: input_datetime.irrigation_start_time
                         layout:
                           embedded: true
                           name: inside
                           align_controls: right
-                        hold_action:
-                          action: none
-                        tap_action:
-                          action: none
-                        double_tap_action:
-                          action: none
+                        {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
                   - type: grid
                     columns: 2
                     square: false
@@ -982,17 +984,11 @@ cards:
                       - type: custom:button-card
                         entity: input_boolean.irrigation_immediate
                         show_name: false
-                        hold_action:
-                          action: none
-                        double_tap_action:
-                          action: none
+                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                       - type: custom:button-card
                         entity: input_boolean.irrigation_future
                         show_name: false
-                        hold_action:
-                          action: none
-                        double_tap_action:
-                          action: none
+                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                   - type: custom:timer-bar-card
                     compressed: true
                     name: Timers
@@ -1050,6 +1046,7 @@ cards:
             top: {{ top }}%
             transform: translate(0, -50%)
             font-size: {{ temperature_sensors_font_size }}%
+          {{ disable_tap_hold_double_ws(1, 1, 1, 5) }}
       {% endfor %}
 
       - type: state-icon
@@ -1101,10 +1098,7 @@ cards:
                         {% endfor %}
                       hours_to_show: "${ HOURS }"
                       refresh_interval: 10
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
+        {{ disable_tap_hold_double_ws(0, 1, 1, 4) }}
 
 ##      ##    ###    ######## ######## ########     ########   #######  #### ##       ######## ########  
 ##  ##  ##   ## ##      ##    ##       ##     ##    ##     ## ##     ##  ##  ##       ##       ##     ## 
@@ -1156,31 +1150,18 @@ cards:
                     show_name: false
                     tap_action:
                       action: toggle
-                    hold_action:
-                      action: none
-                    double_tap_action:
-                      action: none
+                    {{ disable_tap_hold_double_ws(0, 1, 1, 10) }}
                   - type: 'custom:slider-entity-row'
                     entity: input_number.{{ entity }}_duration
                     hide_state: false
-                    hold_action:
-                      action: none
-                    tap_action:
-                      action: none
-                    double_tap_action:
-                      action: none
+                    {{ disable_tap_hold_double_ws(1, 1, 1, 10) }}
                   - type: 'custom:time-picker-card'
                     entity: input_datetime.{{ entity }}_start_time
                     layout:
                       embedded: true
                       name: inside
                       align_controls: right
-                    hold_action:
-                      action: none
-                    tap_action:
-                      action: none
-                    double_tap_action:
-                      action: none
+                    {{ disable_tap_hold_double_ws(1, 1, 1, 10) }}
                   - type: grid
                     columns: 2
                     square: false
@@ -1188,17 +1169,11 @@ cards:
                       - type: custom:button-card
                         entity: input_boolean.{{ entity }}_immediate
                         show_name: false
-                        hold_action:
-                          action: none
-                        double_tap_action:
-                          action: none
+                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                       - type: custom:button-card
                         entity: input_boolean.{{ entity }}_future
                         show_name: false
-                        hold_action:
-                          action: none
-                        double_tap_action:
-                          action: none
+                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                   - type: custom:timer-bar-card
                     compressed: true
                     name: Timer
@@ -1349,10 +1324,7 @@ cards:
                             - entity: sensor.water_boiler_temperature_case_humidity
                           hours_to_show: "${ HOURS }"
                           refresh_interval: 10
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
+        {{ disable_tap_hold_double_ws(0, 1, 1, 4) }}
 
 ##     ##    ###     ######  ##     ## ##     ## ##     ##  ######  
 ##     ##   ## ##   ##    ## ##     ## ##     ## ###   ### ##    ## 
@@ -1617,12 +1589,7 @@ cards:
               top: {{ navi_top.value }}%
               width: 4%
               transform: translate(-50%, -50%) scale({{ navi_scaleX }}, {{ navi_scaleY }})
-            tap_action:
-              action: none
-            double_tap_action:
-              action: none
-            hold_action:
-              action: none
+            {{ disable_tap_hold_double_ws(1, 1, 1, 6) }}
 
           - type: state-label
             entity: sensor.{{ entity }}
@@ -1631,12 +1598,7 @@ cards:
               left: {{ navi_left - navi_left_offset}}%
               top: {{ navi_top.value }}%
               transform: translate(-100%, -50%) scale({{ navi_scaleX * navi_scaleT }}, {{ navi_scaleY * navi_scaleT }})
-            tap_action:
-              action: none
-            double_tap_action:
-              action: none
-            hold_action:
-              action: none
+            {{ disable_tap_hold_double_ws(1, 1, 1, 6) }}
 
           - type: state-label
             entity: sensor.{{ entity }}_ui
@@ -1644,12 +1606,7 @@ cards:
               left: {{ navi_left + navi_left_offset }}%
               top: {{ navi_top.value }}%
               transform: translate(0%, -50%) scale({{ navi_scaleX * navi_scaleT }}, {{ navi_scaleY * navi_scaleT }})
-            tap_action:
-              action: none
-            double_tap_action:
-              action: none
-            hold_action:
-              action: none
+            {{ disable_tap_hold_double_ws(1, 1, 1, 6) }}
           {% set navi_top.value = navi_top.value - navi_top_offset %}
           {% endfor %}
 
@@ -1846,10 +1803,7 @@ cards:
                         {% endfor %}
                         - type: section
                   {% endfor %}
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
+        {{ disable_tap_hold_double_ws(0, 1, 1, 4) }}
 
 ##     ## ##    ## ########     ###    #### ########  
 ##     ## ###   ## ##     ##   ## ##    ##  ##     ## 
@@ -1887,10 +1841,7 @@ cards:
                 type: iframe
                 url: http://192.168.1.104/Dashboard
                 aspect: 100%
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
+        {{ disable_tap_hold_double_ws(0, 1, 1, 4) }}
 
 ##      ##    ###    ######## ######## ########  
 ##  ##  ##   ## ##      ##    ##       ##     ## 
@@ -1944,10 +1895,7 @@ cards:
                       - entity: sensor.citymind_16452690_meter_last_read
                     #hours_to_show: 12
                     refresh_interval: 10
-        double_tap_action:
-          action: none
-        hold_action:
-          action: none
+        {{ disable_tap_hold_double_ws(0, 1, 1, 4) }}
 
    ###     ######  ######## ####  #######  ##    ##  ######  
   ## ##   ##    ##    ##     ##  ##     ## ###   ## ##    ## 
@@ -2028,10 +1976,7 @@ cards:
               transform: 'translate(0, -50%)'
             tap_action:
               action: {{ tap_action }}
-            double_tap_action:
-              action: none
-            hold_tap_action:
-              action: none
+            {{ disable_tap_hold_double_ws(0, 1, 1, 6) }}
 
       {% endfor %}
 
@@ -2064,8 +2009,7 @@ cards:
             service: browser_mod.refresh #window_reload
             data:
               browser_id: THIS
-        hold_action:
-          action: none
+        {{ disable_tap_hold_double_ws(0, 1, 0, 4) }}
 
       # - type: custom:plan-coordinates
       #   style:
