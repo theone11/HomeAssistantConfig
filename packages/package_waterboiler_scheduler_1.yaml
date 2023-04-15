@@ -55,7 +55,7 @@ automation:
       start_time: input_datetime.boiler_switch_start_time1
       scheduler_enable: input_boolean.boiler_switch_scheduler_enable1
       switch: switch.boiler_switch
-      timer: timer.boiler_switch_on_duration_timer
+      timer: timer.boiler_switch
       duration: input_number.boiler_switch_timer_duration1
       scheduler_number: 1
 

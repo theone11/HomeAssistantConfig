@@ -67,11 +67,24 @@ automation:
       - entity_id: switch.boiler_switch
         service: switch.turn_off
 
-  # Trigger    - Manual turn ON Water Boiler Button
+  # Trigger    - Directly turn ON Water Boiler
+  # Conditions - No timer running
+  # Actions    - Start Timer
+  #            - Turn OFF Boiler Switch after timer expires
+  - alias: Boiler Direct Start
+    description: "Boiler Direct Start"
+    use_blueprint:
+      path: blueprint_time_limit_activation.yaml
+      input:
+        switch: switch.boiler_switch
+        timer: timer.boiler_switch
+        max_limit: input_number.ui_water_boiler_max_time_limit
+
+  # Trigger    - Immediate turn ON Water Boiler
   # Conditions - NONE
   # Actions    - Start Boiler Manual Timer
   #            - Turn ON Boiler Switch
-  - alias: Boiler Start Manual Immediate Cycle
+  - alias: Boiler Start Immediate Cycle
     description: BLA BLA BLA
     trigger:
       platform: state
@@ -91,7 +104,7 @@ automation:
   # Conditions - Future enabled
   # Actions    - Start Boiler Timer
   #            - Turn ON Boiler Switch
-  - alias: Boiler Start Manual Future Cycle
+  - alias: Boiler Start Future Cycle
     description: BLA BLA BLA
     trigger:
       platform: time
@@ -133,7 +146,7 @@ automation:
         to: "off"
     condition: []
     action:
-      - service: timer.cancel
+      - service: timer.finish
         data:
           entity_id: timer.boiler_switch
       - service: switch.turn_off
@@ -142,6 +155,7 @@ automation:
         entity_id: input_boolean.boiler_switch_immediate
       - service: input_boolean.turn_off
         entity_id: input_boolean.boiler_switch_future
+
 ###################################
 ########## S C R I P T S ##########
 ###################################

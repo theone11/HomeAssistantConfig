@@ -165,6 +165,18 @@ input_number:
     min: 1
     max: 72
     step: 1
+  ui_water_boiler_max_time_limit:
+    name: Water Boiler maximum direct activation time limit
+    unit_of_measurement: "min"
+    min: 60
+    max: 300
+    step: 10
+  ui_irrigation_max_time_limit:
+    name: Irrigation maximum direct activation time limit
+    unit_of_measurement: "min"
+    min: 10
+    max: 90
+    step: 5
 input_boolean:
   ui_hide_room_temperatures:
     name: Room Temperatures

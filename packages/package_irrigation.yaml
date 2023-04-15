@@ -105,11 +105,82 @@ automation:
       - entity_id: switch.irrigation_drips
         service: switch.turn_off
 
-  # Trigger - Turning ON Immediate Switch
+  # Trigger    - Directly turn ON Irrigation Valve
+  # Conditions - No timer running
+  # Actions    - Start Timer
+  #            - Turn OFF Irrigation Valve after timer expires
+  - alias: Irrigation  Sprinkler West Direct Start
+    description: "Irrigation Sprinkler WestDirect Start"
+    use_blueprint:
+      path: blueprint_time_limit_activation.yaml
+      input:
+        switch: switch.irrigation_sprinkler_west
+        timer: timer.irrigation_sprinkler_west
+        max_limit: input_number.ui_irrigation_max_time_limit
+
+  - alias: Irrigation Sprinkler North Direct Start
+    description: "Irrigation Sprinkler North Direct Start"
+    use_blueprint:
+      path: blueprint_time_limit_activation.yaml
+      input:
+        switch: switch.irrigation_sprinkler_north
+        timer: timer.irrigation_sprinkler_north
+        max_limit: input_number.ui_irrigation_max_time_limit
+
+  - alias: Irrigation Drips Direct Start
+    description: "Irrigation Drips Direct Start"
+    use_blueprint:
+      path: blueprint_time_limit_activation.yaml
+      input:
+        switch: switch.irrigation_drips
+        timer: timer.irrigation_drips
+        max_limit: input_number.ui_irrigation_max_time_limit
+
+  # Trigger - Irrigation valve turned off
+  # Conditions - NONE
+  # Actions - Finish irrigation valve timer
+  - alias: Irrigation Valve OFF
+    description: BLA BLA BLA
+    trigger:
+      - platform: state
+        entity_id: switch.irrigation_sprinkler_west
+        to: "off"
+        id: west
+      - platform: state
+        entity_id: switch.irrigation_sprinkler_north
+        to: "off"
+        id: north
+      - platform: state
+        entity_id: switch.irrigation_drips
+        to: "off"
+        id: drips
+    condition: []
+    action:
+      - choose:
+          - conditions:
+              - condition: trigger
+                id: west
+            sequence:
+              - service: timer.finish
+                entity_id: timer.irrigation_sprinkler_west
+          - conditions:
+              - condition: trigger
+                id: north
+            sequence:
+              - service: timer.finish
+                entity_id: timer.irrigation_sprinkler_north
+          - conditions:
+              - condition: trigger
+                id: drips
+            sequence:
+              - service: timer.finish
+                entity_id: timer.irrigation_drips
+
+  # Trigger - Immediate turn ON Irrigation
   # Conditions - NONE
   # Actions
-  - alias: Irrigation Manual Immediate Start Cycle
-    description: "Irrigation Manual Immediate Start Cycle"
+  - alias: Irrigation Immediate Start Cycle
+    description: "Irrigation Immediate Start Cycle"
     trigger:
       - platform: state
         entity_id: input_boolean.irrigation_immediate
@@ -119,19 +190,19 @@ automation:
     action:
       - service: notify.file_debug
         data:
-          message: "Starting Manual Immediate start_irrigation_cycle script #"
+          message: "Starting Manual Immediate start_irrigation_cycle script"
       - service: script.turn_on
         entity_id: script.start_irrigation_cycle
       - delay: "00:00:01"
       - wait_template: "{{ is_state('script.start_irrigation_cycle', 'off') }}"
       - service: notify.file_debug
         data:
-          message: "Completed Manual Immediate start_irrigation_cycle script #"
+          message: "Completed Manual Immediate start_irrigation_cycle script"
 
   # Trigger - Turning ON Timer Scheduled Switch
   # Conditions - NONE
   # Actions
-  - alias: Irrigation Manual Scheduled Start Cycle
+  - alias: Irrigation Future Start Cycle
     description: "Irrigation Manual Scheduled Start Cycle"
     trigger:
       - platform: time
@@ -143,21 +214,21 @@ automation:
     action:
       - service: notify.file_debug
         data:
-          message: "Starting Manual Future start_irrigation_cycle script #"
+          message: "Starting Manual Future start_irrigation_cycle script"
       - service: script.turn_on
         entity_id: script.start_irrigation_cycle
       - delay: "00:00:01"
       - wait_template: "{{ is_state('script.start_irrigation_cycle', 'off') }}"
       - service: notify.file_debug
         data:
-          message: "Completed Manual Future start_irrigation_cycle script #"
+          message: "Completed Manual Future start_irrigation_cycle script"
 
   # Trigger - Turning OFF Timer Start/Stop Switch
   # Conditions - NONE
   # Actions
   #         - Run stop script with parameter all irrigation valves control entities
-  - alias: Irrigation Stop Cycle
-    description: "Irrigation Stop Cycle"
+  - alias: Irrigation Stop Manual Cycle
+    description: "Irrigation Stop Manual Cycle"
     trigger:
       - platform: state
         entity_id: input_boolean.irrigation_immediate
@@ -182,7 +253,7 @@ automation:
             - "irrigation_sprinkler_north"
             - "irrigation_drips"
           sequence:
-            - service: timer.cancel
+            - service: timer.finish
               target:
                 entity_id: "timer.{{ repeat.item }}"
             - service: switch.turn_off
