@@ -15,7 +15,7 @@ sensor:
           {% endif %}
 
 input_number:
-  boiler_switch_on_duration:
+  boiler_switch_duration:
     name: Duration
     unit_of_measurement: "min"
     #    initial: 30
@@ -33,13 +33,13 @@ input_number:
 input_boolean:
   boiler_switch_immediate:
     name: Water Boiler Immediate
-    icon: mdi:water-boiler
-  boiler_switch_one_time:
-    name: Water Boiler One Time
-    icon: mdi:water-boiler
+    icon: mdi:power
+  boiler_switch_future:
+    name: Water Boiler Future
+    icon: mdi:timer-outline
 
 timer:
-  boiler_switch_on_duration_timer:
+  boiler_switch:
     name: Time Left
     icon: mdi:timer-outline
 
@@ -71,7 +71,7 @@ automation:
   # Conditions - NONE
   # Actions    - Start Boiler Manual Timer
   #            - Turn ON Boiler Switch
-  - alias: Boiler Start 1-Time Cycle
+  - alias: Boiler Start Manual Immediate Cycle
     description: BLA BLA BLA
     trigger:
       platform: state
@@ -81,31 +81,31 @@ automation:
     action:
       - service: timer.start
         data:
-          entity_id: timer.boiler_switch_on_duration_timer
+          entity_id: timer.boiler_switch
           duration:
-            minutes: "{{ states('input_number.boiler_switch_on_duration') | int }}"
+            minutes: "{{ states('input_number.boiler_switch_duration') | int }}"
       - service: switch.turn_on
         entity_id: switch.boiler_switch
 
-  # Trigger    - One-Time Scheduler start time
-  # Conditions - One-Time Scheduler enabled
-  # Actions    - Start Boiler Manual Timer
+  # Trigger    - Future start time
+  # Conditions - Future enabled
+  # Actions    - Start Boiler Timer
   #            - Turn ON Boiler Switch
-  - alias: Boiler Start 1-Time Scheduler Cycle
+  - alias: Boiler Start Manual Future Cycle
     description: BLA BLA BLA
     trigger:
       platform: time
       at: input_datetime.boiler_switch_start_time
     condition:
       condition: state
-      entity_id: input_boolean.boiler_switch_one_time
+      entity_id: input_boolean.boiler_switch_future
       state: "on"
     action:
       - service: timer.start
         data:
-          entity_id: timer.boiler_switch_on_duration_timer
+          entity_id: timer.boiler_switch
           duration:
-            minutes: "{{ states('input_number.boiler_switch_on_duration') | int }}"
+            minutes: "{{ states('input_number.boiler_switch_duration') | int }}"
       - service: switch.turn_on
         entity_id: switch.boiler_switch
 
@@ -116,11 +116,11 @@ automation:
   # Actions    - Cancel/Stop Boiler Timer
   #            - Turn OFF Boiler Switch
   #            - Turn OFF Water Boiler Button
-  - alias: Boiler Stop 1-Time Cycle
+  - alias: Boiler Stop Manual Cycle
     description: BLA BLA BLA
     trigger:
       - platform: state
-        entity_id: timer.boiler_switch_on_duration_timer
+        entity_id: timer.boiler_switch
         to: "idle"
       - platform: state
         entity_id: switch.boiler_switch
@@ -129,19 +129,19 @@ automation:
         entity_id: input_boolean.boiler_switch_immediate
         to: "off"
       - platform: state
-        entity_id: input_boolean.boiler_switch_one_time
+        entity_id: input_boolean.boiler_switch_future
         to: "off"
     condition: []
     action:
       - service: timer.cancel
         data:
-          entity_id: timer.boiler_switch_on_duration_timer
+          entity_id: timer.boiler_switch
       - service: switch.turn_off
         entity_id: switch.boiler_switch
       - service: input_boolean.turn_off
         entity_id: input_boolean.boiler_switch_immediate
       - service: input_boolean.turn_off
-        entity_id: input_boolean.boiler_switch_one_time
+        entity_id: input_boolean.boiler_switch_future
 ###################################
 ########## S C R I P T S ##########
 ###################################

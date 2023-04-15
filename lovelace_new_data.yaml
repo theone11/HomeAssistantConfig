@@ -907,13 +907,13 @@ cards:
           browser_mod:
             service: browser_mod.popup
             data:
+              browser_id: THIS
               style: |
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: gray;
                 --popup-background-color: #101010;
-              browser_id: THIS
-              title: Irrigation Valves 1-Time Cycle
+              title: Irrigation Valves Manual Cycle
               content:
                 type: grid
                 columns: 1
@@ -926,72 +926,74 @@ cards:
                     cards:
                       - type: custom:button-card
                         entity: input_boolean.irrigation_sprinkler_west
-                        showname: true
+                        show_name: true
+                        icon: mdi:sprinkler
                       - type: custom:button-card
                         entity: input_boolean.irrigation_sprinkler_north
-                        showname: true
+                        show_name: true
+                        icon: mdi:sprinkler
                       - type: custom:button-card
                         entity: input_boolean.irrigation_drips
-                        showname: true
-                  - type: entities
-                    show_header_toggle: false
+                        show_name: true
+                        icon: mdi:water
+                  - type: grid
+                    columns: 1
+                    square: false
+                    title: Choose Duration and Start Time
+                    cards:
+                      - type: 'custom:slider-entity-row'
+                        entity: input_number.irrigation_duration
+                        hide_state: false
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                      - type: 'custom:time-picker-card'
+                        entity: input_datetime.irrigation_start_time
+                        layout:
+                          embedded: true
+                          name: inside
+                          align_controls: right
+                        hold_action:
+                          action: none
+                        tap_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                  - type: grid
+                    columns: 2
+                    square: false
+                    cards:
+                      - type: custom:button-card
+                        entity: input_boolean.irrigation_immediate
+                        show_name: false
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                      - type: custom:button-card
+                        entity: input_boolean.irrigation_future
+                        show_name: false
+                        hold_action:
+                          action: none
+                        double_tap_action:
+                          action: none
+                  - type: custom:timer-bar-card
+                    compressed: true
+                    name: Timers
                     entities:
-                      - label: Set cycle duration (seconds) and start
-                        type: section
-                      - entity: input_number.irrigation_set_time
-                      - entity: input_boolean.irrigation_immediate
-                      - type: section
-                      - entity: timer.irrigation_sprinkler_west
-                      - entity: timer.irrigation_sprinkler_north
-                      - entity: timer.irrigation_drips
-                      - type: section
+                      - timer.irrigation_sprinkler_west
+                      - timer.irrigation_sprinkler_north
+                      - timer.irrigation_drips
                   - type: history-graph
+                    title: History
                     hours_to_show: 72
                     entities:
                       - entity: switch.irrigation_sprinkler_west
                       - entity: switch.irrigation_sprinkler_north
                       - entity: switch.irrigation_drips
-                  # - type: grid
-                  #   columns: 3
-                  #   square: false
-                  #   cards:
-                  #     - type: custom:button-card
-                  #       entity: input_boolean.irrigation_sprinkler_west
-                  #       show_name: true
-                  #       icon: mdi:sprinkler
-                  #     - type: custom:button-card
-                  #       entity: input_boolean.irrigation_sprinkler_north
-                  #       show_name: true
-                  #       icon: mdi:sprinkler
-                  #     - type: custom:button-card
-                  #       entity: input_boolean.irrigation_drips
-                  #       show_name: true
-                  #       icon: mdi:water
-                  # - type: grid
-                  #   columns: 2
-                  #   square: false
-                  #   cards:
-                  #     - type: custom:button-card
-                  #       entity: input_boolean.irrigation_immediate
-                  #       show_name: false
-                  #       icon: mdi:power
-                  #     - type: custom:button-card
-                  #       entity: input_boolean.irrigation_one_time
-                  #       show_name: false
-                  #       icon: mdi:timer-outline
-                  # - type: entities
-                  #   # title: 1-Time Cycle
-                  #   show_header_toggle: false
-                  #   entities:
-                  #     - entity: timer..irrigation_sprinkler_west
-                  #     - entity: timer..irrigation_sprinkler_north
-                  #     - entity: timer..irrigation_drips
-                  # - type: history-graph
-                  #   hours_to_show: 72
-                  #   entities:
-                  #     - entity: switch.irrigation_sprinkler_west
-                  #     - entity: switch.irrigation_sprinkler_north
-                  #     - entity: switch.irrigation_drips
         double_tap_action:
           action: more-info
         hold_action:
@@ -1129,7 +1131,7 @@ cards:
                 --popup-max-width: 30vw;
                 --popup-border-color: gray;
                 --popup-background-color: #101010;
-              title: Water Boiler 1-Time Cycle
+              title: Water Boiler Manual Cycle
               content:
                 type: grid
                 columns: 1
@@ -1146,7 +1148,7 @@ cards:
                     double_tap_action:
                       action: none
                   - type: 'custom:slider-entity-row'
-                    entity: input_number.{{ entity }}_on_duration
+                    entity: input_number.{{ entity }}_duration
                     hide_state: false
                     hold_action:
                       action: none
@@ -1173,21 +1175,27 @@ cards:
                       - type: custom:button-card
                         entity: input_boolean.{{ entity }}_immediate
                         show_name: false
-                        icon: mdi:power
                         hold_action:
                           action: none
                         double_tap_action:
                           action: none
                       - type: custom:button-card
-                        entity: input_boolean.{{ entity }}_one_time
+                        entity: input_boolean.{{ entity }}_future
                         show_name: false
-                        icon: mdi:timer-outline
                         hold_action:
                           action: none
                         double_tap_action:
                           action: none
                   - type: custom:timer-bar-card
-                    entity: timer.{{ entity }}_on_duration_timer
+                    compressed: true
+                    name: Timer
+                    entities:
+                      - timer.{{ entity }}
+                  - type: history-graph
+                    title: History
+                    hours_to_show: 72
+                    entities:
+                      - entity: switch.boiler_switch
         double_tap_action:
           action: more-info
         hold_action:
@@ -1209,22 +1217,22 @@ cards:
 
       - type: conditional
         conditions:
-          - entity: input_boolean.{{ entity }}_one_time
+          - entity: input_boolean.{{ entity }}_future
             state: 'on'
-          - entity: timer.{{ entity }}_on_duration_timer
-            state_not: 'idle'
+          - entity: timer.{{ entity }}
+            state: 'idle'
         elements:
           - type: state-label
-            entity: input_datetime.boiler_switch_start_time
+            entity: input_datetime.{{ entity }}_start_time
             style:
-              color: red
+              #color: red
               left: {{ left }}%
-              top: {{ top - timer_top_offset }}%
+              top: {{ top + timer_top_offset }}%
               transform: 'translate(-50%, -50%)'
 
       - type: conditional
         conditions:
-          - entity: timer.{{ entity }}_on_duration_timer
+          - entity: timer.{{ entity }}
             state_not: 'idle'
         elements:
           - type: 'custom:config-template-card'
@@ -1234,7 +1242,7 @@ cards:
               - input_boolean.ui_show_timer_bar_or_time
             card:
               type: custom:timer-bar-card
-              entity: timer.{{ entity }}_on_duration_timer
+              entity: timer.{{ entity }}
               layout: full_row
               text_width: "${ SHOW_BAR === 'on' ? '0%' : '100%' }"
             style:
