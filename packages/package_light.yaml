@@ -25,7 +25,7 @@ light:
       - light.diningroom_light
       - light.guest_bathroom_light
       - light.playroom_light
-#      - light.pantry_light
+      - light.pantry_light
 
   - platform: group
     name: Outside Lights

@@ -42,7 +42,7 @@
 {% set lights = [("diningroom_light"              , "downstairs", 69  , 67  , 1.3, 2  , 0),
                  ("kitchen_light_ceiling"         , "downstairs", 62.5, 82  , 1.1, 1.2, 0),
                  ("kitchen_light_klapa"           , "downstairs", 59  , 84  , 0.7, 1.7, 0),
-                 ("kitchen_table_light"           , "downstairs", 63.5, 73.5, 0.6, 0.6, 0),
+                 ("kitchen_table_light"           , "downstairs", 64  , 73.5, 0.6, 0.6, 0),
                  ("garden_shed_light"             , "outside"   , 73.5, 58  , 0.7, 1.2, 0),
                  ("garden_light_top"              , "outside"   , 89  , 24  , 2.4, 2.4, 0),
                  ("garden_light_bottom"           , "outside"   , 69  , 20  , 8.5, 1.3, 0),
@@ -60,7 +60,8 @@
                  ("ella_light"                    , "upstairs"  , 36.5, 47  , 2  , 1.8, 0),
                  ("tomer_light"                   , "upstairs"  , 29  , 50.5, 1.9, 2.7, 0),
                  ("roof_light_top"                , "roof"      , 5.5 , 51  , 2.6, 2.2, 0),
-                 ("roof_light_bottom"             , "roof"      , 10  , 76  , 2.2, 4.2, 0)] %}
+                 ("roof_light_bottom"             , "roof"      , 10  , 76  , 2.2, 4.2, 0),
+                 ("pantry_light"                  , "downstairs", 61  , 73.5, 0.6, 0.6, 0)] %}
 
 #                       group       , left, top
 {% set light_groups = [("outside"   , 53, 37),
@@ -352,17 +353,6 @@
                             show_name: true
                             show_icon: true
                             show_state: false
-                          {% endfor %}
-                      - type: grid
-                        columns: 7
-                        square: false
-                        cards:
-                          {% for day, number, name, name_he in days %}
-                          - type: entity
-                            entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
-                            name: {{ name_he }}
-                            icon: mdi:numeric-{{ number }}-box-outline
-                            state_color: true
                           {% endfor %}
                       {% endif %}
                       - type: entities
@@ -943,31 +933,9 @@ cards:
                       - type: custom:button-card
                         entity: input_boolean.irrigation_drips
                         showname: true
-                  - type: grid
-                    columns: 3
-                    square: false
-                    title: Choose which irrigation valves to open during the cycle
-                    cards:
-                      - type: tile
-                        entity: input_boolean.irrigation_sprinkler_west
-                        color: primary
-                        vertical: true
-                      - type: tile
-                        entity: input_boolean.irrigation_sprinkler_north
-                        color: primary
-                        vertical: true
-                      - type: tile
-                        entity: input_boolean.irrigation_drips
-                        color: primary
-                        vertical: true
                   - type: entities
                     show_header_toggle: false
                     entities:
-                      - label: Choose which irrigation valves to open during the cycle
-                        type: section
-                      - entity: input_boolean.irrigation_sprinkler_west
-                      - entity: input_boolean.irrigation_sprinkler_north
-                      - entity: input_boolean.irrigation_drips
                       - label: Set cycle duration (seconds) and start
                         type: section
                       - entity: input_number.irrigation_set_time
