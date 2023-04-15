@@ -98,6 +98,8 @@
 # Irrigation
 #--------------------------------------------------------------------------------------------------
 #                             entity                      , type  , left, top, display_name)
+{% set group_irrigation_left, group_irrigation_top = 53 ,31 %}
+
 {% set irrigation_valves = [("irrigation_sprinkler_west" , "switch", 78, 34, "West Sprinklers"),
                             ("irrigation_sprinkler_north", "switch", 82, 51, "North Sprinklers"),
                             ("irrigation_drips"          , "switch", 87, 55, "Drips")] %}
@@ -869,6 +871,22 @@ cards:
 
       - type: conditional
         conditions:
+          - entity: input_boolean.irrigation_future
+            state: 'on'
+          - entity: timer.{{ entity }}
+            state: 'idle'
+          - entity: input_boolean.{{ entity }}
+            state: 'on'
+        elements:
+          - type: state-label
+            entity: input_datetime.irrigation_start_time
+            style:
+              left: {{ group_irrigation_left }}%
+              top: {{ group_irrigation_top + timer_top_offset }}%
+              transform: 'translate(-50%, -50%)'
+
+      - type: conditional
+        conditions:
           - entity: timer.{{ entity }}
             state_not: 'idle'
         elements:
@@ -901,8 +919,8 @@ cards:
         style:
           background-color: {{ background_color }}
           border-radius: {{ border_radius }}%
-          left: 53%
-          top: 31%
+          left: {{ group_irrigation_left }}%
+          top: {{ group_irrigation_top }}%
           transform: translate(-50%, -50%) scale(1, 1)
         tap_action:
           action: fire-dom-event
@@ -922,22 +940,15 @@ cards:
                 square: false
                 cards:
                   - type: grid
-                    columns: 3
+                    columns: {{ irrigation_valves | count }}
                     square: false
                     title: Choose which irrigation valves to open during the cycle
                     cards:
+                      {% for entity in irrigation_valves %}
                       - type: custom:button-card
-                        entity: input_boolean.irrigation_sprinkler_west
+                        entity: input_boolean.{{ entity[0] }}
                         show_name: true
-                        icon: mdi:sprinkler
-                      - type: custom:button-card
-                        entity: input_boolean.irrigation_sprinkler_north
-                        show_name: true
-                        icon: mdi:sprinkler
-                      - type: custom:button-card
-                        entity: input_boolean.irrigation_drips
-                        show_name: true
-                        icon: mdi:water
+                      {% endfor %}
                   - type: grid
                     columns: 1
                     square: false
@@ -986,16 +997,16 @@ cards:
                     compressed: true
                     name: Timers
                     entities:
-                      - timer.irrigation_sprinkler_west
-                      - timer.irrigation_sprinkler_north
-                      - timer.irrigation_drips
+                      {% for entity in irrigation_valves %}
+                      - timer.{{ entity[0] }}
+                      {% endfor %}
                   - type: history-graph
                     title: History
                     hours_to_show: 72
                     entities:
-                      - entity: switch.irrigation_sprinkler_west
-                      - entity: switch.irrigation_sprinkler_north
-                      - entity: switch.irrigation_drips
+                      {% for entity in irrigation_valves %}
+                      - entity: switch.{{ entity[0] }}
+                      {% endfor %}
         double_tap_action:
           action: more-info
         hold_action:
@@ -1007,9 +1018,9 @@ cards:
               title: Irrigation Valves
               content:
                 entities:
-                  - entity: switch.irrigation_sprinkler_west
-                  - entity: switch.irrigation_sprinkler_north
-                  - entity: switch.irrigation_drips
+                  {% for entity in irrigation_valves %}
+                  - entity: switch.{{ entity[0] }}
+                  {% endfor %}
                 show_header_toggle: false
                 type: entities
 
