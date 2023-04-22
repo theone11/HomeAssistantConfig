@@ -118,7 +118,7 @@
 
 title: Irrigation
 path: irrigation
-icon: 'mdi:water'
+icon: 'mdi:watering-can'
 badges: []
 cards:
   - type: grid

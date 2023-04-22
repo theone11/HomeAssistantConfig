@@ -8,9 +8,11 @@
 title: Mobile
 
 views:
+  - !include lovelace_mobile_UI/weather_calendar.yaml
   - !include lovelace_mobile_UI/lights.yaml
   - !include lovelace_mobile_UI/covers.yaml
   - !include lovelace_mobile_UI/irrigation.yaml
   - !include lovelace_mobile_UI/hvac.yaml
   - !include lovelace_mobile_UI/vacuum.yaml
   - !include lovelace_mobile_UI/waterboiler.yaml
+  - !include lovelace_mobile_UI/water_consumption.yaml

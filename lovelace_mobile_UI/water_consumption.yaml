@@ -1,0 +1,32 @@
+# lovelace_gen
+
+title: Water Consumption
+path: water_consumption
+icon: 'mdi:water-pump'
+badges: []
+cards:
+  - type: grid
+    columns: 1
+    square: false
+    cards:
+    - type: grid
+      columns: 1
+      square: false
+      cards:
+        - type: history-graph
+          entities:
+            - entity: sensor.citymind_16452690_meter_today_s_consumption
+            - entity: sensor.water_consumption_hourly
+          #hours_to_show: 12
+          refresh_interval: 10
+        - type: history-graph
+          entities:
+            - entity: sensor.citymind_16452690_meter_consumption_forecast
+            - entity: sensor.citymind_16452690_meter_monthly_consumption
+          #hours_to_show: 12
+          refresh_interval: 10
+        - type: history-graph
+          entities:
+            - entity: sensor.citymind_16452690_meter_last_read
+          #hours_to_show: 12
+          refresh_interval: 10

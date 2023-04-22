@@ -1,0 +1,51 @@
+# lovelace_gen
+
+title: Weather
+path: weather
+icon: 'mdi:weather-cloudy-clock'
+badges: []
+cards:
+  - type: grid
+    columns: 1
+    square: false
+    cards:
+    - type: custom:weather-card
+      entity: weather.accuweather
+      icons: "/local/icons/weather_icons/static/"
+      current: true
+      details: true # true false
+      number_of_forecasts: 5
+      hourly_forecast: false
+    - type: custom:hourly-weather
+      entity: weather.openweathermap
+      num_segments: '15'
+      icons: true
+      show_precipitation_probability: true
+      show_precipitation_amounts: true
+      show_wind: false
+
+    - type: 'custom:atomic-calendar-revive'
+      entities:
+        - entity: calendar.kessler_family
+          name: calendar.kessler_family
+        - entity: calendar.holidays_in_israel
+          name: Holidays in Israel
+      maxDaysToShow: 14
+      maxEventCount: 6
+      showLocation: true
+      showMonth: false
+      showWeekDay: true
+      showDate: true
+      showDescription: false
+      showNoEventsForToday: false
+      disableEventLink: true
+      disableLocationLink: true
+      defaultMode: Event
+      refreshInterval: 60
+      showHours: true
+      showRelativeTime: false
+      europeanDate: false
+      dateFormat: 'LL'
+      hoursFormat: 'HH:mm'
+      showMultiDay: false
+      showMultiDayEventParts: true
