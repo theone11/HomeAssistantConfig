@@ -60,6 +60,12 @@ lovelace:
       icon: mdi:home
       show_in_sidebar: true
       filename: lovelace_new.yaml
+    lovelace-yaml-mobile:
+      mode: yaml
+      title: Mobile
+      icon: mdi:cellphone
+      show_in_sidebar: true
+      filename: lovelace_mobile_UI.yaml
 
 
 notify:
@@ -134,7 +140,7 @@ sensor:
       update_available:
         icon_template: mdi:cloud-download
         value_template: >
-          {% if (states('group.updates') == 'on') or (states('sensor.hacs') > "0") %}
+          {% if (is_state('group.updates', 'on') or (states('sensor.hacs') > "0")) %}
             {{ 1 }}
           {% else %}
             {{ 0 }}

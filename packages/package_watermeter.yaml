@@ -44,7 +44,7 @@ sensor:
       water_consumption_limit_exceeded:
         icon_template: mdi:water-alert
         value_template: >
-          {% if ( (states('sensor.water_consumption_daily_limit_exceeded') == 'on') or (states('sensor.water_consumption_hourly_limit_exceeded') == 'on') or (states('sensor.water_consumption_monthly_limit_exceeded') == 'on') or (states('sensor.water_consumption_monthly_forecast_limit_exceeded') == 'on') ) %}
+          {% if ( is_state('sensor.water_consumption_daily_limit_exceeded', 'on') or is_state('sensor.water_consumption_hourly_limit_exceeded', 'on') or is_state('sensor.water_consumption_monthly_limit_exceeded', 'on') or is_state('sensor.water_consumption_monthly_forecast_limit_exceeded', 'on') ) %}
             1
           {% else %}
             0

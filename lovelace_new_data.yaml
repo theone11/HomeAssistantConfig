@@ -32,6 +32,15 @@
                ("friday"   , "6", "Fri", "שישי"),
                ("saturday" , "7", "Sat", "שבת")] %}
 
+{% set graph_span = [("hour"    , 1),
+                     ("2 hours" , 2),
+                     ("6 hours" , 6),
+                     ("12 hours", 12),
+                     ("18 hours", 18),
+                     ("day"     , 24),
+                     ("36 hours", 36),
+                     ("2 days"  , 48),
+                     ("3 days"  , 72)] %}
 #--------------------------------------------------------------------------------------------------
 # Lights
 #  - List all active areas.
@@ -172,22 +181,23 @@
 {% set settings_left, settings_top = 98.5, 1 %}
 {% set settings_scaleX, settings_scaleY = 0.8, 0.8 %}
 {% set settings_tab_names = ["Visual Limit", "Functional Limits", "Visual"] %}
-#                             entity                                                 , column, section, label                 , type
-{% set settings_entities = [("input_number.mfc_j470dw_ink_low_limit"                 , "1", "y", "Printers"              , "slider"),
-                            ("input_number.water_consumption_hourly_limit"           , "1", "y", "Water Consumption"     , "slider"),
-                            ("input_number.water_consumption_daily_limit"            , "1", "n", ""                      , "slider"),
-                            ("input_number.water_consumption_monthly_limit"          , "1", "n", ""                      , "slider"),
-                            ("input_number.water_consumption_monthly_forecast_limit" , "1", "n", ""                      , "slider"),
-                            ("input_number.boiler_disable_schedulers_temperature"    , "2", "y", "Water Boiler"          , "slider"),
-                            ("input_number.ui_water_boiler_max_time_limit"           , "2", "y", ""                      , "slider"),
-                            ("input_number.ui_irrigation_max_time_limit"             , "2", "y", "Irrigation"            , "slider"),
-                            ("script.1586449615879"                                  , "3", "y", "Home Assistant Control", "entity"),
-                            ("input_boolean.ui_hide_room_temperatures"               , "3", "y", "Hide"                  , "entity"),
-                            ("input_boolean.ui_hide_water_boiler_temperatures"       , "3", "n", ""                      , "entity"),
-                            ("input_boolean.ui_hide_weather          "               , "3", "n", ""                      , "entity"),
-                            ("input_boolean.ui_hide_calendar         "               , "3", "n", ""                      , "entity"),
-                            ("input_boolean.ui_hide_navigation"                      , "3", "n", ""                      , "entity"),
-                            ("input_boolean.ui_show_timer_bar_or_time"               , "3", "y", "Visual Options"        , "entity")] %}
+#                             entity                                                 , tab, section, label                 , type, action, data
+{% set settings_entities = [("input_number.mfc_j470dw_ink_low_limit"                 , "1", "y", "Printers"              , "slider", "", ""),
+                            ("input_number.water_consumption_hourly_limit"           , "1", "y", "Water Consumption"     , "slider", "", ""),
+                            ("input_number.water_consumption_daily_limit"            , "1", "n", ""                      , "slider", "", ""),
+                            ("input_number.water_consumption_monthly_limit"          , "1", "n", ""                      , "slider", "", ""),
+                            ("input_number.water_consumption_monthly_forecast_limit" , "1", "n", ""                      , "slider", "", ""),
+                            ("input_number.boiler_disable_schedulers_temperature"    , "2", "y", "Water Boiler"          , "slider", "", ""),
+                            ("input_number.ui_water_boiler_max_time_limit"           , "2", "y", ""                      , "slider", "", ""),
+                            ("input_number.ui_irrigation_max_time_limit"             , "2", "y", "Irrigation"            , "slider", "", ""),
+                            ("script.1586449615879"                                  , "3", "y", "Home Assistant Control", "entity", "", ""),
+                            ("Settings"                                              , "3", "n", "                      ", "button", "url", "http://homeassistant.local:8123/config/dashboard"),
+                            ("input_boolean.ui_hide_room_temperatures"               , "3", "y", "Hide"                  , "entity", "", ""),
+                            ("input_boolean.ui_hide_water_boiler_temperatures"       , "3", "n", ""                      , "entity", "", ""),
+                            ("input_boolean.ui_hide_weather          "               , "3", "n", ""                      , "entity", "", ""),
+                            ("input_boolean.ui_hide_calendar         "               , "3", "n", ""                      , "entity", "", ""),
+                            ("input_boolean.ui_hide_navigation"                      , "3", "n", ""                      , "entity", "", ""),
+                            ("input_boolean.ui_show_timer_bar_or_time"               , "3", "y", "Visual Options"        , "entity", "", "")] %}
 
 #--------------------------------------------------------------------------------------------------
 # Clock
@@ -274,6 +284,45 @@
 {{"  "*ws}}double_tap_action:
 {{"  "*ws}}  action: none
 {% endif %}
+{%- endmacro %}
+
+#########################################################
+#########################################################
+#########################################################
+
+{% macro create_graph_span_buttons_ws(ws) -%}
+# {{"  "*ws}}- type: grid
+# {{"  "*ws}}  columns: {{ graph_span | count }}
+# {{"  "*ws}}  square: false
+# {{"  "*ws}}  cards:
+# {{"  "*ws}}    {% for label, span in graph_span %}
+# {{"  "*ws}}    - type: custom:button-card
+# {{"  "*ws}}      name: {{ label }}
+# {{"  "*ws}}      show_name: true
+# {{"  "*ws}}      show_icon: false
+# {{"  "*ws}}      show_state: false
+# {{"  "*ws}}      tap_action:
+# {{"  "*ws}}        action: call-service
+# {{"  "*ws}}        service: input_number.set_value
+# {{"  "*ws}}        service_data:
+# {{"  "*ws}}          entity_id: input_number.ui_water_boiler_graph_hours
+# {{"  "*ws}}          value: {{ span }}
+# {{"  "*ws}}    {% endfor %}
+{{"  "*ws}}- type: custom:paper-buttons-row
+{{"  "*ws}}  buttons:
+{{"  "*ws}}    {% for label, span in graph_span %}
+{{"  "*ws}}    - name: {{ label }}
+{{"  "*ws}}      tap_action:
+{{"  "*ws}}        action: call-service
+{{"  "*ws}}        service: input_number.set_value
+{{"  "*ws}}        service_data:
+{{"  "*ws}}          entity_id: input_number.ui_water_boiler_graph_hours
+{{"  "*ws}}          value: {{ span }}
+# {{"  "*ws}}      state_styles:
+# {{"  "*ws}}        "12":
+# {{"  "*ws}}          name:
+# {{"  "*ws}}            color: blue
+{{"  "*ws}}    {% endfor %}
 {%- endmacro %}
 
 #########################################################
@@ -1075,9 +1124,7 @@ cards:
                 columns: 1
                 square: false
                 cards:
-                  - type: 'custom:slider-entity-row'
-                    entity: input_number.ui_water_boiler_graph_hours
-                    hide_state: false
+{{ create_graph_span_buttons_ws(9) }}
                   - type: 'custom:config-template-card'
                     variables:
                       HOURS: states['input_number.ui_water_boiler_graph_hours'].state
@@ -1275,9 +1322,7 @@ cards:
                     columns: 1
                     square: false
                     cards:
-                      - type: 'custom:slider-entity-row'
-                        entity: input_number.ui_water_boiler_graph_hours
-                        hide_state: false
+{{ create_graph_span_buttons_ws(11) }}
                       - type: 'custom:config-template-card'
                         variables:
                           HOURS: states['input_number.ui_water_boiler_graph_hours'].state
@@ -1300,8 +1345,8 @@ cards:
                             - entity: binary_sensor.water_boiler_power_wall_switch_status
                               name: Wall Switch Feedback
                             # - entity: sensor.water_boiler_power_adc
-                            - entity: sensor.water_boiler_temperature_water_level
                             - entity: sensor.water_boiler_power_power_w
+                            - entity: sensor.water_boiler_temperature_water_level
                           hours_to_show: "${ HOURS }"
                           refresh_interval: 10
                   - type: grid
@@ -1786,7 +1831,7 @@ cards:
                       type: entities
                       show_header_toggle: false
                       entities:
-                        {% for entity, column, section, label, type in settings_entities %}
+                        {% for entity, column, section, label, type, action, data in settings_entities %}
                           {% if column == current_column %}
                             {% if section == "y" %}
                         - type: section
@@ -1796,6 +1841,12 @@ cards:
                         - type: 'custom:slider-entity-row'
                           entity: {{ entity }}
                           hide_state: false
+                            {% elif type == "button" %}
+                        - type: button
+                          name: {{ entity }}
+                          tap_action:
+                            actions: {{ action }}
+                            ulr_path: {{ data }}
                             {% else %}
                         - entity: {{ entity }}
                             {% endif %}

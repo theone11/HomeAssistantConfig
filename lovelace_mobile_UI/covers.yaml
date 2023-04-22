@@ -1,0 +1,45 @@
+# lovelace_gen
+
+#--------------------------------------------------------------------------------------------------
+# Covers
+#  - List active area (windows/doors)
+#  - List groups for group buttons
+#--------------------------------------------------------------------------------------------------
+#                 entity                     , group       , left, top, scaleX, scaleY, tap_action
+{% set covers = [("diningroom_window_shutter", "downstairs", 72.9 , 68.5, 0.3 , 1.8 ,  "toggle"),
+                 ("livingroom_window_shutter", "downstairs", 72.9 , 50.5, 0.3 , 1.8 ,  "toggle"),
+                 ("livingroom_door_shutter"  , "downstairs", 62   , 42.2, 3.4 , 0.3 ,  "toggle"),
+                 ("playroom_window_shutter"  , "downstairs", 54.5 , 42.35, 1.8 , 0.40, "toggle"),
+                 ("noga_window_shutter_north", "upstairs"  , 47.75, 52  , 0.25, 1.4 ,  "toggle"),
+                 ("noga_window_shutter_west" , "upstairs"  , 44.2 , 42.3, 1.4 , 0.3,   "toggle"),
+                 ("ella_window_shutter"      , "upstairs"  , 37.2 , 40.7, 1.4 , 0.3,   "toggle"),
+                 ("roof_trap_door"           , "upstairs"  , 12.8 , 60.3, 1.3 , 0.8 ,  "none")] %}
+
+#                       group       , left, top
+{% set cover_groups = [("downstairs", 53, 68),
+                       ("upstairs"  , 28, 68)] %}
+
+title: Shutters
+path: shutters
+icon: 'mdi:window-shutter'
+badges: []
+cards:
+  - type: grid
+    columns: 1
+    square: false
+    cards:
+    {% for group, left, top in cover_groups %}
+    - type: entities
+      title: {{ group.capitalize() }}
+      show_header_toggle: true
+      entities:
+      {% for entity, entity_group, left, top, scaleX, scaleY, deg in covers %}
+        {% if entity_group == group %}
+        - entity: cover.{{ entity }}
+        - type: custom:slider-entity-row
+          entity: cover.{{ entity }}
+          full_row: true
+          hide_state: true
+        {% endif %}
+      {% endfor %}
+    {% endfor %}

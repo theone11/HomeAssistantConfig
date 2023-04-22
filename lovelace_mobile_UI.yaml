@@ -1,0 +1,13 @@
+# lovelace_gen
+
+#kiosk_mode:
+#  hide_header: true
+#  hide_menubutton: true
+#  hide_overflow: true
+
+title: Mobile
+
+views:
+  - !include lovelace_mobile_UI/lights.yaml
+  - !include lovelace_mobile_UI/covers.yaml
+  - !include lovelace_mobile_UI/irrigation.yaml

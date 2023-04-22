@@ -22,6 +22,7 @@
 !www/images/radio_stations
 !esphome/
 !esphome/zzz*
+!lovelace_mobile_UI/
 
 #!esphome
 #!esphome/zzz_common_files

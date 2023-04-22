@@ -18,7 +18,7 @@
     entity_id: sensor.hacs
   condition:
     - condition: template
-      value_template: "{{ states(trigger.entity_id) != 'unknown'}}"
+      value_template: "{{ has_value(trigger.entity_id) }}"
     - condition: template
       value_template: "{{ (states(trigger.entity_id) | float) != 0}}"
   action:

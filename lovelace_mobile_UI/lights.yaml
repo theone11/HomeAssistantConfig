@@ -1,0 +1,69 @@
+# lovelace_gen
+
+#--------------------------------------------------------------------------------------------------
+# Lights
+#  - List all active areas.
+#    If more than one exists with the same name - must be consecutive
+#  - List groups for group buttons
+#--------------------------------------------------------------------------------------------------
+#                 entity                          , group       , left, top, scaleX, scaleY, deg)
+{% set lights = [("diningroom_light"              , "downstairs", 69  , 67  , 1.3, 2  , 0),
+                 ("kitchen_light_ceiling"         , "downstairs", 62.5, 82  , 1.1, 1.2, 0),
+                 ("kitchen_light_klapa"           , "downstairs", 59  , 84  , 0.7, 1.7, 0),
+                 ("kitchen_table_light"           , "downstairs", 64  , 73.5, 0.6, 0.6, 0),
+                 ("garden_shed_light"             , "outside"   , 73.5, 58  , 0.7, 1.2, 0),
+                 ("garden_light_top"              , "outside"   , 89  , 24  , 2.4, 2.4, 0),
+                 ("garden_light_bottom"           , "outside"   , 69  , 20  , 8.5, 1.3, 0),
+                 ("garden_light_bottom"           , "outside"   , 85  , 56  , 1.3, 6.5, 23),
+                 ("playroom_light"                , "downstairs", 54  , 51  , 2  , 2.6, 0),
+                 ("guest_bathroom_light"          , "downstairs", 70.7, 82  , 0.7, 1.4, 0),
+                 ("patio_light_top"               , "outside"   , 65  , 32  , 2  , 2  , 0),
+                 ("patio_light_bottom"            , "outside"   , 58  , 32  , 2  , 2  , 0),
+                 ("master_bathroom_light_top"     , "upstairs"  , 44.5, 84  , 1.3, 0.7, 0),
+                 ("master_bathroom_light_bottom"  , "upstairs"  , 44.5, 79  , 1.3, 0.6, 0),
+                 ("laundryroom_light"             , "upstairs"  , 44.5, 72.5, 1.3, 1.1, 0),
+                 ("main_bathroom_light_bottom"    , "upstairs"  , 44.5, 66  , 1.3, 0.6, 0),
+                 ("main_bathroom_light_top"       , "upstairs"  , 44.5, 60.5, 1.3, 0.9, 0),
+                 ("noga_light"                    , "upstairs"  , 43.2, 48.5, 1.6, 1.6, 0),
+                 ("ella_light"                    , "upstairs"  , 36.5, 47  , 2  , 1.8, 0),
+                 ("tomer_light"                   , "upstairs"  , 29  , 50.5, 1.9, 2.7, 0),
+                 ("roof_light_top"                , "roof"      , 5.5 , 51  , 2.6, 2.2, 0),
+                 ("roof_light_bottom"             , "roof"      , 10  , 76  , 2.2, 4.2, 0),
+                 ("pantry_light"                  , "downstairs", 61  , 73.5, 0.6, 0.6, 0)] %}
+
+#                       group       , left, top
+{% set light_groups = [("downstairs", 53, 74),
+                       ("upstairs"  , 28, 74),
+                       ("outside"   , 53, 37),
+                       ("roof"      , 3 , 74)] %}
+
+title: Lights
+path: lights
+icon: 'mdi:lightbulb'
+badges: []
+cards:
+  - type: grid
+    columns: 1
+    square: false
+    cards:
+    {% for group, left, top in light_groups %}
+    - type: entities
+      title: {{ group.capitalize() }}
+      show_header_toggle: true
+      entities:
+      {% for entity, entity_group, left, top, scaleX, scaleY, deg in lights %}
+        {% if entity_group == group %}
+        - entity: light.{{ entity }}
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+
+    - type: grid
+      columns: 4
+      square: false
+      cards:
+        {% for entity, entity_group, left, top, scaleX, scaleY, deg in lights %}
+        - type: button
+          entity: light.{{ entity }}
+          show_name: true
+        {% endfor %}

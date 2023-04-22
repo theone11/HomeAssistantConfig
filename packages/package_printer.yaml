@@ -36,13 +36,14 @@ automation:
   - alias: Printer Ink Level Below Limit
     description: Printer Ink Level Below Limit
     trigger:
-      platform: template
-      value_template: "{{ (states('sensor.mfc_j470dw_ink_low') | int) > 0 }}"
-    condition: []
+      platform: numeric_state
+      entity_id: sensor.mfc_j470dw_ink_low
+      above: 0
+    condition: "{{ has_value('sensor.mfc_j470dw_ink_low') }}"
     action:
       - service: notify.email
         data:
-          message: Printer ink level below limit. Black={{ sensor.mfc_j470dw_black_ink_remaining }}%, Cyan={{ sensor.mfc_j470dw_cyan_ink_remaining }}%, Magenta={{ sensor.mfc_j470dw_magenta_ink_remaining }}%, Yellow={{ sensor.mfc_j470dw_yellow_ink_remaining }}%
+          message: Printer ink level below limit. Black={{ states('sensor.mfc_j470dw_black_ink_remaining') }}%, Cyan={{ states('sensor.mfc_j470dw_cyan_ink_remaining') }}%, Magenta={{ states('sensor.mfc_j470dw_magenta_ink_remaining') }}%, Yellow={{ states('sensor.mfc_j470dw_yellow_ink_remaining') }}%
 
 ###################################
 ########## S C R I P T S ##########
