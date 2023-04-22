@@ -12,14 +12,11 @@
                ("saturday" , "7", "Sat", "שבת")] %}
 
 #--------------------------------------------------------------------------------------------------
-# Irrigation
+# Vacuums
 #--------------------------------------------------------------------------------------------------
-#                             entity                      , type  , left, top, display_name)
-{% set group_irrigation_left, group_irrigation_top = 53 ,31 %}
-
-{% set irrigation_valves = [("irrigation_sprinkler_west" , "switch", 78, 34, "West Sprinklers"),
-                            ("irrigation_sprinkler_north", "switch", 82, 51, "North Sprinklers"),
-                            ("irrigation_drips"          , "switch", 87, 55, "Drips")] %}
+#                 entity   , left, top
+{% set vacuums = [("bottom", 53 , 80),
+                  ("top"   , 28 , 80)] %}
 
 #########################################################
 #########################################################
@@ -116,74 +113,32 @@
     {% endfor %}
 {%- endmacro %}
 
-title: Irrigation
-path: irrigation
-icon: 'mdi:water'
+title: Vacuum
+path: vacuum
+icon: 'mdi:robot-vacuum'
 badges: []
 cards:
   - type: grid
     columns: 1
     square: false
     cards:
-    - type: entities
-      title: Irrigation System
-      show_header_toggle: false
-      entities:
-      {% for entity, type, left, top, display_name in irrigation_valves %}
-        - entity: {{ type }}.{{ entity }}
-      {% endfor %}
-
-    - type: grid
-      columns: {{ irrigation_valves | count }}
-      square: false
-      title: Choose which irrigation valves to open during the cycle
-      cards:
-        {% for entity in irrigation_valves %}
-        - type: custom:button-card
-          entity: input_boolean.{{ entity[0] }}
-          show_name: true
-        {% endfor %}
-    - type: grid
-      columns: 1
-      square: false
-      title: Choose Duration and Start Time
-      cards:
-        - type: 'custom:slider-entity-row'
-          entity: input_number.irrigation_duration
-          hide_state: false
-        - type: 'custom:time-picker-card'
-          entity: input_datetime.irrigation_start_time
-          layout:
-            embedded: true
-            name: inside
-            align_controls: right
     - type: grid
       columns: 2
       square: false
       cards:
-        - type: custom:button-card
-          entity: input_boolean.irrigation_immediate
-          show_name: false
-        - type: custom:button-card
-          entity: input_boolean.irrigation_future
-          show_name: false
-    - type: custom:timer-bar-card
-      compressed: true
-      name: Timers
-      entities:
-        {% for entity in irrigation_valves %}
-        - timer.{{ entity[0] }}
-        {% endfor %}
-    - type: history-graph
-      title: History
-      hours_to_show: 72
-      entities:
-        {% for entity in irrigation_valves %}
-        - entity: switch.{{ entity[0] }}
-        {% endfor %}
+      {% for entity, left, top in vacuums %}
+      - type: custom:xiaomi-vacuum-map-card
+        map_source:
+          camera: camera.vacuum_{{ entity }}
+        calibration_source:
+          camera: true
+        entity: vacuum.vacuum_{{ entity }}
+        vacuum_platform: default
+        map_locked: true
+      {% endfor %}
 
-    {% for entity, type, left, top, display_name in irrigation_valves %}
+  {% for entity, left, top in vacuums %}
     - type: markdown
-      content: "# {{ display_name }} Schedulers"
-    {{ create_schedulers_popup(entity, "DSD") }}
-    {% endfor %}
+      content: "# {{ entity }}  Schedulers"
+    {{ create_schedulers_popup("vacuum_" ~ entity, "DS") }}
+  {% endfor %}
