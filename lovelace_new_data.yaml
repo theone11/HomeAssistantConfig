@@ -599,6 +599,7 @@ cards:
                   content:
                     type: custom:hourly-weather
                     entity: weather.openweathermap
+                    name: ""
                     num_segments: '36'
                     icons: true
                     show_precipitation_probability: true
