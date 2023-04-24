@@ -27,7 +27,7 @@ input_number:
     unit_of_measurement: "ºC"
     #    initial: 25
     min: 40
-    max: 70
+    max: 80
     step: 1
 
 input_boolean:
@@ -92,6 +92,9 @@ automation:
       to: "on"
     condition: []
     action:
+      - service: notify.file_debug
+        data:
+          message: "{{ trigger.entity_id }} Started"
       - service: timer.start
         data:
           entity_id: timer.boiler_switch
@@ -114,6 +117,9 @@ automation:
       entity_id: input_boolean.boiler_switch_future
       state: "on"
     action:
+      - service: notify.file_debug
+        data:
+          message: "{{ trigger.entity_id }} Started"
       - service: timer.start
         data:
           entity_id: timer.boiler_switch
@@ -155,6 +161,9 @@ automation:
         entity_id: input_boolean.boiler_switch_immediate
       - service: input_boolean.turn_off
         entity_id: input_boolean.boiler_switch_future
+      - service: notify.file_debug
+        data:
+          message: "{{ trigger.entity_id }} Stopped"
 
 ###################################
 ########## S C R I P T S ##########
