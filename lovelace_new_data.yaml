@@ -602,6 +602,7 @@ cards:
                     name: ""
                     num_segments: '36'
                     icons: true
+                    show_date: boundary
                     show_precipitation_probability: true
                     show_precipitation_amounts: true
                     show_wind: false
