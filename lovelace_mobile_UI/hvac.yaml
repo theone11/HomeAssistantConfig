@@ -73,30 +73,35 @@
             {% if (scheduler_type == "S_HVAC") %}
             # - type: section
             - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
-            - type: 'custom:simple-thermostat'
-              entity: climate.{{ entity }}_virtual_{{ s }}
-              header: false
-              setpoints:
-              layout:
-                step: row
-                mode:
-                  names: false
-                  icons: true
-                  headings: false
-              decimals: 0
-              step_size: 1
-              hide:
-                state: true
-                temperature: true
-              control:
-                hvac: true
-                fan:
-                  "low":
-                    icon: mdi:fan-speed-1
-                  "mid":
-                    icon: mdi:fan-speed-2
-                  "high":
-                    icon: mdi:fan-speed-3
+            - type: custom:silent-remotes-card
+              entity: climate.hvac_{{ entity }}_virtual_{{ s }}
+              theme: light
+              title: "Scheduler {{ s }}"
+              remoteType: ac
+            # - type: 'custom:simple-thermostat'
+            #   entity: climate.{{ entity }}_virtual_{{ s }}
+            #   header: false
+            #   setpoints:
+            #   layout:
+            #     step: row
+            #     mode:
+            #       names: false
+            #       icons: true
+            #       headings: false
+            #   decimals: 0
+            #   step_size: 1
+            #   hide:
+            #     state: true
+            #     temperature: true
+            #   control:
+            #     hvac: true
+            #     fan:
+            #       "low":
+            #         icon: mdi:fan-speed-1
+            #       "mid":
+            #         icon: mdi:fan-speed-2
+            #       "high":
+            #         icon: mdi:fan-speed-3
             - type: 'custom:time-picker-card'
               entity: input_datetime.{{ entity }}_start_time{{ s }}
               layout:
@@ -127,15 +132,11 @@ cards:
       square: false
       cards:
       {% for entity, left, top in hvacs %}
-      - type: custom:silent-remotes-card
-        remote: remote.{{ entity }}
-        commandsFilePath: /local/remotes/1620.json
-        theme: light
-        title: {{ entity.capitalize() }} AC
-        remoteType: ac
-        callServiceProps:
-          domain: remote
-          service: send_command
+        - type: custom:silent-remotes-card
+          entity: climate.hvac_{{ entity }}
+          theme: light
+          title: {{ entity.capitalize() }} AC
+          remoteType: ac
       {% endfor %}
 
   {% for entity, left, top in hvacs %}
