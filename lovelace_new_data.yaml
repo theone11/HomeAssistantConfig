@@ -68,8 +68,8 @@
                  ("noga_light"                    , "upstairs"  , 43.2, 48.5, 1.6, 1.6, 0),
                  ("ella_light"                    , "upstairs"  , 36.5, 47  , 2  , 1.8, 0),
                  ("tomer_light"                   , "upstairs"  , 29  , 50.5, 1.9, 2.7, 0),
-                 ("roof_light_top"                , "roof"      , 5.5 , 51  , 2.6, 2.2, 0),
-                 ("roof_light_bottom"             , "roof"      , 10  , 76  , 2.2, 4.2, 0),
+                 ("roof_light_bottom"             , "roof"      , 5.5 , 51  , 2.6, 2.2, 0),
+                 ("roof_light_top"                , "roof"      , 10  , 76  , 2.2, 4.2, 0),
                  ("pantry_light"                  , "downstairs", 61  , 73.5, 0.6, 0.6, 0)] %}
 
 #                       group       , left, top
