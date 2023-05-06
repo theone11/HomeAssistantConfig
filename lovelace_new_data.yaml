@@ -191,7 +191,6 @@
                             ("input_number.ui_water_boiler_max_time_limit"           , "2", "y", ""                      , "slider", "", ""),
                             ("input_number.ui_irrigation_max_time_limit"             , "2", "y", "Irrigation"            , "slider", "", ""),
                             ("script.1586449615879"                                  , "3", "y", "Home Assistant Control", "entity", "", ""),
-                            ("Settings"                                              , "3", "n", "                      ", "button", "url", "http://homeassistant.local:8123/config/dashboard"),
                             ("input_boolean.ui_hide_room_temperatures"               , "3", "y", "Hide"                  , "entity", "", ""),
                             ("input_boolean.ui_hide_water_boiler_temperatures"       , "3", "n", ""                      , "entity", "", ""),
                             ("input_boolean.ui_hide_weather          "               , "3", "n", ""                      , "entity", "", ""),
@@ -1542,8 +1541,8 @@ cards:
             data:
               browser_id: THIS
               style: |
-                --popup-min-width: 50vw;
-                --popup-max-width: 50vw;
+                --popup-min-width: 55vw;
+                --popup-max-width: 55vw;
                 --popup-border-color: gray;
                 --popup-background-color: #101010;
               title: {{ entity.capitalize() }} Air Conditioning
@@ -1832,7 +1831,14 @@ cards:
                         {% endfor %}
                         - type: section
                   {% endfor %}
-        {{ disable_tap_hold_double_ws(0, 1, 1, 4) }}
+        hold_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.navigate
+            data:
+              path: "/config/dashboard"
+              browser_id: THIS
+        {{ disable_tap_hold_double_ws(0, 0, 1, 4) }}
 
 ##     ## ##    ## ########     ###    #### ########  
 ##     ## ###   ## ##     ##   ## ##    ##  ##     ## 
@@ -2032,13 +2038,13 @@ cards:
             data:
               code: lovelace_reload()
               browser_id: THIS
-        double_tap_action:
+        hold_action:
           action: fire-dom-event
           browser_mod:
             service: browser_mod.refresh #window_reload
             data:
               browser_id: THIS
-        {{ disable_tap_hold_double_ws(0, 1, 0, 4) }}
+        {{ disable_tap_hold_double_ws(0, 0, 1, 4) }}
 
       # - type: custom:plan-coordinates
       #   style:
