@@ -143,6 +143,7 @@ automation:
         to: "idle"
       - platform: state
         entity_id: switch.boiler_switch
+        from: "on"
         to: "off"
       - platform: state
         entity_id: input_boolean.boiler_switch_immediate
