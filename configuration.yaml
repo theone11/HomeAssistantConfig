@@ -216,4 +216,5 @@ group:
       - update.samba_share_update
       - update.studio_code_server_update
       - update.terminal_ssh_update
-      
+      - update.piper_update
+      - update.whisper_update
