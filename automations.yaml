@@ -63,3 +63,20 @@
       entity_id: light.roof_light_top
     - service: switch.turn_off
       entity_id: switch.roof_right_table_power_relay
+
+# Refresh all webUI instances
+- alias: Refresh all webUI instances
+  trigger:
+    - platform: time
+      at: "05:00:00"
+  condition: []
+  action:
+    - service: browser_mod.refresh
+      data:
+        browser_id:
+          - fc8b96e1-6a34f15b
+          - b994c6fd-fa5e732a
+          - 879d54bd-bbfea94e
+          - 9eced174-13cf35ca
+          - 9a54c5db-b6bde9d8
+          - 1806f035-f31ffdab
