@@ -2046,8 +2046,22 @@ cards:
               browser_id: THIS
         {{ disable_tap_hold_double_ws(0, 0, 1, 4) }}
 
+      - type: custom:browser-control-card
+        hide_fullscreen: true
+        hide_screenlock: true
+        hide_zoom: true
+        hide_refresh: false
+        no_padding: true
+        small_buttons: false
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: {{ settings_left - 0.75 }}%
+          top: {{ settings_top + 4 }}%
+          transform: translate(0%, 0%) scale({{ settings_scaleX/2 }}, {{settings_scaleY/2 }})
+
       # - type: custom:plan-coordinates
       #   style:
       #     color: red
-      #     left: 0%
-      #     top: 0%
+      #     left: 50%
+      #     top: 50%
