@@ -1,0 +1,9 @@
+substitutions:
+  device_name: sonoff-mini-1
+  friendly_name: "Sonoff Mini 1"
+  static_ip: 192.168.1.68
+  onoff_toggle: "toggle"
+
+packages:
+  common: !include zzz_common_files/common.yaml
+  family: !include zzz_common_files/common_sonoff_mini.yaml

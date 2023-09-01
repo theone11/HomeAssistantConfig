@@ -1,8 +1,8 @@
 substitutions:
-  device_name: livingroom-wall-light
-  friendly_name: "Livingroom Wall Light"
-  static_ip: 192.168.1.70
-  onoff_toggle: "onoff"
+  device_name: sonoff-mini-3
+  friendly_name: "sonoff-mini-3"
+  static_ip: 192.168.1.65
+  onoff_toggle: "toggle"
 
 packages:
   common: !include zzz_common_files/common.yaml

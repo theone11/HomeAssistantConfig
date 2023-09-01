@@ -1,25 +1,33 @@
 substitutions:
-  platform: ESP8266
-  board: esp8285
-  arduino_version: 2.4.2
+  platform: esp32
+  board: esp32dev
   esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
+  bluetooth_proxy_active: "TRUE" # "TRUE" / "FALSE" - Turn ON if device supports BlueTooth
   hide_restart_switch: "FALSE"
-  onoff_toggle: "toggle" # onoff / toggle
+  onoff_toggle: "toggle" # on_off (for switch) / toggle (for momentary pushbutton)
 
 ##############################################################
-#   Sonoff Mini
+#   Sonoff MiniR4 (Extreme)
 ##############################################################
-# Blue LED        : GPIO13 inverted
-# Button:         : GPIO00
-# Relay & Red LED : GPIO12
-# Switch Input    : GPIO04 Inverted
-# Spare           : GPIO16
+# Button   : GPIO00
+# Link LED : GPIO19 (Inverted)
+# Relay    : GPIO26 (Load)
+# Switch   : GPIO27 (S1/S2)
 ##############################################################
+
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 300ms
+    window: 100ms
+    active: true
+
+bluetooth_proxy:
+  active: true
 
 status_led:
   pin:
-    number: GPIO13
-    inverted: True
+    number: GPIO19
+    inverted: TRUE
 
 binary_sensor:
   - platform: gpio
@@ -27,7 +35,8 @@ binary_sensor:
     name: "${friendly_name} Button"
     pin:
       number: GPIO00
-      inverted: TRUE
+      mode: INPUT_PULLUP
+      inverted: FALSE
     internal: true
     filters:
       - delayed_off: 50ms
@@ -41,11 +50,12 @@ binary_sensor:
     name: "${friendly_name} Switch"
     id: switch_input
     pin:
-      number: GPIO04
-      # inverted: TRUE
-    internal: true
+      number: GPIO27
+      inverted: FALSE
+    internal: TRUE
     filters:
       - delayed_off: 50ms
+      - delayed_on: 50ms
     on_press:
       then:
         - if:
@@ -68,7 +78,7 @@ binary_sensor:
 output:
 - platform: gpio
   id: relay
-  pin: GPIO12
+  pin: GPIO26
 
 light:
 - platform: binary

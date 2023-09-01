@@ -34,6 +34,7 @@ wifi:
   ap:
     ssid: "AP_${device_name}"
     password: !secret AP_Password
+    ap_timeout: 3min
 
 captive_portal:
 
@@ -49,12 +50,6 @@ web_server:
 # Enable Home Assistant API
 api:
   reboot_timeout: ${api_reboot_timeout}
-
-#mqtt:
-#  broker: !secret MQTT_Broker_IP
-#  username: !secret MQTT_Broker_Username
-#  password: !secret MQTT_Broker_Password
-#  topic_prefix: ${MQTT_broker_topic_prefix}/${device_name}
 
 ota:
 
