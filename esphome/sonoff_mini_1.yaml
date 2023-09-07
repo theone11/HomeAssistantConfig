@@ -1,5 +1,5 @@
 substitutions:
-  device_name: sonoff-mini-1
+  device_name: sonoff-mini-1 #lobby-light
   friendly_name: "Sonoff Mini 1"
   static_ip: 192.168.1.68
   onoff_toggle: "toggle"

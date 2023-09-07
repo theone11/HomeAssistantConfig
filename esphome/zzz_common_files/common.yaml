@@ -14,7 +14,7 @@ esphome:
   name: ${device_name}
   platform: ${platform}
   board: ${board}
-  esp8266_restore_from_flash: ${esp8266_restore_from_flash}
+  #esp8266_restore_from_flash: ${esp8266_restore_from_flash}
 
 wifi:
   networks:
@@ -108,3 +108,4 @@ switch:
     name: "${friendly_name} Restart"
     internal: ${hide_restart_switch}
     icon: mdi:restart
+    restore_mode: ALWAYS_OFF

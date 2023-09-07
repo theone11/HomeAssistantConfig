@@ -1,7 +1,7 @@
 substitutions:
-  device_name: porch-light
-  friendly_name: "Porch Light"
-  static_ip: 192.168.1.54
+  device_name: master-bedroom-right-light
+  friendly_name: "Master Bedroom Left Light"
+  static_ip: 192.168.1.56
   onoff_toggle: "toggle"
 
 packages:

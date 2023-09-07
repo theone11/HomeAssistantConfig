@@ -2,7 +2,7 @@ substitutions:
   device_name: lobby-light
   friendly_name: "Lobby Light"
   static_ip: 192.168.1.73
-  onoff_toggle: "onoff"
+  onoff_toggle: "toggle"
 
 packages:
   common: !include zzz_common_files/common.yaml
