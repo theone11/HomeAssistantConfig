@@ -2,12 +2,12 @@
 ########## E N T I T I E S ##########
 #####################################
 
-binary_sensor:
-  - platform: ping
-    name: unRAID
-    host: 192.168.1.104
-    count: 2
-    scan_interval: 600
+#binary_sensor:
+#  - platform: ping
+#    name: unRAID
+#    host: 192.168.1.104
+#    count: 2
+#    scan_interval: 600
 
 sensor:
   - platform: template
