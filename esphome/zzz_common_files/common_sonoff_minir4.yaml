@@ -1,7 +1,6 @@
 substitutions:
   platform: esp32
   board: esp32dev
-  #esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
   bluetooth_proxy_active: "TRUE" # "TRUE" / "FALSE" - Turn ON if device supports BlueTooth
   hide_restart_switch: "FALSE"
   onoff_toggle: "toggle" # on_off (for switch) / toggle (for momentary pushbutton)
@@ -12,8 +11,11 @@ substitutions:
 # Button   : GPIO00
 # Link LED : GPIO19 (Inverted)
 # Relay    : GPIO26 (Load)
-# Switch   : GPIO27 (S1/S2)
+# Switch   : GPIO27 (S2)
 ##############################################################
+
+packages:
+  platform: !include platform_esp32.yaml
 
 esp32_ble_tracker:
   scan_parameters:

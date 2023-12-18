@@ -9,12 +9,9 @@ substitutions:
   api_reboot_timeout: 600min
   latitude: !secret latitude
   longitude: !secret longitude
-  
+
 esphome:
   name: ${device_name}
-  platform: ${platform}
-  board: ${board}
-  #esp8266_restore_from_flash: ${esp8266_restore_from_flash}
 
 wifi:
   networks:

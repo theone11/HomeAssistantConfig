@@ -9,6 +9,7 @@ substitutions:
   #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
 
 packages:
+  platform: !include zzz_common_files/platform_esp8266.yaml
   common: !include zzz_common_files/common.yaml
 
 ##############################################################

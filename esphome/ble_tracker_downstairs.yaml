@@ -9,7 +9,8 @@ substitutions:
   #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
 
 packages:
-  common: !include zzz_common_files/common_esp32.yaml
+  platform: !include zzz_common_files/platform_esp32.yaml
+  common: !include zzz_common_files/common.yaml
 
 ##############################################################
 #   Custom Boiler Power functionality

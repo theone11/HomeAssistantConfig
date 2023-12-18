@@ -22,6 +22,10 @@ substitutions:
 #
 ##############################################################
 
+packages:
+  platform: !include platform_esp8266.yaml
+
+
 status_led:
   pin:
     number: GPIO00

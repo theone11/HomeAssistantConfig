@@ -1,0 +1,4 @@
+esp32:
+  board: ${board}
+  framework:
+    type: arduino

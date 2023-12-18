@@ -1,6 +1,6 @@
 substitutions:
   device_name: master-bedroom-right-light
-  friendly_name: "Master Bedroom Left Light"
+  friendly_name: "Master Bedroom Right Light"
   static_ip: 192.168.1.56
   onoff_toggle: "toggle"
 

@@ -30,7 +30,9 @@
                  ("roof_light_bottom"             , "roof"      , 10  , 76  , 2.2, 4.2, 0),
                  ("pantry_light"                  , "downstairs", 61  , 73.5, 0.6, 0.6, 0),
                  ("hallway_light"                 , "upstairs"  , 41  , 66  , 0.6, 2.8, 0),
-                 ("stairs_light"                  , "upstairs"  , 36.2, 67  , 2.3, 1.5, 0)] %}
+                 ("stairs_light"                  , "upstairs"  , 36.2, 67  , 2.3, 1.5, 0),
+                 ("master_bedroom_right_light"    , "upstairs"  , 40.5, 80.5, 1  , 1.8, 0),
+                 ("master_bedroom_left_light"     , "upstairs"  , 35.8, 83  , 1.9, 2.8, 0)] %}
 
 #                       group       , left, top
 {% set light_groups = [("downstairs", 53, 74),
