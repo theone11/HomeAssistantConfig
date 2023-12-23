@@ -31,7 +31,10 @@ esp32_ble_tracker:
   scan_parameters:
     interval: 2000ms
     window: 1500ms
+    active: false
+
 bluetooth_proxy:
+  active: false
 
 # sensor:
 #   - platform: xiaomi_lywsd03mmc

@@ -31,45 +31,47 @@ esp32_ble_tracker:
   scan_parameters:
     interval: 2000ms
     window: 1500ms
-# bluetooth_proxy:
 
-sensor:
-  - platform: xiaomi_lywsd03mmc
-    mac_address: "A4:C1:38:61:B0:B0" # #1
-    bindkey: "1ec799ba6fe63062dbbfafb439a3aecc"
-    temperature:
-      name: "Master Bedroom Temperature"
-    humidity:
-      name: "Master Bedroom Humidity"
-    battery_level:
-      name: "Master Bedroom Battery Level"
+bluetooth_proxy:
+  active: false
 
-  - platform: xiaomi_lywsd03mmc
-    mac_address: "A4:C1:38:0A:90:F5" # #2
-    bindkey: "269aefdc0b46ff27bb52392085f712f8"
-    temperature:
-      name: "Noga Temperature"
-    humidity:
-      name: "Noga Humidity"
-    battery_level:
-      name: "Noga Battery Level"
+# sensor:
+#   - platform: xiaomi_lywsd03mmc
+#     mac_address: "A4:C1:38:61:B0:B0" # #1
+#     bindkey: "1ec799ba6fe63062dbbfafb439a3aecc"
+#     temperature:
+#       name: "Master Bedroom Temperature"
+#     humidity:
+#       name: "Master Bedroom Humidity"
+#     battery_level:
+#       name: "Master Bedroom Battery Level"
 
-  - platform: xiaomi_lywsd03mmc
-    mac_address: "A4:C1:38:5C:DC:B6" # #3
-    bindkey: "6d65225b9360541e8bcec04672236fdd"
-    temperature:
-      name: "Ella Temperature"
-    humidity:
-      name: "Ella Humidity"
-    battery_level:
-      name: "Ella Battery Level"
+#   - platform: xiaomi_lywsd03mmc
+#     mac_address: "A4:C1:38:0A:90:F5" # #2
+#     bindkey: "269aefdc0b46ff27bb52392085f712f8"
+#     temperature:
+#       name: "Noga Temperature"
+#     humidity:
+#       name: "Noga Humidity"
+#     battery_level:
+#       name: "Noga Battery Level"
 
-  - platform: xiaomi_lywsd03mmc
-    mac_address: "A4:C1:38:70:B2:37" # #4
-    bindkey: "f4578e1abfcf6c37c11aa0878e02d2a4"
-    temperature:
-      name: "Tomer Temperature"
-    humidity:
-      name: "Tomer Humidity"
-    battery_level:
-      name: "Tomer Battery Level"
+#   - platform: xiaomi_lywsd03mmc
+#     mac_address: "A4:C1:38:5C:DC:B6" # #3
+#     bindkey: "6d65225b9360541e8bcec04672236fdd"
+#     temperature:
+#       name: "Ella Temperature"
+#     humidity:
+#       name: "Ella Humidity"
+#     battery_level:
+#       name: "Ella Battery Level"
+
+#   - platform: xiaomi_lywsd03mmc
+#     mac_address: "A4:C1:38:70:B2:37" # #4
+#     bindkey: "f4578e1abfcf6c37c11aa0878e02d2a4"
+#     temperature:
+#       name: "Tomer Temperature"
+#     humidity:
+#       name: "Tomer Humidity"
+#     battery_level:
+#       name: "Tomer Battery Level"

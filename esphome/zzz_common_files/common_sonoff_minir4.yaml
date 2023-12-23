@@ -21,10 +21,10 @@ esp32_ble_tracker:
   scan_parameters:
     interval: 300ms
     window: 100ms
-    active: true
+    active: false
 
 bluetooth_proxy:
-  active: true
+  active: false
 
 status_led:
   pin:

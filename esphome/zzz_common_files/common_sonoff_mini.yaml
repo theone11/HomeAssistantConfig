@@ -12,7 +12,9 @@ substitutions:
 # Button:         : GPIO00
 # Relay & Red LED : GPIO12
 # Switch Input    : GPIO04 Inverted
-# Spare           : GPIO16
+# Spare           : GPIO16 (OTA)
+# TX              : GPIO01
+# RX              : GPIO03
 ##############################################################
 
 packages:

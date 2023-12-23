@@ -228,28 +228,35 @@
 #--------------------------------------------------------------------------------------------------
 {% set temperature_sensors_font_size = 75 %}
 #                              entity                                  , category       , left, top
-{% set temperature_sensors = [("master_bedroom_temperature"            , "room"         , 36.5, 93  ),
-                              ("noga_temperature"                      , "room"         , 45  , 59  ),
-                              ("ella_temperature"                      , "room"         , 36  , 56  ),
-                              ("tomer_temperature"                     , "room"         , 28  , 61.5),
+{% set temperature_sensors = [("master_bedroom_sensor_temperature"     , "room"         , 36.5, 93  ),
+                              ("noga_sensor_temperature"               , "room"         , 45  , 59  ),
+                              ("ella_sensor_temperature"               , "room"         , 36  , 56  ),
+                              ("tomer_sensor_temperature"              , "room"         , 28  , 61.5),
+                              ("livingroom_tv_sensor_temperature"      , "room"         , 59  , 63  ),
+                              ("livingroom_corner_sensor_temperature"  , "room"         , 71.5, 47  ),
+                              ("kitchen_sensor_temperature"            , "room"         , 59  , 76  ),
                               ("water_boiler_temperature_panel_out"    , "water_boiler" , 3.5 , 52  ),
                               ("water_boiler_temperature_in_from_panel", "water_boiler" , 9.5 , 43  ),
                               ("water_boiler_temperature_out_to_panel" , "water_boiler" , 9.5 , 47  ),
-                              ("livingroom_tv_temperature"             , "room"         , 59  , 63  ),
-                              ("livingroom_corner_temperature"         , "room"         , 71.5, 47  ),
                               ("livingroom_temperature"                , "room"         , 71.5, 45.5),
                               ("hallway_temperature"                   , "room"         , 36.6, 65.5)] %}
 
-#                              entity                 , category       , left, top
-{% set humidity_sensors = [("master_bedroom_humidity" , "room"         , 36.5, 93  ),
-                           ("noga_humidity"           , "room"         , 45  , 59  ),
-                           ("ella_humidity"           , "room"         , 36  , 56  ),
-                           ("tomer_humidity"          , "room"         , 28  , 61.5)] %}
-#                              entity                     , category       , left, top
-{% set battery_sensors = [("master_bedroom_battery_level" , "room"         , 36.5, 93  ),
-                          ("noga_battery_level"           , "room"         , 45  , 59  ),
-                          ("ella_battery_level"           , "room"         , 36  , 56  ),
-                          ("tomer_battery_level"          , "room"         , 28  , 61.5)] %}
+#                              entity                             , category, left, top
+{% set humidity_sensors = [("master_bedroom_sensor_humidity"   , "room", 36.5, 93  ),
+                           ("noga_sensor_humidity"             , "room", 45  , 59  ),
+                           ("ella_sensor_humidity"             , "room", 36  , 56  ),
+                           ("tomer_sensor_humidity"            , "room", 28  , 61.5),
+                           ("livingroom_tv_sensor_humidity"    , "room", 59  , 63  ),
+                           ("livingroom_corner_sensor_humidity", "room", 71.5, 47  ),
+                           ("kitchen_sensor_humidity"          , "room", 59  , 76  )] %}
+#                              entity                            , category, left, top
+{% set battery_sensors = [("master_bedroom_sensor_battery"   , "room", 36.5, 93  ),
+                          ("noga_sensor_battery"             , "room", 45  , 59  ),
+                          ("ella_sensor_battery"             , "room", 36  , 56  ),
+                          ("tomer_sensor_battery"            , "room", 28  , 61.5),
+                          ("livingroom_tv_sensor_battery"    , "room", 59  , 63  ),
+                          ("livingroom_corner_sensor_battery", "room", 71.5, 47  ),
+                          ("kitchen_sensor_battery"          , "room", 59  , 76  )] %}
 
 #--------------------------------------------------------------------------------------------------
 # Conditional Entities
