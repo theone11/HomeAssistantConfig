@@ -3,22 +3,22 @@
 #####################################
 
 input_boolean:
-  hvac_livingroom_scheduler_enable4:
+  hvac_upstairs_scheduler_enable4:
     name: Enable
     icon: mdi:power
 
 input_datetime:
-  hvac_livingroom_start_time4:
+  hvac_upstairs_start_time4:
     name: Start Time
     has_date: false
     has_time: true
 
 climate:
   - platform: smartir
-    name: HVAC Livingroom Virtual 4
-    unique_id: hvac_livingroom_virtual4
+    name: HVAC Upstairs Virtual 4
+    unique_id: hvac_upstairs_virtual4
     device_code: 1621
-    controller_data: remote.livingroom_remote
+    controller_data: remote.upstairs_remote
     # temperature_sensor:
     delay: 10
 
@@ -27,15 +27,15 @@ climate:
 ###########################################
 
 automation:
-  description: "HVAC Livingroom Scheduler 4"
-  alias: hvac_livingroom_scheduler4
+  description: "HVAC Upstairs Scheduler 4"
+  alias: hvac_upstairs_scheduler4
   use_blueprint:
     path: blueprint_hvac_scheduler.yaml
     input:
-      start_time: input_datetime.hvac_livingroom_start_time4
-      scheduler_enable: input_boolean.hvac_livingroom_scheduler_enable4
-      virtual_climate: climate.hvac_livingroom_virtual_4
-      target_climate: climate.hvac_livingroom
+      start_time: input_datetime.hvac_upstairs_start_time4
+      scheduler_enable: input_boolean.hvac_upstairs_scheduler_enable4
+      virtual_climate: climate.hvac_upstairs_virtual_4
+      target_climate: climate.hvac_upstairs
 
 ###################################
 ########## S C R I P T S ##########

@@ -49,7 +49,7 @@ action:
       fan_mode: "{{ state_attr(virtual_climate, 'fan_mode') }}"
   - service: climate.set_temperature
     data:
-      entity_id: climate.hvac_hallway
+      entity_id: !input target_climate
       temperature: "{{ state_attr(virtual_climate, 'temperature') | float }}"
       hvac_mode: "{{ states(virtual_climate) }}"
   - service: input_boolean.turn_off

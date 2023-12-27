@@ -5,7 +5,7 @@
 sensor:
   - platform: template
     sensors:
-      hvac_livingroom_problem:
+      hvac_downstairs_problem:
         icon_template: mdi:air-conditioner
         value_template: >
           {% if (has_value('sensor.livingroom_temperature')) %}
@@ -13,7 +13,7 @@ sensor:
           {% else %}
             {{ 1 }}
           {% endif %}
-      hvac_hallway_problem:
+      hvac_upstairs_problem:
         icon_template: mdi:air-conditioner
         value_template: >
           {% if (has_value('sensor.hallway_temperature')) %}
@@ -22,20 +22,41 @@ sensor:
             {{ 1 }}
           {% endif %}
 
+  - platform: min_max
+    name: upstairs_avg_temperature
+    type: mean
+    round_digits: 1
+    entity_ids:
+      - sensor.ella_sensor_temperature
+      - sensor.tomer_sensor_temperature
+      - sensor.noga_sensor_temperature
+      - sensor.master_bedroom_sensor_temperature
+      - sensor.hallway_temperature
+
+  - platform: min_max
+    name: downstairs_avg_temperature
+    type: mean
+    round_digits: 1
+    entity_ids:
+      - sensor.livingroom_corner_sensor_temperature
+      - sensor.livingroom_tv_sensor_temperature
+      - sensor.kitchen_sensor_temperature
+      - sensor.livingroom_temperature
+
 climate:
   - platform: smartir
-    name: HVAC Livingroom
-    unique_id: hvac_livingroom
+    name: HVAC Downstairs
+    unique_id: hvac_downstairs
     device_code: 1620
-    controller_data: remote.livingroom
-    temperature_sensor: sensor.livingroom_temperature
+    controller_data: remote.downstairs
+    temperature_sensor: sensor.downstairs_avg_temperature
 
   - platform: smartir
-    name: HVAC Hallway
-    unique_id: hvac_hallway
+    name: HVAC Upstairs
+    unique_id: hvac_upstairs
     device_code: 1620
-    controller_data: remote.hallway
-    temperature_sensor: sensor.hallway_temperature
+    controller_data: remote.upstairs
+    temperature_sensor: sensor.upstairs_avg_temperature
 
 ###########################################
 ########## A U T O M A T I O N S ##########

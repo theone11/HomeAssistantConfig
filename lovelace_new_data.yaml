@@ -130,8 +130,8 @@
 # HVAC
 #--------------------------------------------------------------------------------------------------
 #                 entity     , left, top
-{% set hvacs = [("livingroom", 53 , 92),
-                ("hallway"   , 28 , 92)] %}
+{% set hvacs = [("downstairs", 53 , 92),
+                ("upstairs"  , 28 , 92)] %}
 
 #--------------------------------------------------------------------------------------------------
 # Navigation
@@ -266,7 +266,7 @@
 #                             entity                                                     , state,    left, top, icon                     , tap_action
 {% set conditional_entities = [("switch.roof_right_table_power_relay"                    , "on"      , 10 , 67, "mdi:power"                  , "toggle"),
                                ("binary_sensor.water_boiler_power_pump_controller_status", "on"      , 8.5, 47, "mdi:pump"                   , "none"  ),
-                               ("switch.water_boiler_temperature_pump_manual"            , "on"      , 8.5, 47, "mdi:pump"                   , "none"  ),
+                               ("switch.water_boiler_temperature_pump_manual"            , "on"      , 8.5, 48, "mdi:pump"                   , "none"  ),
                                ("binary_sensor.water_boiler_power_wall_switch_status"    , "on"      , 11,  45, "mdi:water-boiler"           , "none"  ),
                                ("switch.main_bathroom_heater"                            , "on"      , 44 , 66, "mdi:radiator"               , "toggle"),
                                ("switch.master_bathroom_heater"                          , "on"      , 44 , 83, "mdi:radiator"               , "toggle"),
@@ -342,7 +342,7 @@
 #########################################################
 
 {% macro create_schedulers_icons(entity, left, top) -%}
-{% if (entity == "hvac_hallway") or (entity == "hvac_livingroom") %}
+{% if (entity == "hvac_upstairs") or (entity == "hvac_downstairs") %}
 {% set schedulers = ['1', '2', '3', '4'] %}
 {% else %}
 {% set schedulers = ['1', '2'] %}
@@ -458,35 +458,35 @@
                           # - type: section
                           - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
                             {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
-                          - type: custom:silent-remotes-card
+                          # - type: custom:silent-remotes-card
+                          #   entity: climate.{{ entity }}_virtual_{{ s }}
+                          #   theme: light
+                          #   title: "Scheduler {{ s }}"
+                          #   remoteType: ac
+                          - type: 'custom:simple-thermostat'
                             entity: climate.{{ entity }}_virtual_{{ s }}
-                            theme: light
-                            title: "Scheduler {{ s }}"
-                            remoteType: ac
-                          # - type: 'custom:simple-thermostat'
-                            # entity: climate.{{ entity }}_virtual_{{ s }}
-                            # header: false
-                            # setpoints:
-                            # layout:
-                            #   step: row
-                            #   mode:
-                            #     names: false
-                            #     icons: true
-                            #     headings: false
-                            # decimals: 0
-                            # step_size: 1
-                            # hide:
-                            #   state: true
-                            #   temperature: true
-                            # control:
-                            #   hvac: true
-                            #   fan:
-                            #     "low":
-                            #       icon: mdi:fan-speed-1
-                            #     "mid":
-                            #       icon: mdi:fan-speed-2
-                            #     "high":
-                            #       icon: mdi:fan-speed-3
+                            header: false
+                            setpoints:
+                            layout:
+                              step: row
+                              mode:
+                                names: false
+                                icons: true
+                                headings: false
+                            decimals: 0
+                            step_size: 1
+                            hide:
+                              state: true
+                              temperature: true
+                            control:
+                              hvac: true
+                              fan:
+                                "low":
+                                  icon: mdi:fan-speed-1
+                                "mid":
+                                  icon: mdi:fan-speed-2
+                                "high":
+                                  icon: mdi:fan-speed-3
                           - type: 'custom:time-picker-card'
                             entity: input_datetime.{{ entity }}_start_time{{ s }}
                             {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
@@ -1540,11 +1540,35 @@ cards:
                 --popup-border-color: gray;
                 --popup-background-color: #101010;
               content:
-                type: custom:silent-remotes-card
+                # type: custom:silent-remotes-card
+                # entity: climate.hvac_{{ entity }}
+                # theme: light
+                # title: {{ entity.capitalize() }} AC
+                # remoteType: ac
+                type: 'custom:simple-thermostat'
                 entity: climate.hvac_{{ entity }}
-                theme: light
-                title: {{ entity.capitalize() }} AC
-                remoteType: ac
+                header: false
+                setpoints:
+                layout:
+                  step: row
+                  mode:
+                    names: false
+                    icons: true
+                    headings: false
+                decimals: 0
+                step_size: 1
+                hide:
+                  state: true
+                  temperature: true
+                control:
+                  hvac: true
+                  fan:
+                    "low":
+                      icon: mdi:fan-speed-1
+                    "mid":
+                      icon: mdi:fan-speed-2
+                    "high":
+                      icon: mdi:fan-speed-3
         double_tap_action:
           action: more-info
         hold_action:
@@ -1564,10 +1588,10 @@ cards:
 
       # Show temperature
       - type: state-label
-        entity: sensor.{{ entity ~ '_temperature' }}
+        entity: sensor.{{ entity ~ '_avg_temperature' }}
         style:
           left: {{ left + 1 }}%
-          top: {{ top }}%
+          top: {{ top - 1}}%
           transform: 'translate(0, -50%)'
 
       # Show airconditioner state (if ON)
@@ -1580,21 +1604,21 @@ cards:
             entity: climate.hvac_{{ entity }}
             style:
               left: {{ left + 1 }}%
-              top: {{ top + 1.5 }}%
+              top: {{ top + 0.5 }}%
               transform: 'translate(0, -50%)'
           - type: state-label
             entity: climate.hvac_{{ entity }}
             attribute: "fan_mode"
             style:
               left: {{ left + 3 }}%
-              top: {{ top + 1.5 }}%
+              top: {{ top + 0.5 }}%
               transform: 'translate(0, -50%)'
           - type: state-label
             entity: climate.hvac_{{ entity }}
             attribute: "temperature"
             style:
               left: {{ left + 4.5 }}%
-              top: {{ top + 1.5 }}%
+              top: {{ top + 0.5 }}%
               transform: 'translate(0, -50%)'
 
       {{ create_schedulers_icons("hvac_" ~ entity, left, top) }}
@@ -1828,6 +1852,8 @@ cards:
                           label: {{ label }}
                             {% endif %}
                             {%if type == "slider" %}
+                        # - type: tile
+                        #   entity: {{ entity }}
                         - type: 'custom:slider-entity-row'
                           entity: {{ entity }}
                           hide_state: false
