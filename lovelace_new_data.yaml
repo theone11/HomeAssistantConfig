@@ -179,7 +179,7 @@
 
 #--------------------------------------------------------------------------------------------------
 # Settings
-#  - Divided into "column" and seperated by "section"
+#  - Divided into "tabs" and seperated by "section"
 #    If a sections is defined as "y" then the "label" is used as the header
 #    The type can be either a "slider" or an "entity"
 #--------------------------------------------------------------------------------------------------
@@ -308,6 +308,7 @@
 # {{"  "*ws}}  square: false
 # {{"  "*ws}}  cards:
 # {{"  "*ws}}    {% for label, span in graph_span %}
+# {{"  "*ws}}    - type: button
 # {{"  "*ws}}    - type: custom:button-card
 # {{"  "*ws}}      name: {{ label }}
 # {{"  "*ws}}      show_name: true
@@ -353,7 +354,8 @@
           - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
             state: 'on'
         elements:
-          - icon: 'mdi:timer-outline'
+          - type: icon
+            icon: 'mdi:timer-outline'
             style:
               {% if s == '1' %}
               left: {{ left + scheduler_left_offset }}%
@@ -369,7 +371,6 @@
               top: {{ top + scheduler_top_offset }}%
               {% endif %}
               transform: translate(-50%, -50%) scale({{ scheduler_scaleX }}, {{ scheduler_scaleY }})
-            type: icon
             {{ disable_tap_hold_double_ws(1, 1, 1, 6) }}
 {% endfor %}
 {%- endmacro %}
@@ -426,6 +427,7 @@
                         square: false
                         cards:
                           {% for day, number, name, name_he in days %}
+                          # - type: button
                           - type: custom:button-card
                             entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
                             name: {{ name_he }}
@@ -458,35 +460,6 @@
                           # - type: section
                           - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
                             {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
-                          # - type: custom:silent-remotes-card
-                          #   entity: climate.{{ entity }}_virtual_{{ s }}
-                          #   theme: light
-                          #   title: "Scheduler {{ s }}"
-                          #   remoteType: ac
-                          - type: 'custom:simple-thermostat'
-                            entity: climate.{{ entity }}_virtual_{{ s }}
-                            header: false
-                            setpoints:
-                            layout:
-                              step: row
-                              mode:
-                                names: false
-                                icons: true
-                                headings: false
-                            decimals: 0
-                            step_size: 1
-                            hide:
-                              state: true
-                              temperature: true
-                            control:
-                              hvac: true
-                              fan:
-                                "low":
-                                  icon: mdi:fan-speed-1
-                                "mid":
-                                  icon: mdi:fan-speed-2
-                                "high":
-                                  icon: mdi:fan-speed-3
                           - type: 'custom:time-picker-card'
                             entity: input_datetime.{{ entity }}_start_time{{ s }}
                             {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
@@ -494,14 +467,44 @@
                               embedded: true
                               name: inside
                               align_controls: right
+                      - type: thermostat
+                        entity: climate.hvac_upstairs_virtual_2
+                        features:
+                          - type: climate-hvac-modes
+                            style: icons
+                            hvac_modes:
+                              - 'off'
+                              - cool
+                              - heat
+                              - auto
+                          - type: climate-fan-modes
+                            style: icons
+                            fan_modes:
+                              - low
+                              - high
+                              - mid
                           {% endif %}
-                          {% if scheduler_type == "DSD" %}
-                          - type: section
-                          - type: 'custom:slider-entity-row'
-                            entity: input_number.{{ entity }}_timer_duration{{ s }}
-                            {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
-                            hide_state: false
-                          {% endif %}
+                      {% if scheduler_type == "DSD" %}
+                      - type: tile
+                        entity: input_number.{{ entity }}_timer_duration{{ s }}
+                        icon: 'mdi:timer-outline'
+                        vertical: false
+                        hide_state: false
+                        show_entity_picture: false
+                        features:
+                          - style: slider
+                            type: numeric-input
+                        {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
+                      # - type: entities
+                      #   icon: 'mdi:timer-outline'
+                      #   show_header_toggle: false
+                      #   state_color: false
+                      #   entities:
+                      #     - type: 'custom:slider-entity-row'
+                      #       entity: input_number.{{ entity }}_timer_duration{{ s }}
+                      #       {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
+                      #       hide_state: false
+                      {% endif %}
                   {% endfor %}
 {%- endmacro %}
 
@@ -1025,6 +1028,7 @@ cards:
                     title: Choose which irrigation valves to open during the cycle
                     cards:
                       {% for entity in irrigation_valves %}
+                      # - type: button
                       - type: custom:button-card
                         entity: input_boolean.{{ entity[0] }}
                         show_name: true
@@ -1034,10 +1038,20 @@ cards:
                     square: false
                     title: Choose Duration and Start Time
                     cards:
-                      - type: 'custom:slider-entity-row'
+                      - type: tile
                         entity: input_number.irrigation_duration
+                        icon: 'mdi:timer-outline'
+                        vertical: false
                         hide_state: false
+                        show_entity_picture: false
+                        features:
+                          - style: slider
+                            type: numeric-input
                         {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
+                      # - type: 'custom:slider-entity-row'
+                      #   entity: input_number.irrigation_duration
+                      #   hide_state: false
+                      #   {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
                       - type: 'custom:time-picker-card'
                         entity: input_datetime.irrigation_start_time
                         layout:
@@ -1049,10 +1063,12 @@ cards:
                     columns: 2
                     square: false
                     cards:
+                      # - type: button
                       - type: custom:button-card
                         entity: input_boolean.irrigation_immediate
                         show_name: false
                         {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
+                      # - type: button
                       - type: custom:button-card
                         entity: input_boolean.irrigation_future
                         show_name: false
@@ -1210,6 +1226,7 @@ cards:
                 columns: 1
                 square: false
                 cards:
+                  # - type: button
                   - type: custom:button-card
                     entity: switch.{{ entity }}
                     show_icon: true
@@ -1217,10 +1234,20 @@ cards:
                     tap_action:
                       action: toggle
                     {{ disable_tap_hold_double_ws(0, 1, 1, 10) }}
-                  - type: 'custom:slider-entity-row'
+                  - type: tile
                     entity: input_number.{{ entity }}_duration
+                    icon: 'mdi:timer-outline'
+                    vertical: false
                     hide_state: false
+                    show_entity_picture: false
+                    features:
+                      - style: slider
+                        type: numeric-input
                     {{ disable_tap_hold_double_ws(1, 1, 1, 10) }}
+                  # - type: 'custom:slider-entity-row'
+                  #   entity: input_number.{{ entity }}_duration
+                  #   hide_state: false
+                  #   {{ disable_tap_hold_double_ws(1, 1, 1, 10) }}
                   - type: 'custom:time-picker-card'
                     entity: input_datetime.{{ entity }}_start_time
                     layout:
@@ -1232,10 +1259,12 @@ cards:
                     columns: 2
                     square: false
                     cards:
+                      # - type: button
                       - type: custom:button-card
                         entity: input_boolean.{{ entity }}_immediate
                         show_name: false
                         {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
+                      # - type: button
                       - type: custom:button-card
                         entity: input_boolean.{{ entity }}_future
                         show_name: false
@@ -1545,30 +1574,46 @@ cards:
                 # theme: light
                 # title: {{ entity.capitalize() }} AC
                 # remoteType: ac
-                type: 'custom:simple-thermostat'
-                entity: climate.hvac_{{ entity }}
-                header: false
-                setpoints:
-                layout:
-                  step: row
-                  mode:
-                    names: false
-                    icons: true
-                    headings: false
-                decimals: 0
-                step_size: 1
-                hide:
-                  state: true
-                  temperature: true
-                control:
-                  hvac: true
-                  fan:
-                    "low":
-                      icon: mdi:fan-speed-1
-                    "mid":
-                      icon: mdi:fan-speed-2
-                    "high":
-                      icon: mdi:fan-speed-3
+                # type: 'custom:simple-thermostat'
+                # entity: climate.hvac_{{ entity }}
+                # header: false
+                # setpoints:
+                # layout:
+                #   step: row
+                #   mode:
+                #     names: false
+                #     icons: true
+                #     headings: false
+                # decimals: 0
+                # step_size: 1
+                # hide:
+                #   state: true
+                #   temperature: true
+                # control:
+                #   hvac: true
+                #   fan:
+                #     "low":
+                #       icon: mdi:fan-speed-1
+                #     "mid":
+                #       icon: mdi:fan-speed-2
+                #     "high":
+                #       icon: mdi:fan-speed-3
+                type: thermostat
+                entity: climate.hvac_upstairs_virtual_2
+                features:
+                  - type: climate-hvac-modes
+                    style: icons
+                    hvac_modes:
+                      - 'off'
+                      - cool
+                      - heat
+                      - auto
+                  - type: climate-fan-modes
+                    style: icons
+                    fan_modes:
+                      - low
+                      - high
+                      - mid
         double_tap_action:
           action: more-info
         hold_action:
@@ -1838,22 +1883,42 @@ cards:
               content:
                 type: custom:tabbed-card
                 tabs:
-                  {% for current_column in ['1', '2', '3'] %}
+                  {% for current_tab in ['1', '2', '3'] %}
                   - attributes:
                       label: {{settings_tab_names[loop.index0]}}
                     card:
+                      # type: grid
+                      # columns: 1
+                      # square: false
+                      # cards:
+                      #   {% for entity, tab, section, label, type, action, data in settings_entities %}
+                      #     {% if tab == current_tab %}
+                      #       {% if section == "y" %}
+                      #   - type: markdown
+                      #     content: >
+                      #       ### {{ label }}
+                      #       {% endif %}
+                      #       {%if type == "slider" %}
+                      #   - type: tile
+                      #     entity: {{ entity }}
+                      #       {% elif type == "button" %}
+                      #   - type: custom:button-card
+                      #     name: {{ entity }}
+                      #       {% else %}
+                      #   - entity: {{ entity }}
+                      #       {% endif %}
+                      #     {% endif %}
+                      #   {% endfor %}
                       type: entities
                       show_header_toggle: false
                       entities:
-                        {% for entity, column, section, label, type, action, data in settings_entities %}
-                          {% if column == current_column %}
+                        {% for entity, tab, section, label, type, action, data in settings_entities %}
+                          {% if tab == current_tab %}
                             {% if section == "y" %}
                         - type: section
                           label: {{ label }}
                             {% endif %}
                             {%if type == "slider" %}
-                        # - type: tile
-                        #   entity: {{ entity }}
                         - type: 'custom:slider-entity-row'
                           entity: {{ entity }}
                           hide_state: false
@@ -2101,6 +2166,7 @@ cards:
 
       # - type: custom:plan-coordinates
       #   style:
+      #     background-color: white
       #     color: red
-      #     left: 50%
+      #     left: 95%
       #     top: 50%

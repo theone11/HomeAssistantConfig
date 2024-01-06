@@ -6,8 +6,8 @@ input_number:
   mfc_j470dw_ink_low_limit:
     name: Brother MFC-J470DW Ink Low Level Limit
     unit_of_measurement: "%"
-    min: 10
-    max: 90
+    min: 0
+    max: 100
     step: 10
 
 sensor:

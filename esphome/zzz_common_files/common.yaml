@@ -12,6 +12,8 @@ substitutions:
 
 esphome:
   name: ${device_name}
+  area: ${area}
+  comment: ${comment}
 
 wifi:
   networks:

@@ -1,6 +1,8 @@
 substitutions:
   device_name: diningroom-light
   friendly_name: "Diningroom Light"
+  comment: "Diningroom Light Wall Switch - ESP8266"
+  area: "Diningroom"
   static_ip: 192.168.1.25
 
   #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>

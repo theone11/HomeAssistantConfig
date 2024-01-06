@@ -31,7 +31,7 @@ sensor:
       - sensor.tomer_sensor_temperature
       - sensor.noga_sensor_temperature
       - sensor.master_bedroom_sensor_temperature
-      - sensor.hallway_temperature
+      # - sensor.hallway_temperature
 
   - platform: min_max
     name: downstairs_avg_temperature
@@ -41,7 +41,7 @@ sensor:
       - sensor.livingroom_corner_sensor_temperature
       - sensor.livingroom_tv_sensor_temperature
       - sensor.kitchen_sensor_temperature
-      - sensor.livingroom_temperature
+      # - sensor.livingroom_temperature
 
 climate:
   - platform: smartir
