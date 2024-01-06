@@ -46,6 +46,9 @@ trigger:
   platform: time
   at: !input start_time
 condition:
+  - condition: state # Do not start a schedule if the irrigation valve was already turned on manually
+    entity_id: !input switch
+    state: "off"
   - condition: state
     entity_id: !input scheduler_enable
     state: 'on'
