@@ -1643,7 +1643,7 @@ cards:
       - type: conditional
         conditions:
           - entity: climate.hvac_{{ entity }}
-            state_not: 'on'
+            state_not: 'off'
         elements:
           - type: state-label
             entity: climate.hvac_{{ entity }}
@@ -1919,9 +1919,13 @@ cards:
                           label: {{ label }}
                             {% endif %}
                             {%if type == "slider" %}
-                        - type: 'custom:slider-entity-row'
+                        - type: custom:mushroom-number-card
                           entity: {{ entity }}
-                          hide_state: false
+                          fill_container: true
+                          layout: horizontal
+                        # - type: 'custom:slider-entity-row'
+                        #   entity: {{ entity }}
+                        #   hide_state: false
                             {% elif type == "button" %}
                         - type: button
                           name: {{ entity }}
