@@ -215,3 +215,4 @@ group:
       - update.terminal_ssh_update
       - update.piper_update
       - update.whisper_update
+      - update.openwakeword_update

@@ -23,7 +23,7 @@ sensor:
           {% endif %}
 
   - platform: min_max
-    name: upstairs_avg_temperature
+    name: upstairs_average_temperature
     type: mean
     round_digits: 1
     entity_ids:
@@ -34,7 +34,7 @@ sensor:
       # - sensor.hallway_temperature
 
   - platform: min_max
-    name: downstairs_avg_temperature
+    name: downstairs_average_temperature
     type: mean
     round_digits: 1
     entity_ids:

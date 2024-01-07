@@ -1633,9 +1633,9 @@ cards:
 
       # Show temperature
       - type: state-label
-        entity: sensor.{{ entity ~ '_avg_temperature' }}
+        entity: sensor.{{ entity ~ '_average_temperature' }}
         style:
-          left: {{ left + 1 }}%
+          left: {{ left + 1.25 }}%
           top: {{ top - 1}}%
           transform: 'translate(0, -50%)'
 
@@ -1643,26 +1643,26 @@ cards:
       - type: conditional
         conditions:
           - entity: climate.hvac_{{ entity }}
-            state_not: 'off'
+            state_not: 'on'
         elements:
           - type: state-label
             entity: climate.hvac_{{ entity }}
             style:
-              left: {{ left + 1 }}%
+              left: {{ left + 1.25 }}%
               top: {{ top + 0.5 }}%
               transform: 'translate(0, -50%)'
           - type: state-label
             entity: climate.hvac_{{ entity }}
             attribute: "fan_mode"
             style:
-              left: {{ left + 3 }}%
+              left: {{ left + 3.25 }}%
               top: {{ top + 0.5 }}%
               transform: 'translate(0, -50%)'
           - type: state-label
             entity: climate.hvac_{{ entity }}
             attribute: "temperature"
             style:
-              left: {{ left + 4.5 }}%
+              left: {{ left + 4.75 }}%
               top: {{ top + 0.5 }}%
               transform: 'translate(0, -50%)'
 
