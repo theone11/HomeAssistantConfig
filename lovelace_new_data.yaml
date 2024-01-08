@@ -421,54 +421,50 @@
                     square: false
                     title: Schedule {{ s }}
                     cards:
+                      - type: custom:mushroom-entity-card
+                        entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+                        secondary_info: none
+                        fill_container: true
+                        tap_action:
+                          action: toggle
+                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                       {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
                       - type: grid
                         columns: 7
                         square: false
                         cards:
                           {% for day, number, name, name_he in days %}
-                          # - type: button
-                          - type: custom:button-card
+                          - type: custom:mushroom-entity-card
                             entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
+                            primary_info: none
+                            secondary_info: none
                             name: {{ name_he }}
                             icon: mdi:numeric-{{ number }}-box-outline
-                            show_name: true
-                            show_icon: true
-                            show_state: false
+                            layout: vertical
+                            fill_container: true
+                            tap_action:
+                              action: toggle
                             {{ disable_tap_hold_double_ws(0, 1, 1, 14) }}
                           {% endfor %}
                       {% endif %}
-                      - type: entities
-                        # icon: 'mdi:timer-outline'
-                        show_header_toggle: false
-                        state_color: false
-                        # title: Schedule {{ s }}
-                        entities:
-                          {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
-                          # - type: section
-                          - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
-                            {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
-                          - type: 'custom:time-picker-card'
-                            entity: input_datetime.{{ entity }}_start_time{{ s }}
-                            {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
-                            layout:
-                              embedded: true
-                              name: inside
-                              align_controls: right
-                            {% endif %}
-                          {% if (scheduler_type == "S_HVAC") %}
-                          # - type: section
-                          - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
-                            {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
-                          - type: 'custom:time-picker-card'
-                            entity: input_datetime.{{ entity }}_start_time{{ s }}
-                            {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
-                            layout:
-                              embedded: true
-                              name: inside
-                              align_controls: right
+                      - type: 'custom:time-picker-card'
+                        entity: input_datetime.{{ entity }}_start_time{{ s }}
+                        {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
+                        layout:
+                          embedded: true
+                          name: inside
+                          align_controls: right
+                      {% if scheduler_type == "DSD" %}
+                      - type: custom:mushroom-number-card
+                        entity: input_number.{{ entity }}_timer_duration{{ s }}
+                        icon: 'mdi:timer-outline'
+                        fill_container: true
+                        layout: horizontal
+                        {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
+                      {% endif %}
+                      {% if (scheduler_type == "S_HVAC") %}
                       - type: thermostat
-                        entity: climate.hvac_upstairs_virtual_2
+                        entity: climate.{{ entity }}_virtual{{ s }}
                         features:
                           - type: climate-hvac-modes
                             style: icons
@@ -483,27 +479,6 @@
                               - low
                               - high
                               - mid
-                          {% endif %}
-                      {% if scheduler_type == "DSD" %}
-                      - type: tile
-                        entity: input_number.{{ entity }}_timer_duration{{ s }}
-                        icon: 'mdi:timer-outline'
-                        vertical: false
-                        hide_state: false
-                        show_entity_picture: false
-                        features:
-                          - style: slider
-                            type: numeric-input
-                        {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
-                      # - type: entities
-                      #   icon: 'mdi:timer-outline'
-                      #   show_header_toggle: false
-                      #   state_color: false
-                      #   entities:
-                      #     - type: 'custom:slider-entity-row'
-                      #       entity: input_number.{{ entity }}_timer_duration{{ s }}
-                      #       {{ disable_tap_hold_double_ws(1, 1, 1, 14) }}
-                      #       hide_state: false
                       {% endif %}
                   {% endfor %}
 {%- endmacro %}
@@ -1029,30 +1004,29 @@ cards:
                     cards:
                       {% for entity in irrigation_valves %}
                       # - type: button
-                      - type: custom:button-card
+                      #   entity: input_boolean.{{ entity[0] }}
+                      #   show_name: true
+                      - type: custom:mushroom-entity-card
                         entity: input_boolean.{{ entity[0] }}
-                        show_name: true
+                        secondary_info: none
+                        layout: vertical
+                        fill_container: true
+                        tap_action:
+                          action: toggle
+                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                       {% endfor %}
                   - type: grid
                     columns: 1
                     square: false
                     title: Choose Duration and Start Time
                     cards:
-                      - type: tile
+                      - type: custom:mushroom-number-card
                         entity: input_number.irrigation_duration
                         icon: 'mdi:timer-outline'
-                        vertical: false
-                        hide_state: false
-                        show_entity_picture: false
-                        features:
-                          - style: slider
-                            type: numeric-input
+                        fill_container: true
+                        layout: horizontal
                         {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
-                      # - type: 'custom:slider-entity-row'
-                      #   entity: input_number.irrigation_duration
-                      #   hide_state: false
-                      #   {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
-                      - type: 'custom:time-picker-card'
+                      - type: custom:time-picker-card
                         entity: input_datetime.irrigation_start_time
                         layout:
                           embedded: true
@@ -1063,16 +1037,32 @@ cards:
                     columns: 2
                     square: false
                     cards:
-                      # - type: button
-                      - type: custom:button-card
+                      - type: custom:mushroom-entity-card
                         entity: input_boolean.irrigation_immediate
-                        show_name: false
+                        primary_info: none
+                        secondary_info: none
+                        layout: vertical
+                        fill_container: true
+                        tap_action:
+                          action: toggle
                         {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                       # - type: button
-                      - type: custom:button-card
+                      #   entity: input_boolean.irrigation_immediate
+                      #   show_name: false
+                      #   {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
+                      - type: custom:mushroom-entity-card
                         entity: input_boolean.irrigation_future
-                        show_name: false
+                        primary_info: none
+                        secondary_info: none
+                        layout: vertical
+                        fill_container: true
+                        tap_action:
+                          action: toggle
                         {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
+                      # - type: button
+                      #   entity: input_boolean.irrigation_future
+                      #   show_name: false
+                      #   {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                   - type: custom:timer-bar-card
                     compressed: true
                     name: Timers
@@ -1234,20 +1224,12 @@ cards:
                     tap_action:
                       action: toggle
                     {{ disable_tap_hold_double_ws(0, 1, 1, 10) }}
-                  - type: tile
+                  - type: custom:mushroom-number-card
                     entity: input_number.{{ entity }}_duration
                     icon: 'mdi:timer-outline'
-                    vertical: false
-                    hide_state: false
-                    show_entity_picture: false
-                    features:
-                      - style: slider
-                        type: numeric-input
+                    fill_container: true
+                    layout: horizontal
                     {{ disable_tap_hold_double_ws(1, 1, 1, 10) }}
-                  # - type: 'custom:slider-entity-row'
-                  #   entity: input_number.{{ entity }}_duration
-                  #   hide_state: false
-                  #   {{ disable_tap_hold_double_ws(1, 1, 1, 10) }}
                   - type: 'custom:time-picker-card'
                     entity: input_datetime.{{ entity }}_start_time
                     layout:
@@ -1260,14 +1242,25 @@ cards:
                     square: false
                     cards:
                       # - type: button
-                      - type: custom:button-card
+                      - type: custom:mushroom-entity-card
                         entity: input_boolean.{{ entity }}_immediate
-                        show_name: false
+                        primary_info: none
+                        secondary_info: none
+                        layout: vertical
+                        fill_container: true
+                        tap_action:
+                          action: toggle
                         {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                       # - type: button
-                      - type: custom:button-card
+                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
+                      - type: custom:mushroom-entity-card
                         entity: input_boolean.{{ entity }}_future
-                        show_name: false
+                        primary_info: none
+                        secondary_info: none
+                        layout: vertical
+                        fill_container: true
+                        tap_action:
+                          action: toggle
                         {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                   - type: custom:timer-bar-card
                     compressed: true
@@ -1599,7 +1592,7 @@ cards:
                 #     "high":
                 #       icon: mdi:fan-speed-3
                 type: thermostat
-                entity: climate.hvac_upstairs_virtual_2
+                entity: climate.hvac_{{ entity }}
                 features:
                   - type: climate-hvac-modes
                     style: icons
@@ -1655,14 +1648,14 @@ cards:
             entity: climate.hvac_{{ entity }}
             attribute: "fan_mode"
             style:
-              left: {{ left + 3.25 }}%
+              left: {{ left + 3 }}%
               top: {{ top + 0.5 }}%
               transform: 'translate(0, -50%)'
           - type: state-label
             entity: climate.hvac_{{ entity }}
             attribute: "temperature"
             style:
-              left: {{ left + 4.75 }}%
+              left: {{ left + 4.5 }}%
               top: {{ top + 0.5 }}%
               transform: 'translate(0, -50%)'
 
@@ -1923,9 +1916,6 @@ cards:
                           entity: {{ entity }}
                           fill_container: true
                           layout: horizontal
-                        # - type: 'custom:slider-entity-row'
-                        #   entity: {{ entity }}
-                        #   hide_state: false
                             {% elif type == "button" %}
                         - type: button
                           name: {{ entity }}
@@ -1933,7 +1923,15 @@ cards:
                             actions: {{ action }}
                             ulr_path: {{ data }}
                             {% else %}
-                        - entity: {{ entity }}
+                        - type: custom:mushroom-entity-card
+                          entity: {{ entity }}
+                          fill_container: true
+                          layout: horizontal
+                          primary_info: name
+                          secondary_info: none
+                          tap_action:
+                            action: toggle
+                        # - entity: {{ entity }}
                             {% endif %}
                           {% endif %}
                         {% endfor %}

@@ -34,7 +34,7 @@ automation:
     input:
       start_time: input_datetime.hvac_downstairs_start_time3
       scheduler_enable: input_boolean.hvac_downstairs_scheduler_enable3
-      virtual_climate: climate.hvac_downstairs_virtual_3
+      virtual_climate: climate.hvac_downstairs_virtual3
       target_climate: climate.hvac_downstairs
 
 ###################################

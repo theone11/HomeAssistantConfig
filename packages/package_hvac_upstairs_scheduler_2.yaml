@@ -28,13 +28,13 @@ climate:
 
 automation:
   description: "HVAC Upstairs Scheduler 2"
-  alias: hvac_upstairs_scheduler2
+  alias: hvac_upstairs_scheduler_2
   use_blueprint:
     path: blueprint_hvac_scheduler.yaml
     input:
       start_time: input_datetime.hvac_upstairs_start_time2
       scheduler_enable: input_boolean.hvac_upstairs_scheduler_enable2
-      virtual_climate: climate.hvac_upstairs_virtual_2
+      virtual_climate: climate.hvac_upstairs_virtual2
       target_climate: climate.hvac_upstairs
 
 ###################################
