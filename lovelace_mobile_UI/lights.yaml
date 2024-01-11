@@ -45,28 +45,52 @@ path: lights
 icon: 'mdi:lightbulb'
 badges: []
 cards:
+  {% for group, left, top in light_groups %}
   - type: grid
-    columns: 1
+    title: {{ group.capitalize() }}
+    columns: 2
     square: false
     cards:
-    {% for group, left, top in light_groups %}
-    - type: entities
-      title: {{ group.capitalize() }}
-      show_header_toggle: true
-      entities:
       {% for entity, entity_group, left, top, scaleX, scaleY, deg in lights %}
         {% if entity_group == group %}
-        - entity: light.{{ entity }}
+      - type: custom:mushroom-entity-card
+        entity: light.{{ entity }}
+        secondary_info: none
+        layout: vertical
+        fill_container: true
+        tap_action:
+          action: toggle
         {% endif %}
       {% endfor %}
-    {% endfor %}
+  {% endfor %}
 
-#    - type: grid
-#      columns: 4
-#      square: false
-#      cards:
-#        {% for entity, entity_group, left, top, scaleX, scaleY, deg in lights %}
-#        - type: button
-#          entity: light.{{ entity }}
-#          show_name: true
-#        {% endfor %}
+  # - type: grid
+  #   columns: 1
+  #   square: false
+  #   cards:
+  #   {% for group, left, top in light_groups %}
+  #   - type: entities
+  #     title: {{ group.capitalize() }}
+  #     show_header_toggle: true
+  #     entities:
+  #     {% for entity, entity_group, left, top, scaleX, scaleY, deg in lights %}
+  #       {% if entity_group == group %}
+  #       - entity: light.{{ entity }}
+  #       {% endif %}
+  #     {% endfor %}
+  #   {% endfor %}
+
+  # {% for group, left, top in light_groups %}
+  # - type: grid
+  #   title: {{ group.capitalize() }}
+  #   columns: 3
+  #   square: false
+  #   cards:
+  #     {% for entity, entity_group, left, top, scaleX, scaleY, deg in lights %}
+  #       {% if entity_group == group %}
+  #     - type: button
+  #       entity: light.{{ entity }}
+  #       show_name: true
+  #       {% endif %}
+  #     {% endfor %}
+  # {% endfor %}

@@ -37,84 +37,63 @@
     - type: grid
       columns: 1
       square: false
-      title: Schedule {{ s }}
+      title: Scheduler {{ s }}
       cards:
+        - type: custom:mushroom-entity-card
+          entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+          secondary_info: none
+          fill_container: true
+          tap_action:
+            action: toggle
         {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
         - type: grid
           columns: 7
           square: false
           cards:
             {% for day, number, name, name_he in days %}
-            - type: custom:button-card
+            - type: custom:mushroom-entity-card
               entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
+              primary_info: none
+              secondary_info: none
               name: {{ name_he }}
               icon: mdi:numeric-{{ number }}-box-outline
-              show_name: true
-              show_icon: true
-              show_state: false
+              layout: vertical
+              fill_container: true
+              tap_action:
+                action: toggle
             {% endfor %}
         {% endif %}
-        - type: entities
-          # icon: 'mdi:timer-outline'
-          show_header_toggle: false
-          state_color: false
-          # title: Schedule {{ s }}
-          entities:
-            {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
-            # - type: section
-            - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
-            - type: 'custom:time-picker-card'
-              entity: input_datetime.{{ entity }}_start_time{{ s }}
-              layout:
-                embedded: true
-                name: inside
-                align_controls: right
-              {% endif %}
-            {% if (scheduler_type == "S_HVAC") %}
-            # - type: section
-            - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
-            # - type: custom:silent-remotes-card
-            #   entity: climate.hvac_{{ entity }}_virtual_{{ s }}
-            #   theme: light
-            #   title: "Scheduler {{ s }}"
-            #   remoteType: ac
-            - type: 'custom:simple-thermostat'
-              entity: climate.{{ entity }}_virtual_{{ s }}
-              header: false
-              setpoints:
-              layout:
-                step: row
-                mode:
-                  names: false
-                  icons: true
-                  headings: false
-              decimals: 0
-              step_size: 1
-              hide:
-                state: true
-                temperature: true
-              control:
-                hvac: true
-                fan:
-                  "low":
-                    icon: mdi:fan-speed-1
-                  "mid":
-                    icon: mdi:fan-speed-2
-                  "high":
-                    icon: mdi:fan-speed-3
-            - type: 'custom:time-picker-card'
-              entity: input_datetime.{{ entity }}_start_time{{ s }}
-              layout:
-                embedded: true
-                name: inside
-                align_controls: right
-            {% endif %}
-            {% if scheduler_type == "DSD" %}
-            - type: section
-            - type: 'custom:slider-entity-row'
-              entity: input_number.{{ entity }}_timer_duration{{ s }}
-              hide_state: false
-            {% endif %}
+        - type: 'custom:time-picker-card'
+          entity: input_datetime.{{ entity }}_start_time{{ s }}
+          layout:
+            embedded: true
+            name: inside
+            align_controls: right
+        {% if scheduler_type == "DSD" %}
+        - type: custom:mushroom-number-card
+          entity: input_number.{{ entity }}_timer_duration{{ s }}
+          icon: 'mdi:timer-outline'
+          fill_container: true
+          layout: horizontal
+        {% endif %}
+        {% if (scheduler_type == "S_HVAC") %}
+        - type: thermostat
+          entity: climate.{{ entity }}_virtual{{ s }}
+          features:
+            - type: climate-hvac-modes
+              style: icons
+              hvac_modes:
+                - 'off'
+                - cool
+                - heat
+                - auto
+            - type: climate-fan-modes
+              style: icons
+              fan_modes:
+                - low
+                - high
+                - mid
+        {% endif %}
     {% endfor %}
 {%- endmacro %}
 
@@ -132,15 +111,29 @@ cards:
       square: false
       cards:
       {% for entity, left, top in hvacs %}
-        - type: custom:silent-remotes-card
+        - type: thermostat
           entity: climate.hvac_{{ entity }}
-          theme: light
-          title: {{ entity.capitalize() }} AC
-          remoteType: ac
+          features:
+            - type: climate-hvac-modes
+              style: icons
+              hvac_modes:
+                - 'off'
+                - cool
+                - heat
+                - auto
+            - type: climate-fan-modes
+              style: icons
+              fan_modes:
+                - low
+                - high
+                - mid
       {% endfor %}
 
   {% for entity, left, top in hvacs %}
-    - type: markdown
-      content: "# {{ entity }} Schedulers"
+  - type: grid
+    title: HVAC {{ entity.capitalize() }} Schedulers
+    columns: 2
+    square: false
+    cards:
     {{ create_schedulers_popup("hvac_" ~ entity, "S_HVAC") }}
   {% endfor %}

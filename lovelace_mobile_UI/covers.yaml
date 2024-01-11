@@ -24,22 +24,40 @@ path: shutters
 icon: 'mdi:window-shutter'
 badges: []
 cards:
+  {% for group, left, top in cover_groups %}
   - type: grid
+    title: {{ group.capitalize() }}
     columns: 1
     square: false
     cards:
-    {% for group, left, top in cover_groups %}
-    - type: entities
-      title: {{ group.capitalize() }}
-      show_header_toggle: true
-      entities:
       {% for entity, entity_group, left, top, scaleX, scaleY, deg in covers %}
         {% if entity_group == group %}
-        - entity: cover.{{ entity }}
-        - type: custom:slider-entity-row
-          entity: cover.{{ entity }}
-          full_row: true
-          hide_state: true
+      - type: custom:mushroom-cover-card
+        entity: cover.playroom_window_shutter
+        show_position_control: true
+        show_buttons_control: true
+        show_tilt_position_control: false
+        layout: default
         {% endif %}
       {% endfor %}
-    {% endfor %}
+  {% endfor %}
+
+  # - type: grid
+  #   columns: 1
+  #   square: false
+  #   cards:
+  #   {% for group, left, top in cover_groups %}
+  #   - type: entities
+  #     title: {{ group.capitalize() }}
+  #     show_header_toggle: true
+  #     entities:
+  #     {% for entity, entity_group, left, top, scaleX, scaleY, deg in covers %}
+  #       {% if entity_group == group %}
+  #       - entity: cover.{{ entity }}
+  #       - type: custom:slider-entity-row
+  #         entity: cover.{{ entity }}
+  #         full_row: true
+  #         hide_state: true
+  #       {% endif %}
+  #     {% endfor %}
+  #   {% endfor %}

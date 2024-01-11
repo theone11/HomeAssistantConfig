@@ -419,7 +419,7 @@
                   - type: grid
                     columns: 1
                     square: false
-                    title: Schedule {{ s }}
+                    title: Scheduler {{ s }}
                     cards:
                       - type: custom:mushroom-entity-card
                         entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
@@ -1252,7 +1252,6 @@ cards:
                           action: toggle
                         {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                       # - type: button
-                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
                       - type: custom:mushroom-entity-card
                         entity: input_boolean.{{ entity }}_future
                         primary_info: none
