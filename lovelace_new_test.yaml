@@ -1,0 +1,11 @@
+# lovelace_gen
+
+kiosk_mode:
+  hide_header: true
+#  hide_menubutton: true
+#  hide_overflow: true
+
+title: Test
+
+views:
+  - !include lovelace_new_test_data.yaml

@@ -14,6 +14,9 @@
 #--------------------------------------------------------------------------------------------------
 # General
 #--------------------------------------------------------------------------------------------------
+{% set popup_border_color = "gray" %}
+{% set popup_background_color = "#505050" %}
+
 {% set border_radius = 12 %}
 {% set background_color = 'rgba(255, 255, 255, 0.1)' %}
 {% set background_color_alert = 'rgba(255, 0, 0, 0.2)' %}
@@ -227,19 +230,19 @@
 #  - They include humidity and battery values as well
 #--------------------------------------------------------------------------------------------------
 {% set temperature_sensors_font_size = 75 %}
-#                              entity                                  , category       , left, top
-{% set temperature_sensors = [("master_bedroom_sensor_temperature"     , "room"         , 36.5, 93  ),
-                              ("noga_sensor_temperature"               , "room"         , 45  , 59  ),
-                              ("ella_sensor_temperature"               , "room"         , 36  , 56  ),
-                              ("tomer_sensor_temperature"              , "room"         , 28  , 61.5),
-                              ("livingroom_tv_sensor_temperature"      , "room"         , 59  , 63  ),
-                              ("livingroom_corner_sensor_temperature"  , "room"         , 71.5, 47  ),
-                              ("kitchen_sensor_temperature"            , "room"         , 59  , 76  ),
-                              ("water_boiler_temperature_panel_out"    , "water_boiler" , 3.5 , 52  ),
-                              ("water_boiler_temperature_in_from_panel", "water_boiler" , 9.5 , 43  ),
-                              ("water_boiler_temperature_out_to_panel" , "water_boiler" , 9.5 , 47  ),
-                              ("livingroom_temperature"                , "room"         , 71.5, 45.5),
-                              ("hallway_temperature"                   , "room"         , 36.6, 65.5)] %}
+#                              entity                                  , category       , left, top, font_scale
+{% set temperature_sensors = [("master_bedroom_sensor_temperature"     , "room"         , 36.5, 93  , 1),
+                              ("noga_sensor_temperature"               , "room"         , 45  , 59  , 1),
+                              ("ella_sensor_temperature"               , "room"         , 36  , 56  , 1),
+                              ("tomer_sensor_temperature"              , "room"         , 28  , 61.5, 1),
+                              ("livingroom_tv_sensor_temperature"      , "room"         , 59  , 63  , 1),
+                              ("livingroom_corner_sensor_temperature"  , "room"         , 71.5, 47  , 1),
+                              ("kitchen_sensor_temperature"            , "room"         , 59  , 76  , 1),
+                              ("water_boiler_temperature_panel_out"    , "water_boiler" , 3.5 , 52  , 1),
+                              ("water_boiler_temperature_in_from_panel", "water_boiler" , 9.25, 43  , 1.5),
+                              ("water_boiler_temperature_out_to_panel" , "water_boiler" , 9.5 , 47  , 1),
+                              ("livingroom_temperature"                , "room"         , 71.5, 45.5, 1),
+                              ("hallway_temperature"                   , "room"         , 36.6, 65.5, 1)] %}
 
 #                              entity                             , category, left, top
 {% set humidity_sensors = [("master_bedroom_sensor_humidity"   , "room", 36.5, 93  ),
@@ -405,84 +408,85 @@
 #        DS      - Day Start
 #        S_HVAC  - Start HVAC
 
-{% macro create_schedulers_popup(entity, scheduler_type) -%}
-                {% if (scheduler_type == "S_HVAC") %}
-                {% set num_schedulers = 4 %}
-                {% set schedulers = ['1', '2', '3', '4'] %}
-                {% else %}
-                {% set num_schedulers = 2 %}
-                {% set schedulers = ['1', '2'] %}
-                {% endif %}
-                type: grid
-                columns: {{ num_schedulers }}
-                square: false
-                cards:
-                  {% for s in schedulers %}
-                  - type: grid
-                    columns: 1
-                    square: false
-                    title: Scheduler {{ s }}
-                    cards:
-                      - type: custom:mushroom-entity-card
-                        entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
-                        secondary_info: none
-                        fill_container: true
-                        tap_action:
-                          action: toggle
-                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
-                      {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
-                      - type: grid
-                        columns: 7
-                        square: false
-                        cards:
-                          {% for day, number, name, name_he in days %}
-                          - type: custom:mushroom-entity-card
-                            entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
-                            primary_info: none
-                            secondary_info: none
-                            name: {{ name_he }}
-                            icon: mdi:numeric-{{ number }}-box-outline
-                            layout: vertical
-                            fill_container: true
-                            tap_action:
-                              action: toggle
-                            {{ disable_tap_hold_double_ws(0, 1, 1, 14) }}
-                          {% endfor %}
-                      {% endif %}
-                      - type: 'custom:time-picker-card'
-                        entity: input_datetime.{{ entity }}_start_time{{ s }}
-                        {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
-                        layout:
-                          embedded: true
-                          name: inside
-                          align_controls: right
-                      {% if scheduler_type == "DSD" %}
-                      - type: custom:mushroom-number-card
-                        entity: input_number.{{ entity }}_timer_duration{{ s }}
-                        icon: 'mdi:timer-outline'
-                        fill_container: true
-                        layout: horizontal
-                        {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
-                      {% endif %}
+{% macro create_schedulers_tab(entity, scheduler_type) -%}
                       {% if (scheduler_type == "S_HVAC") %}
-                      - type: thermostat
-                        entity: climate.{{ entity }}_virtual{{ s }}
-                        features:
-                          - type: climate-hvac-modes
-                            style: icons
-                            hvac_modes:
-                              - 'off'
-                              - cool
-                              - heat
-                              - auto
-                          - type: climate-fan-modes
-                            style: icons
-                            fan_modes:
-                              - low
-                              - high
-                              - mid
+                      {% set num_schedulers = 4 %}
+                      {% set schedulers = ['1', '2', '3', '4'] %}
+                      {% else %}
+                      {% set num_schedulers = 2 %}
+                      {% set schedulers = ['1', '2'] %}
                       {% endif %}
-                  {% endfor %}
+                      type: grid
+                      columns: {{ num_schedulers }}
+                      square: false
+                      cards:
+                        {% for s in schedulers %}
+                        - type: grid
+                          columns: 1
+                          square: false
+                          title: Scheduler {{ s }}
+                          cards:
+                            - type: custom:mushroom-entity-card
+                              entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+                              secondary_info: none
+                              fill_container: true
+                              tap_action:
+                                action: toggle
+                              {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
+                            {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
+                            - type: grid
+                              columns: 7
+                              square: false
+                              cards:
+                                {% for day, number, name, name_he in days %}
+                                - type: custom:mushroom-entity-card
+                                  entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
+                                  primary_info: none
+                                  secondary_info: none
+                                  name: {{ name_he }}
+                                  icon: mdi:numeric-{{ number }}-box-outline
+                                  layout: vertical
+                                  fill_container: true
+                                  tap_action:
+                                    action: toggle
+                                  {{ disable_tap_hold_double_ws(0, 1, 1, 17) }}
+                                {% endfor %}
+                            {% endif %}
+                            - type: 'custom:time-picker-card'
+                              entity: input_datetime.{{ entity }}_start_time{{ s }}
+                              {{ disable_tap_hold_double_ws(1, 1, 1, 15) }}
+                              layout:
+                                embedded: true
+                                name: inside
+                                align_controls: right
+                            {% if scheduler_type == "DSD" %}
+                            - type: custom:mushroom-number-card
+                              entity: input_number.{{ entity }}_timer_duration{{ s }}
+                              icon: 'mdi:timer-outline'
+                              fill_container: true
+                              layout: horizontal
+                              {{ disable_tap_hold_double_ws(1, 1, 1, 15) }}
+                            {% endif %}
+                            {% if (scheduler_type == "S_HVAC") %}
+                            - type: thermostat
+                              entity: climate.{{ entity }}_virtual{{ s }}
+                              name: Virtual {{ s }}
+                              features:
+                                - type: climate-hvac-modes
+                                  style: icons
+                                  hvac_modes:
+                                    - 'off'
+                                    - cool
+                                    - heat
+                                    - auto
+                                - type: climate-fan-modes
+                                  style: icons
+                                  fan_modes:
+                                    - low
+                                    - high
+                                    - mid
+                            {% endif %}
+                        {% endfor %}
 {%- endmacro %}
 
  ######  ########    ###    ########  ######## 
@@ -590,8 +594,8 @@ cards:
                   browser_id: THIS
                   style: |
                     --popup-min-width: 80vw;
-                    --popup-border-color: gray;
-                    --popup-background-color: #101010;
+                    --popup-border-color: {{ popup_border_color }};
+                    --popup-background-color: {{ popup_background_color }};
                   title: Hourly Weather Forecast
                   content:
                     type: custom:hourly-weather
@@ -688,8 +692,8 @@ cards:
               style: |
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
               entity_id: light.kitchen_table_light_ambilight
           {% else %}
           action: more-info
@@ -780,8 +784,8 @@ cards:
               style: |
                 --popup-min-width: 20vw;
                 --popup-max-width: 20vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
               title: Cover
               content:
                 type: 'custom:vertical-slider-cover-card'
@@ -838,8 +842,8 @@ cards:
               style: |
                 --popup-min-width: 25vw;
                 --popup-max-width: 25vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
               title: {{ entity_group.capitalize() }} Shutters
               content:
                 type: 'custom:vertical-slider-cover-card'
@@ -912,19 +916,7 @@ cards:
         double_tap_action:
           action: more-info
         hold_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            data:
-              browser_id: THIS
-              style: |
-                --popup-min-width: 50vw;
-                --popup-max-width: 50vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
-              title: {{ display_name }} Scheduler
-              content:
-                {{ create_schedulers_popup(entity, "DSD") }}
+          action: none
       {{ create_schedulers_icons(entity, left, top) }}
 
       - type: conditional
@@ -974,6 +966,15 @@ cards:
       # -------------------------------------
       # -------------------------------------
 
+      - type: icon
+        icon: mdi:calendar
+        style:
+          left: {{ group_irrigation_left + 0.1 }}%
+          top: {{ group_irrigation_top + 0.1 }}%
+          color: rgb(128, 128, 128)
+          transform: translate(0%, 0%) scale({{ group_scaleX * 0.7 }}, {{ group_scaleY * 0.7 }})
+          {{ disable_tap_hold_double_ws(1, 1, 1, 4) }}
+
       - type: state-icon
         entity: group.irrigation
         style:
@@ -989,112 +990,139 @@ cards:
             data:
               browser_id: THIS
               style: |
-                --popup-min-width: 30vw;
-                --popup-max-width: 30vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
-              title: Irrigation Valves Manual Cycle
+                --popup-min-width: 45vw;
+                --popup-max-width: 45vw;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
+              title: Irrigation
               content:
-                type: grid
-                columns: 1
-                square: false
-                cards:
-                  - type: grid
-                    columns: {{ irrigation_valves | count }}
-                    square: false
-                    title: Choose which irrigation valves to open during the cycle
-                    cards:
-                      {% for entity in irrigation_valves %}
-                      # - type: button
-                      #   entity: input_boolean.{{ entity[0] }}
-                      #   show_name: true
-                      - type: custom:mushroom-entity-card
-                        entity: input_boolean.{{ entity[0] }}
-                        secondary_info: none
-                        layout: vertical
-                        fill_container: true
-                        tap_action:
-                          action: toggle
-                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
-                      {% endfor %}
-                  - type: grid
-                    columns: 1
-                    square: false
-                    title: Choose Duration and Start Time
-                    cards:
-                      - type: custom:mushroom-number-card
-                        entity: input_number.irrigation_duration
-                        icon: 'mdi:timer-outline'
-                        fill_container: true
-                        layout: horizontal
-                        {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
-                      - type: custom:time-picker-card
-                        entity: input_datetime.irrigation_start_time
-                        layout:
-                          embedded: true
-                          name: inside
-                          align_controls: right
-                        {{ disable_tap_hold_double_ws(1, 1, 1, 12) }}
-                  - type: grid
-                    columns: 2
-                    square: false
-                    cards:
-                      - type: custom:mushroom-entity-card
-                        entity: input_boolean.irrigation_immediate
-                        primary_info: none
-                        secondary_info: none
-                        layout: vertical
-                        fill_container: true
-                        tap_action:
-                          action: toggle
-                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
-                      # - type: button
-                      #   entity: input_boolean.irrigation_immediate
-                      #   show_name: false
-                      #   {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
-                      - type: custom:mushroom-entity-card
-                        entity: input_boolean.irrigation_future
-                        primary_info: none
-                        secondary_info: none
-                        layout: vertical
-                        fill_container: true
-                        tap_action:
-                          action: toggle
-                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
-                      # - type: button
-                      #   entity: input_boolean.irrigation_future
-                      #   show_name: false
-                      #   {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
-                  - type: custom:timer-bar-card
-                    compressed: true
-                    name: Timers
-                    entities:
-                      {% for entity in irrigation_valves %}
-                      - timer.{{ entity[0] }}
-                      {% endfor %}
-                  - type: history-graph
-                    title: History
-                    hours_to_show: 72
-                    entities:
-                      {% for entity in irrigation_valves %}
-                      - entity: switch.{{ entity[0] }}
-                      {% endfor %}
+                type: custom:tabbed-card
+                attributes:
+                  isMinWidthIndicator: true
+                  minWidth: true
+                  stacked: true
+                  isFadingIndicator: false
+                tabs:
+                  - attributes:
+                      label: Direct Control
+                      icon: mdi:power
+                    card:
+                      type: grid
+                      columns: {{ irrigation_valves | count }}
+                      square: false
+                      cards:
+                        {% for entity in irrigation_valves %}
+                        # - type: button
+                        #   entity: input_boolean.{{ entity[0] }}
+                        #   show_name: true
+                        - type: custom:mushroom-entity-card
+                          entity: switch.{{ entity[0] }}
+                          secondary_info: none
+                          layout: vertical
+                          fill_container: true
+                          tap_action:
+                            action: toggle
+                          {{ disable_tap_hold_double_ws(0, 1, 1, 13) }}
+                        {% endfor %}
+                  - attributes:
+                      label: One Time Cycle Control
+                      icon: mdi:power
+                    card:
+                      type: grid
+                      columns: 1
+                      square: false
+                      cards:
+                        - type: grid
+                          columns: {{ irrigation_valves | count }}
+                          square: false
+                          #title: Choose which irrigation valves to open during the cycle
+                          cards:
+                            {% for entity in irrigation_valves %}
+                            # - type: button
+                            #   entity: input_boolean.{{ entity[0] }}
+                            #   show_name: true
+                            - type: custom:mushroom-entity-card
+                              entity: input_boolean.{{ entity[0] }}
+                              secondary_info: none
+                              layout: vertical
+                              fill_container: true
+                              tap_action:
+                                action: toggle
+                              {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
+                            {% endfor %}
+                        - type: grid
+                          columns: 1
+                          square: false
+                          #title: Choose Duration and Start Time
+                          cards:
+                            - type: custom:mushroom-number-card
+                              entity: input_number.irrigation_duration
+                              icon: 'mdi:timer-outline'
+                              fill_container: true
+                              layout: horizontal
+                              {{ disable_tap_hold_double_ws(1, 1, 1, 15) }}
+                            - type: custom:time-picker-card
+                              entity: input_datetime.irrigation_start_time
+                              layout:
+                                embedded: true
+                                name: inside
+                                align_controls: right
+                              {{ disable_tap_hold_double_ws(1, 1, 1, 15) }}
+                        - type: grid
+                          columns: 2
+                          square: false
+                          cards:
+                            - type: custom:mushroom-entity-card
+                              entity: input_boolean.irrigation_immediate
+                              primary_info: none
+                              secondary_info: none
+                              layout: vertical
+                              fill_container: true
+                              tap_action:
+                                action: toggle
+                              {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
+                            # - type: button
+                            #   entity: input_boolean.irrigation_immediate
+                            #   show_name: false
+                            #   {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
+                            - type: custom:mushroom-entity-card
+                              entity: input_boolean.irrigation_future
+                              primary_info: none
+                              secondary_info: none
+                              layout: vertical
+                              fill_container: true
+                              tap_action:
+                                action: toggle
+                              {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
+                            # - type: button
+                            #   entity: input_boolean.irrigation_future
+                            #   show_name: false
+                            #   {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
+                        - type: custom:timer-bar-card
+                          compressed: true
+                          name: Timers
+                          entities:
+                            {% for entity in irrigation_valves %}
+                            - timer.{{ entity[0] }}
+                            {% endfor %}
+                        - type: history-graph
+                          title: History
+                          hours_to_show: 72
+                          entities:
+                            {% for entity in irrigation_valves %}
+                            - entity: switch.{{ entity[0] }}
+                            {% endfor %}
+                  {% for entity, type, left, top, display_name in irrigation_valves %}
+                  - attributes:
+                      label: {{ display_name }}
+                      icon: mdi:calendar
+                    card:
+                      {{ create_schedulers_tab(entity, "DSD") }}
+                  {% endfor %}
         double_tap_action:
           action: more-info
         hold_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            data:
-              browser_id: THIS
-              title: Irrigation Valves
-              content:
-                entities:
-                  {% for entity in irrigation_valves %}
-                  - entity: switch.{{ entity[0] }}
-                  {% endfor %}
-                show_header_toggle: false
-                type: entities
+          action: none
 
 ######## ######## ##     ## ########  ######## ########     ###    ######## ##     ## ########  ########     ######  ######## ##    ##  ######   #######  ########   ######  
    ##    ##       ###   ### ##     ## ##       ##     ##   ## ##      ##    ##     ## ##     ## ##          ##    ## ##       ###   ## ##    ## ##     ## ##     ## ##    ## 
@@ -1105,7 +1133,7 @@ cards:
    ##    ######## ##     ## ##        ######## ##     ## ##     ##    ##     #######  ##     ## ########     ######  ######## ##    ##  ######   #######  ##     ##  ######  
 # TEMPERATURE SENSORS
 
-      {% for entity, category, left, top in temperature_sensors %}
+      {% for entity, category, left, top, font_scale in temperature_sensors %}
       - type: conditional
         conditions:
           {% if category == "room" %}
@@ -1121,7 +1149,7 @@ cards:
             left: {{ left }}%
             top: {{ top }}%
             transform: translate(0, -50%)
-            font-size: {{ temperature_sensors_font_size }}%
+            font-size: {{ temperature_sensors_font_size * font_scale }}%
           {{ disable_tap_hold_double_ws(1, 1, 1, 5) }}
       {% endfor %}
 
@@ -1143,8 +1171,8 @@ cards:
               style: |
                 --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
               title: Temperature & Humidity Sensors
               content:
                 type: grid
@@ -1160,7 +1188,7 @@ cards:
                     card:
                       type: history-graph
                       entities:
-                        {% for entity, category, left, top in temperature_sensors %}
+                        {% for entity, category, left, top, font_scale in temperature_sensors %}
                         {% if category == "room" %}
                         - entity: sensor.{{ entity }}
                         {% endif %}
@@ -1193,6 +1221,15 @@ cards:
 
       {{ create_warning_background(entity ~ "_problem", type ~ "." ~ entity, left, top) }}
 
+      - type: icon
+        icon: mdi:calendar
+        style:
+          left: {{ left + 0.1 }}%
+          top: {{ top + 0.1 }}%
+          color: rgb(128, 128, 128)
+          transform: translate(0%, 0%) scale({{ group_scaleX * 0.7 }}, {{ group_scaleY * 0.7 }})
+          {{ disable_tap_hold_double_ws(1, 1, 1, 4) }}
+
       - type: state-icon
         entity: {{ type }}.{{ entity }}
         style:
@@ -1210,88 +1247,148 @@ cards:
               style: |
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
-              title: Water Boiler Manual Cycle
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
+              title: Water Boiler
               content:
-                type: grid
-                columns: 1
-                square: false
-                cards:
-                  # - type: button
-                  - type: custom:button-card
-                    entity: switch.{{ entity }}
-                    show_icon: true
-                    show_name: false
-                    tap_action:
-                      action: toggle
-                    {{ disable_tap_hold_double_ws(0, 1, 1, 10) }}
-                  - type: custom:mushroom-number-card
-                    entity: input_number.{{ entity }}_duration
-                    icon: 'mdi:timer-outline'
-                    fill_container: true
-                    layout: horizontal
-                    {{ disable_tap_hold_double_ws(1, 1, 1, 10) }}
-                  - type: 'custom:time-picker-card'
-                    entity: input_datetime.{{ entity }}_start_time
-                    layout:
-                      embedded: true
-                      name: inside
-                      align_controls: right
-                    {{ disable_tap_hold_double_ws(1, 1, 1, 10) }}
-                  - type: grid
-                    columns: 2
-                    square: false
-                    cards:
-                      # - type: button
-                      - type: custom:mushroom-entity-card
-                        entity: input_boolean.{{ entity }}_immediate
-                        primary_info: none
-                        secondary_info: none
-                        layout: vertical
-                        fill_container: true
-                        tap_action:
-                          action: toggle
-                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
-                      # - type: button
-                      - type: custom:mushroom-entity-card
-                        entity: input_boolean.{{ entity }}_future
-                        primary_info: none
-                        secondary_info: none
-                        layout: vertical
-                        fill_container: true
-                        tap_action:
-                          action: toggle
-                        {{ disable_tap_hold_double_ws(0, 1, 1, 12) }}
-                  - type: custom:timer-bar-card
-                    compressed: true
-                    name: Timer
-                    entities:
-                      - timer.{{ entity }}
-                  - type: history-graph
-                    title: History
-                    hours_to_show: 72
-                    entities:
-                      - entity: switch.boiler_switch
-                        name: Wall Switch
-                      - entity: binary_sensor.water_boiler_power_wall_switch_status
-                        name: Wall Switch Feedback
+                type: custom:tabbed-card
+                attributes:
+                  isMinWidthIndicator: true
+                tabs:
+                  - attributes:
+                      label: Control
+                      icon: mdi:power
+                    card:
+                      type: grid
+                      columns: 1
+                      square: false
+                      cards:
+                        # - type: button
+                        - type: custom:button-card
+                          entity: switch.{{ entity }}
+                          show_icon: true
+                          show_name: false
+                          tap_action:
+                            action: toggle
+                          {{ disable_tap_hold_double_ws(0, 1, 1, 13) }}
+                        - type: custom:mushroom-number-card
+                          entity: input_number.{{ entity }}_duration
+                          icon: 'mdi:timer-outline'
+                          fill_container: true
+                          layout: horizontal
+                          {{ disable_tap_hold_double_ws(1, 1, 1, 13) }}
+                        - type: 'custom:time-picker-card'
+                          entity: input_datetime.{{ entity }}_start_time
+                          layout:
+                            embedded: true
+                            name: inside
+                            align_controls: right
+                          {{ disable_tap_hold_double_ws(1, 1, 1, 13) }}
+                        - type: grid
+                          columns: 2
+                          square: false
+                          cards:
+                            # - type: button
+                            - type: custom:mushroom-entity-card
+                              entity: input_boolean.{{ entity }}_immediate
+                              primary_info: none
+                              secondary_info: none
+                              layout: vertical
+                              fill_container: true
+                              tap_action:
+                                action: toggle
+                              {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
+                            # - type: button
+                            - type: custom:mushroom-entity-card
+                              entity: input_boolean.{{ entity }}_future
+                              primary_info: none
+                              secondary_info: none
+                              layout: vertical
+                              fill_container: true
+                              tap_action:
+                                action: toggle
+                              {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
+                        - type: custom:timer-bar-card
+                          compressed: true
+                          name: Timer
+                          entities:
+                            - timer.{{ entity }}
+                        - type: history-graph
+                          title: History
+                          hours_to_show: 72
+                          entities:
+                            - entity: switch.boiler_switch
+                              name: Wall Switch
+                            - entity: binary_sensor.water_boiler_power_wall_switch_status
+                              name: Wall Switch Feedback
+                  - attributes:
+                      label: Schedulers
+                      icon: mdi:calendar
+                    card:
+                      {{ create_schedulers_tab(entity, "DSD") }}
+                  - attributes:
+                      label: Information
+                      icon: mdi:information-outline
+                    card:
+                      type: grid
+                      columns: 1
+                      square: false
+                      cards:
+                        - type: grid
+                          columns: 1
+                          square: false
+                          cards:
+{{ create_graph_span_buttons_ws(14) }}
+                            - type: 'custom:config-template-card'
+                              variables:
+                                HOURS: states['input_select.ui_graph_hours'].state
+                              entities:
+                                - input_select.ui_graph_hours
+                              card:
+                                type: history-graph
+                                entities:
+                                  - entity: sensor.water_boiler_temperature_temperature_difference_state
+                                  - entity: sensor.water_boiler_temperature_panel_out
+                                  - entity: sensor.water_boiler_temperature_in_from_panel
+                                  - entity: sensor.water_boiler_temperature_out_to_panel
+                                  - entity: sensor.water_boiler_temperature_temperature_difference
+                                  - entity: switch.water_boiler_temperature_pump_manual
+                                    name: Pump Control
+                                  - entity: binary_sensor.water_boiler_power_pump_controller_status
+                                    name: Pump Feedback
+                                  - entity: switch.boiler_switch
+                                    name: Wall Switch
+                                  - entity: binary_sensor.water_boiler_power_wall_switch_status
+                                    name: Wall Switch Feedback
+                                  # - entity: sensor.water_boiler_power_adc
+                                  - entity: sensor.water_boiler_power_power_w
+                                  - entity: sensor.water_boiler_temperature_water_level
+                                hours_to_show: "${ HOURS }"
+                                refresh_interval: 10
+                        - type: grid
+                          columns: 1
+                          square: false
+                          cards:
+                            - type: 'custom:config-template-card'
+                              variables:
+                                HOURS: states['input_select.ui_graph_hours'].state
+                              entities:
+                                - input_select.ui_graph_hours
+                              card:
+                                type: history-graph
+                                entities:
+                                  - entity: sensor.water_boiler_power_am2302_temperature
+                                  - entity: sensor.water_boiler_power_si7021_temperature
+                                  - entity: sensor.water_boiler_temperature_case_temperature
+                                  - entity: sensor.water_boiler_power_am2302_humidity
+                                  - entity: sensor.water_boiler_power_si7021_humidity
+                                  - entity: sensor.water_boiler_temperature_case_humidity
+                                hours_to_show: "${ HOURS }"
+                                refresh_interval: 10
         double_tap_action:
           action: more-info
         hold_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            data:
-              browser_id: THIS
-              style: |
-                --popup-min-width: 50vw;
-                --popup-max-width: 50vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
-              title: {{ display_name }} Scheduler
-              content:
-                {{ create_schedulers_popup(entity, "DSD") }}
+          action: none
 
       {{ create_schedulers_icons(entity, left, top) }}
 
@@ -1333,89 +1430,6 @@ cards:
 
       {% endfor %}
 
-      # -----------------------------------------------
-      # -----------------------------------------------
-      # Water Boiler Information
-      # -----------------------------------------------
-      # -----------------------------------------------
-      - type: icon
-        icon: mdi:information-variant
-        style:
-          background-color: {{ background_color }}
-          border-radius: {{ border_radius }}%
-          left: 9.75%
-          top: 44.75%
-          transform: 'translate(0, -50%)'
-        tap_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            data:
-              browser_id: THIS
-              style: |
-                --popup-min-width: 80vw;
-                --popup-max-width: 80vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
-              title: Water Boiler Temperature & Humidity
-              content:
-                type: grid
-                columns: 2
-                square: false
-                cards:
-                  - type: grid
-                    columns: 1
-                    square: false
-                    cards:
-{{ create_graph_span_buttons_ws(11) }}
-                      - type: 'custom:config-template-card'
-                        variables:
-                          HOURS: states['input_select.ui_graph_hours'].state
-                        entities:
-                          - input_select.ui_graph_hours
-                        card:
-                          type: history-graph
-                          entities:
-                            - entity: sensor.water_boiler_temperature_temperature_difference_state
-                            - entity: sensor.water_boiler_temperature_panel_out
-                            - entity: sensor.water_boiler_temperature_in_from_panel
-                            - entity: sensor.water_boiler_temperature_out_to_panel
-                            - entity: sensor.water_boiler_temperature_temperature_difference
-                            - entity: switch.water_boiler_temperature_pump_manual
-                              name: Pump Control
-                            - entity: binary_sensor.water_boiler_power_pump_controller_status
-                              name: Pump Feedback
-                            - entity: switch.boiler_switch
-                              name: Wall Switch
-                            - entity: binary_sensor.water_boiler_power_wall_switch_status
-                              name: Wall Switch Feedback
-                            # - entity: sensor.water_boiler_power_adc
-                            - entity: sensor.water_boiler_power_power_w
-                            - entity: sensor.water_boiler_temperature_water_level
-                          hours_to_show: "${ HOURS }"
-                          refresh_interval: 10
-                  - type: grid
-                    columns: 1
-                    square: false
-                    cards:
-                      - type: 'custom:config-template-card'
-                        variables:
-                          HOURS: states['input_select.ui_graph_hours'].state
-                        entities:
-                          - input_select.ui_graph_hours
-                        card:
-                          type: history-graph
-                          entities:
-                            - entity: sensor.water_boiler_power_am2302_temperature
-                            - entity: sensor.water_boiler_power_si7021_temperature
-                            - entity: sensor.water_boiler_temperature_case_temperature
-                            - entity: sensor.water_boiler_power_am2302_humidity
-                            - entity: sensor.water_boiler_power_si7021_humidity
-                            - entity: sensor.water_boiler_temperature_case_humidity
-                          hours_to_show: "${ HOURS }"
-                          refresh_interval: 10
-        {{ disable_tap_hold_double_ws(0, 1, 1, 4) }}
-
 ##     ##    ###     ######  ##     ## ##     ## ##     ##  ######  
 ##     ##   ## ##   ##    ## ##     ## ##     ## ###   ### ##    ## 
 ##     ##  ##   ##  ##       ##     ## ##     ## #### #### ##       
@@ -1429,6 +1443,15 @@ cards:
       
       {{ create_warning_background("vacuum_" ~ entity ~ "_problem", "vacuum.vacuum_" ~ entity, left, top) }}
 
+      - type: icon
+        icon: mdi:calendar
+        style:
+          left: {{ left + 0.1 }}%
+          top: {{ top + 0.1 }}%
+          color: rgb(128, 128, 128)
+          transform: translate(0%, 0%) scale({{ group_scaleX * 0.7 }}, {{ group_scaleY * 0.7 }})
+          {{ disable_tap_hold_double_ws(1, 1, 1, 4) }}
+      
       - type: state-icon
         entity: vacuum.vacuum_{{ entity }}
         style:
@@ -1446,34 +1469,35 @@ cards:
               style: |
                 --popup-min-width: 30vw;
                 --popup-max-width: 30vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
               title: Vacuum {{ entity.capitalize() }}
               content:
-                type: custom:xiaomi-vacuum-map-card
-                map_source:
-                  camera: camera.vacuum_{{ entity }}
-                calibration_source:
-                  camera: true
-                entity: vacuum.vacuum_{{ entity }}
-                vacuum_platform: default
-                map_locked: true
+                type: custom:tabbed-card
+                attributes:
+                  isMinWidthIndicator: true
+                tabs:
+                  - attributes:
+                      label: Control
+                      icon: mdi:power
+                    card:
+                      type: custom:xiaomi-vacuum-map-card
+                      map_source:
+                        camera: camera.vacuum_{{ entity }}
+                      calibration_source:
+                        camera: true
+                      entity: vacuum.vacuum_{{ entity }}
+                      vacuum_platform: default
+                      map_locked: true
+                  - attributes:
+                      label: Schedulers
+                      icon: mdi:calendar
+                    card:
+                      {{ create_schedulers_tab("vacuum_" ~ entity, "DS") }}
         double_tap_action:
           action: more-info
         hold_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            data:
-              browser_id: THIS
-              style: |
-                --popup-min-width: 50vw;
-                --popup-max-width: 50vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
-              title: Vacuum {{ entity.capitalize() }} Scheduler
-              content:
-                {{ create_schedulers_popup("vacuum_" ~ entity, "DS") }}
+          action: none
 
       {{ create_schedulers_icons("vacuum_" ~ entity, left, top) }}
       {% endfor %}
@@ -1504,8 +1528,8 @@ cards:
               style: |
                 --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
               content:
                 type: iframe
                 url: !secret squeezebox_url
@@ -1519,8 +1543,8 @@ cards:
               style: |
                 --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
               content:
                 type: iframe
                 url: !secret squeezebox_url_regular
@@ -1545,6 +1569,15 @@ cards:
 
       {{ create_warning_background("hvac_" ~ entity ~ "_problem", "climate.hvac_" ~ entity, left, top) }}
 
+      - type: icon
+        icon: mdi:calendar
+        style:
+          left: {{ left + 0.1 }}%
+          top: {{ top + 0.1 }}%
+          color: rgb(128, 128, 128)
+          transform: translate(0%, 0%) scale({{ group_scaleX * 0.7 }}, {{ group_scaleY * 0.7 }})
+          {{ disable_tap_hold_double_ws(1, 1, 1, 4) }}
+
       - type: state-icon
         entity: climate.hvac_{{ entity }}
         icon: 'mdi:air-conditioner'
@@ -1561,72 +1594,45 @@ cards:
             data:
               browser_id: THIS
               style: |
-                --popup-min-width: 25vw;
-                --popup-max-width: 25vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
+                --popup-min-width: 45vw;
+                --popup-max-width: 45vw;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
+              title: {{ entity.capitalize() }} HVAC
               content:
-                # type: custom:silent-remotes-card
-                # entity: climate.hvac_{{ entity }}
-                # theme: light
-                # title: {{ entity.capitalize() }} AC
-                # remoteType: ac
-                # type: 'custom:simple-thermostat'
-                # entity: climate.hvac_{{ entity }}
-                # header: false
-                # setpoints:
-                # layout:
-                #   step: row
-                #   mode:
-                #     names: false
-                #     icons: true
-                #     headings: false
-                # decimals: 0
-                # step_size: 1
-                # hide:
-                #   state: true
-                #   temperature: true
-                # control:
-                #   hvac: true
-                #   fan:
-                #     "low":
-                #       icon: mdi:fan-speed-1
-                #     "mid":
-                #       icon: mdi:fan-speed-2
-                #     "high":
-                #       icon: mdi:fan-speed-3
-                type: thermostat
-                entity: climate.hvac_{{ entity }}
-                features:
-                  - type: climate-hvac-modes
-                    style: icons
-                    hvac_modes:
-                      - 'off'
-                      - cool
-                      - heat
-                      - auto
-                  - type: climate-fan-modes
-                    style: icons
-                    fan_modes:
-                      - low
-                      - high
-                      - mid
+                type: custom:tabbed-card
+                attributes:
+                  isMinWidthIndicator: true
+                tabs:
+                  - attributes:
+                      label: Control
+                      icon: mdi:power
+                    card:
+                      type: thermostat
+                      entity: climate.hvac_{{ entity }}
+                      features:
+                        - type: climate-hvac-modes
+                          style: icons
+                          hvac_modes:
+                            - 'off'
+                            - cool
+                            - heat
+                            - auto
+                        - type: climate-fan-modes
+                          style: icons
+                          fan_modes:
+                            - low
+                            - high
+                            - mid
+                  - attributes:
+                      label: Schedulers
+                      icon: mdi:calendar
+                    card:
+                      {{ create_schedulers_tab("hvac_" ~ entity, "S_HVAC") }}
         double_tap_action:
           action: more-info
         hold_action:
-          action: fire-dom-event
-          browser_mod:
-            service: browser_mod.popup
-            data:
-              browser_id: THIS
-              style: |
-                --popup-min-width: 55vw;
-                --popup-max-width: 55vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
-              title: {{ entity.capitalize() }} Air Conditioning
-              content:
-                {{ create_schedulers_popup("hvac_" ~ entity, "S_HVAC") }}
+          action: none
 
       # Show temperature
       - type: state-label
@@ -1741,8 +1747,8 @@ cards:
       #         style: |
       #           --popup-min-width: 40vw;
       #           --popup-max-width: 40vw;
-      #           --popup-border-color: gray;
-      #           --popup-background-color: #101010;
+      #           --popup-border-color: {{ popup_border_color }};
+      #           --popup-background-color: {{ popup_background_color }};
       #         title: {{ entity.capitalize() }}
       #         content:
       #           type: picture-entity
@@ -1790,8 +1796,8 @@ cards:
                   style: |
                     --popup-min-width: 50vw;
                     --popup-max-width: 50vw;
-                    --popup-border-color: gray;
-                    --popup-background-color: #101010;
+                    --popup-border-color: {{ popup_border_color }};
+                    --popup-background-color: {{ popup_background_color }};
                   title: Details
                   content:
                   {% if (card_type == "entities") %}
@@ -1874,8 +1880,8 @@ cards:
               style: |
                 --popup-min-width: 50vw;
                 --popup-max-width: 50vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
               title: Settings
               content:
                 type: custom:tabbed-card
@@ -1884,28 +1890,6 @@ cards:
                   - attributes:
                       label: {{settings_tab_names[loop.index0]}}
                     card:
-                      # type: grid
-                      # columns: 1
-                      # square: false
-                      # cards:
-                      #   {% for entity, tab, section, label, type, action, data in settings_entities %}
-                      #     {% if tab == current_tab %}
-                      #       {% if section == "y" %}
-                      #   - type: markdown
-                      #     content: >
-                      #       ### {{ label }}
-                      #       {% endif %}
-                      #       {%if type == "slider" %}
-                      #   - type: tile
-                      #     entity: {{ entity }}
-                      #       {% elif type == "button" %}
-                      #   - type: custom:button-card
-                      #     name: {{ entity }}
-                      #       {% else %}
-                      #   - entity: {{ entity }}
-                      #       {% endif %}
-                      #     {% endif %}
-                      #   {% endfor %}
                       type: entities
                       show_header_toggle: false
                       entities:
@@ -1979,8 +1963,8 @@ cards:
               style: |
                 --popup-min-width: 80vw;
                 --popup-max-width: 80vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
               title: UnRAID Server
               content:
                 type: iframe
@@ -2015,8 +1999,8 @@ cards:
               style: |
                 --popup-min-width: 40vw;
                 --popup-max-width: 40vw;
-                --popup-border-color: gray;
-                --popup-background-color: #101010;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
               title: Water Consumption
               content:
                 type: grid

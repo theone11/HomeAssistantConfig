@@ -66,6 +66,12 @@ lovelace:
       icon: mdi:cellphone
       show_in_sidebar: true
       filename: lovelace_mobile_UI.yaml
+    lovelace-yaml-optimized-test:
+      mode: yaml
+      title: FloorPlan Test
+      icon: mdi:bug-outline
+      show_in_sidebar: true
+      filename: lovelace_new_test.yaml
 
 
 notify:
@@ -162,12 +168,20 @@ smartir:
 #    custom_components.hacs: debug
 #    aiogithubapi: debug
 
+input_select:
+  ui_graph_hours:
+    options:
+      - 1
+      - 2
+      - 6
+      - 12
+      - 18
+      - 24
+      - 36
+      - 48
+      - 72
+
 input_number:
-  ui_water_boiler_graph_hours:
-    name: Hours to Show
-    min: 1
-    max: 72
-    step: 1
   ui_water_boiler_max_time_limit:
     name: Water Boiler maximum direct activation time limit
     unit_of_measurement: "min"

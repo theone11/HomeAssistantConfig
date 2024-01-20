@@ -33,7 +33,7 @@ cards:
       {% for entity, entity_group, left, top, scaleX, scaleY, deg in covers %}
         {% if entity_group == group %}
       - type: custom:mushroom-cover-card
-        entity: cover.playroom_window_shutter
+        entity: cover.{{ entity }}
         show_position_control: true
         show_buttons_control: true
         show_tilt_position_control: false

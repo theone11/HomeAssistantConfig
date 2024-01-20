@@ -209,6 +209,9 @@ cards:
       hours_to_show: 72
       entities:
         - entity: switch.boiler_switch
+          name: Wall Switch
+        - entity: binary_sensor.water_boiler_power_wall_switch_status
+          name: Wall Switch Feedback
     {% endfor %}
 
   {% for entity, type, left, top, display_name in boilers %}
