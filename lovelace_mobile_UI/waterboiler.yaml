@@ -116,6 +116,7 @@
 # {{"  "*ws}}  square: false
 # {{"  "*ws}}  cards:
 # {{"  "*ws}}    {% for label, span in graph_span %}
+# {{"  "*ws}}    - type: button
 # {{"  "*ws}}    - type: custom:button-card
 # {{"  "*ws}}      name: {{ label }}
 # {{"  "*ws}}      show_name: true
@@ -123,25 +124,27 @@
 # {{"  "*ws}}      show_state: false
 # {{"  "*ws}}      tap_action:
 # {{"  "*ws}}        action: call-service
-# {{"  "*ws}}        service: input_number.set_value
+# {{"  "*ws}}        service: input_select.select_option
 # {{"  "*ws}}        service_data:
-# {{"  "*ws}}          entity_id: input_number.ui_water_boiler_graph_hours
-# {{"  "*ws}}          value: {{ span }}
+# {{"  "*ws}}          entity_id: input_select.ui_graph_hours
+# {{"  "*ws}}          option: {{ span }}
 # {{"  "*ws}}    {% endfor %}
 {{"  "*ws}}- type: custom:paper-buttons-row
 {{"  "*ws}}  buttons:
 {{"  "*ws}}    {% for label, span in graph_span %}
-{{"  "*ws}}    - name: {{ label }}
+{{"  "*ws}}    - entity: input_select.ui_graph_hours
+{{"  "*ws}}      name: {{ label }}
+{{"  "*ws}}      icon: false
 {{"  "*ws}}      tap_action:
 {{"  "*ws}}        action: call-service
-{{"  "*ws}}        service: input_number.set_value
+{{"  "*ws}}        service: input_select.select_option
 {{"  "*ws}}        service_data:
-{{"  "*ws}}          entity_id: input_number.ui_water_boiler_graph_hours
-{{"  "*ws}}          value: {{ span }}
-# {{"  "*ws}}      state_styles:
-# {{"  "*ws}}        "12":
-# {{"  "*ws}}          name:
-# {{"  "*ws}}            color: blue
+{{"  "*ws}}          entity_id: input_select.ui_graph_hours
+{{"  "*ws}}          option: {{ span }}
+{{"  "*ws}}      state_styles:
+{{"  "*ws}}        "{{ span }}":
+{{"  "*ws}}          name:
+{{"  "*ws}}            background-color: var(--primary-color)
 {{"  "*ws}}    {% endfor %}
 {%- endmacro %}
 
@@ -226,9 +229,9 @@ cards:
 {{ create_graph_span_buttons_ws(2) }}
     - type: 'custom:config-template-card'
       variables:
-        HOURS: states['input_number.ui_water_boiler_graph_hours'].state
+        HOURS: states['input_select.ui_graph_hours'].state
       entities:
-        - input_number.ui_water_boiler_graph_hours
+        - input_select.ui_graph_hours
       card:
         type: history-graph
         entities:
