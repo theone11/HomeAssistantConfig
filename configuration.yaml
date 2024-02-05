@@ -43,6 +43,7 @@ recorder:
       - sensor.sagem_*
       - sensor.seventeentrack_*
       - sensor.accuweather_*
+      - sensor.glances_*
 
 automation: !include automations.yaml
 script: !include scripts.yaml

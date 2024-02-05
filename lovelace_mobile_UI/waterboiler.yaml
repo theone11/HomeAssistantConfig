@@ -162,6 +162,8 @@ cards:
     columns: 1
     square: false
     cards:
+    - type: entity
+      entity: sensor.water_boiler_temperature_in_from_panel
     {% for entity, type, left, top, display_name in boilers %}
     - type: custom:button-card
       entity: switch.{{ entity }}

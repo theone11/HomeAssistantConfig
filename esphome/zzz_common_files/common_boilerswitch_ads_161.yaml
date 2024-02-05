@@ -1,0 +1,37 @@
+substitutions:
+  board: generic-bk7231n-qfn32-tuya
+
+##############################################################
+#   ADS-161 High Power (Boiler) Switch
+##############################################################
+#
+#   * Numbers are GPIO#
+#
+#          |      |            Green LED - 00
+#   ---------------            Blue LED  - ??
+#   Button |  03  |
+#   ---------------
+#   LED    |  14  |
+#   ---------------
+#   Relay  |  04  |
+#
+##############################################################
+
+packages:
+  platform: !include platform_bk72xx.yaml
+
+# Tuya MCU on UART1 (BK72xx example)
+uart:
+  rx_pin: RX1
+  tx_pin: TX1
+  baud_rate: 9600
+
+tuya:
+
+switch:
+  - platform: "tuya"
+    name: "${friendly_name}"
+    id: boiler
+    restore_mode: ALWAYS_OFF
+    icon: "mdi:water-boiler"
+    switch_datapoint: 1

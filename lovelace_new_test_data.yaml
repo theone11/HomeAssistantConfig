@@ -951,6 +951,7 @@ cards:
               entity: timer.{{ entity }}
               layout: full_row
               text_width: "${ SHOW_BAR === 'on' ? '0%' : '100%' }"
+              sync_issues: ignore
             style:
               width: 2%
               left: {{ left }}%
@@ -1101,6 +1102,7 @@ cards:
                         - type: custom:timer-bar-card
                           compressed: true
                           name: Timers
+                          sync_issues: ignore
                           entities:
                             {% for entity in irrigation_valves %}
                             - timer.{{ entity[0] }}
@@ -1311,6 +1313,7 @@ cards:
                         - type: custom:timer-bar-card
                           compressed: true
                           name: Timer
+                          sync_issues: ignore
                           entities:
                             - timer.{{ entity }}
                         - type: history-graph
@@ -1422,6 +1425,7 @@ cards:
               entity: timer.{{ entity }}
               layout: full_row
               text_width: "${ SHOW_BAR === 'on' ? '0%' : '100%' }"
+              sync_issues: ignore
             style:
               width: 2%
               left: {{ left }}%

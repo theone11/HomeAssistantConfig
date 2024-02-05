@@ -1,11 +1,11 @@
 substitutions:
   device_name: boiler-switch
   friendly_name: "Boiler Switch"
+  area: "Hallway"
+  comment: "Boiler Switch based on ADS-161 BK7231n TuyaMCU"
   static_ip: 192.168.1.45
   max_duration_on: 240min # Limit switch ON time
 
-  #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
-
 packages:
   common: !include zzz_common_files/common.yaml
-  family: !include zzz_common_files/common_boilerswitch_wfbs01.yaml
+  family: !include zzz_common_files/common_boilerswitch_ads_161.yaml
