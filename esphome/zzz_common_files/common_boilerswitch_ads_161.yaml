@@ -35,3 +35,12 @@ switch:
     restore_mode: ALWAYS_OFF
     icon: "mdi:water-boiler"
     switch_datapoint: 1
+    on_turn_on:
+    - script.execute: boiler_timer
+
+script:
+  - id: boiler_timer
+    mode: restart     # Restart script when called
+    then:
+      - delay: ${max_duration_on}
+      - switch.turn_off: boiler

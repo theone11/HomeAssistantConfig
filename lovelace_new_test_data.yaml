@@ -273,7 +273,7 @@
                                ("binary_sensor.water_boiler_power_wall_switch_status"    , "on"      , 11,  45, "mdi:water-boiler"           , "none"  ),
                                ("switch.main_bathroom_heater"                            , "on"      , 44 , 66, "mdi:radiator"               , "toggle"),
                                ("switch.master_bathroom_heater"                          , "on"      , 44 , 83, "mdi:radiator"               , "toggle"),
-                               ("lock.nuki_home_door_lock"                               , "unlocked", 69 , 88, "mdi:lock-open"              , "none"  ),
+                               ("lock.nuki_home_door_lock"                               , "unlocked", 69 , 88, "mdi:lock-open"              , "toggle"),
                                ("binary_sensor.nuki_home_door_battery_critical"          , "on"      , 69 , 88, "mdi:battery-alert"          , "none"  ),
                                ("binary_sensor.nuki_home_door_battery_charging"          , "on"      , 69 , 88, "mdi:battery-charging-medium", "none"  )] %}
 

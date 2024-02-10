@@ -85,9 +85,9 @@
       weather_entity: weather.accuweather
       indoortemp: sensor.hallway_temperature
       climate: climate.hvac_upstairs
-      left_button_entity: light.main_bathroom_light_top
+      left_button_entity: switch.main_bathroom_light_nspanel_relay_1
       left_button_name: Ceiling Light
-      right_button_entity: light.main_bathroom_light_bottom
+      right_button_entity: switch.main_bathroom_light_nspanel_relay_2
       right_button_name: Wall Light
       entitypages_enabled: true
       nspanel_name: 62a05de4f818fc17d6faa360e9cfe490
