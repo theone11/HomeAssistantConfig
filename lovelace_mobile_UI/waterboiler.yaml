@@ -35,7 +35,7 @@
 #        S_HVAC  - Start HVAC
 
 {% macro create_schedulers_popup(entity, scheduler_type) -%}
-  {% if (scheduler_type == "S_HVAC") %}
+  {% if (scheduler_type == "S_HVAC") or (scheduler_type == "S_BOILER") %}
   {% set num_schedulers = 4 %}
   {% set schedulers = ['1', '2', '3', '4'] %}
   {% else %}
@@ -54,7 +54,7 @@
           fill_container: true
           tap_action:
             action: toggle
-        {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
+        {% if (scheduler_type == "DSD") or (scheduler_type == "DS") or (scheduler_type == "S_BOILER") %}
         - type: grid
           columns: 7
           square: false
@@ -78,7 +78,7 @@
             embedded: true
             name: inside
             align_controls: right
-        {% if scheduler_type == "DSD" %}
+        {% if (scheduler_type == "DSD") or (scheduler_type == "S_BOILER") %}
         - type: custom:mushroom-number-card
           entity: input_number.{{ entity }}_timer_duration{{ s }}
           icon: 'mdi:timer-outline'
@@ -225,7 +225,7 @@ cards:
     columns: 1
     square: false
     cards:
-    {{ create_schedulers_popup(entity, "DSD") }}
+    {{ create_schedulers_popup(entity, "S_BOILER") }}
   {% endfor %}
 
 {{ create_graph_span_buttons_ws(2) }}

@@ -1,0 +1,67 @@
+#####################################
+########## E N T I T I E S ##########
+#####################################
+
+input_boolean:
+  boiler_switch_scheduler_enable4:
+    name: Enable
+    icon: mdi:power
+  boiler_switch_day_sunday4:
+    name: Sunday
+    icon: mdi:calendar-today
+  boiler_switch_day_monday4:
+    name: Monday
+    icon: mdi:calendar-today
+  boiler_switch_day_tuesday4:
+    name: Tuesday
+    icon: mdi:calendar-today
+  boiler_switch_day_wednesday4:
+    name: Wednesday
+    icon: mdi:calendar-today
+  boiler_switch_day_thursday4:
+    name: Thursday
+    icon: mdi:calendar-today
+  boiler_switch_day_friday4:
+    name: Friday
+    icon: mdi:calendar-today
+  boiler_switch_day_saturday4:
+    name: Saturday
+    icon: mdi:calendar-today
+
+input_datetime:
+  boiler_switch_start_time4:
+    name: Start Time
+    has_date: false
+    has_time: true
+
+input_number:
+  boiler_switch_timer_duration4:
+    name: Duration
+    unit_of_measurement: "min"
+    min: 0
+    max: 180
+    step: 5
+
+###########################################
+########## A U T O M A T I O N S ##########
+###########################################
+
+automation:
+  description: "Water Boiler Scheduler 4"
+  alias: water_boiler_scheduler4
+  use_blueprint:
+    path: blueprint_waterboiler_scheduler.yaml
+    input:
+      start_time: input_datetime.boiler_switch_start_time4
+      scheduler_enable: input_boolean.boiler_switch_scheduler_enable4
+      switch: switch.boiler_switch
+      timer: timer.boiler_switch
+      duration: input_number.boiler_switch_timer_duration4
+      scheduler_number: 4
+
+###################################
+########## S C R I P T S ##########
+###################################
+
+# script:
+#   # ---------------------

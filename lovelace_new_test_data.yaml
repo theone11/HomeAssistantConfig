@@ -409,7 +409,7 @@
 #        S_HVAC  - Start HVAC
 
 {% macro create_schedulers_tab(entity, scheduler_type) -%}
-                      {% if (scheduler_type == "S_HVAC") %}
+                      {% if (scheduler_type == "S_HVAC") or (scheduler_type == "S_BOILER") %}
                       {% set num_schedulers = 4 %}
                       {% set schedulers = ['1', '2', '3', '4'] %}
                       {% else %}
@@ -417,7 +417,11 @@
                       {% set schedulers = ['1', '2'] %}
                       {% endif %}
                       type: grid
+                      {% if (scheduler_type == "S_BOILER") %}
+                      columns: {{ num_schedulers/2 }}
+                      {% else %}
                       columns: {{ num_schedulers }}
+                      {% endif %}
                       square: false
                       cards:
                         {% for s in schedulers %}
@@ -433,7 +437,7 @@
                               tap_action:
                                 action: toggle
                               {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
-                            {% if (scheduler_type == "DSD") or (scheduler_type == "DS") %}
+                            {% if (scheduler_type == "DSD") or (scheduler_type == "DS") or (scheduler_type == "S_BOILER") %}
                             - type: grid
                               columns: 7
                               square: false
@@ -459,7 +463,7 @@
                                 embedded: true
                                 name: inside
                                 align_controls: right
-                            {% if scheduler_type == "DSD" %}
+                            {% if (scheduler_type == "DSD") or (scheduler_type == "S_BOILER") %}
                             - type: custom:mushroom-number-card
                               entity: input_number.{{ entity }}_timer_duration{{ s }}
                               icon: 'mdi:timer-outline'
@@ -1328,7 +1332,7 @@ cards:
                       label: Schedulers
                       icon: mdi:calendar
                     card:
-                      {{ create_schedulers_tab(entity, "DSD") }}
+                      {{ create_schedulers_tab(entity, "S_BOILER") }}
                   - attributes:
                       label: Information
                       icon: mdi:information-outline
