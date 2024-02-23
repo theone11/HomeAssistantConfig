@@ -22,7 +22,7 @@
 {% set background_color_alert = 'rgba(255, 0, 0, 0.2)' %}
 {% set group_scaleX, group_scaleY = 1, 1 %}
 
-{% set scheduler_left_offset, scheduler_top_offset = 1, 1 %}
+{% set scheduler_left_offset, scheduler_top_offset = 2, 2.5 %}
 {% set scheduler_scaleX, scheduler_scaleY = 0.6, 0.6 %}
 
 {% set timer_top_offset = 2.5 %}
@@ -354,6 +354,7 @@
 {% set schedulers = ['1', '2'] %}
 {% endif %}
 {% for s in schedulers %}
+{% set number = s | int %}
       - type: conditional
         conditions:
           - entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
@@ -362,20 +363,10 @@
           - type: icon
             icon: 'mdi:timer-outline'
             style:
-              {% if s == '1' %}
-              left: {{ left + scheduler_left_offset }}%
-              top: {{ top - scheduler_top_offset }}%
-              {% elif s == '2' %}
-              left: {{ left + scheduler_left_offset }}%
-              top: {{ top + scheduler_top_offset }}%
-              {% elif s == '3' %}
               left: {{ left - scheduler_left_offset }}%
-              top: {{ top - scheduler_top_offset }}%
-              {% elif s == '4' %}
-              left: {{ left - scheduler_left_offset }}%
-              top: {{ top + scheduler_top_offset }}%
-              {% endif %}
-              transform: translate(-50%, -50%) scale({{ scheduler_scaleX }}, {{ scheduler_scaleY }})
+              top: {{ (top - scheduler_top_offset) + (scheduler_top_offset)/2*(number-1) }}%
+              color: rgb(128, 128, 128)
+              transform: translate(0%, 0%) scale({{ scheduler_scaleX }}, {{ scheduler_scaleY }})
             {{ disable_tap_hold_double_ws(1, 1, 1, 6) }}
 {% endfor %}
 {%- endmacro %}
@@ -1583,7 +1574,7 @@ cards:
           left: {{ left + 0.1 }}%
           top: {{ top + 0.1 }}%
           color: rgb(128, 128, 128)
-          transform: translate(0%, 0%) scale({{ group_scaleX * 0.7 }}, {{ group_scaleY * 0.7 }})
+          transform: translate(0%, 0%) scale({{ group_scaleX * 0.5 }}, {{ group_scaleY * 0.5 }})
           {{ disable_tap_hold_double_ws(1, 1, 1, 4) }}
 
       - type: state-icon
@@ -1826,30 +1817,34 @@ cards:
                     {% endif %}
                     {% endfor %}
                   {% elif (card_type == "ha_updates") %}
-                    type: markdown
-                    entity_id: {{ entity }}
-                    {% raw %}
-                    content: |
-                      # Home Assistant updates:
-                      {% if states('group.updates') == "on" %}
-                        {% for updates in state_attr('group.updates', 'entity_id') %}
-                          {% if states(updates) == "on" %}
-                        - <img src="{{ state_attr(updates, 'entity_picture') }}" alt="-" width="15"/> **{{ state_attr(updates, 'title') }}** _{{ state_attr(updates, 'installed_version') }}_ -> _{{ state_attr(updates, 'latest_version') }}_
+                    type: grid
+                    columns: 1
+                    square: false
+                    cards:
+                      - type: markdown
+                        entity_id: {{ entity }}
+                        {% raw %}
+                        content: |
+                          # Home Assistant updates:
+                          {% if states('group.updates') == "on" %}
+                            {% for updates in state_attr('group.updates', 'entity_id') %}
+                              {% if states(updates) == "on" %}
+                            - <img src="{{ state_attr(updates, 'entity_picture') }}" alt="-" width="15"/> **{{ state_attr(updates, 'title') }}** _{{ state_attr(updates, 'installed_version') }}_ -> _{{ state_attr(updates, 'latest_version') }}_
+                              {% endif %}
+                            {% endfor %}
+                          {% else %}
+                            - No updates
                           {% endif %}
-                        {% endfor %}
-                      {% else %}
-                        - No updates
-                      {% endif %}
-                      ---
-                      # HACS updates:
-                      {% if states('sensor.hacs') != "0" %}
-                        {% for repo in state_attr('sensor.hacs', 'repositories') %}
-                        - **{{ repo.display_name }}** _{{ repo["installed_version"] }}_ -> _{{ repo["available_version"] }}_
-                        {% endfor %}
-                      {% else %}
-                        - No updates
-                      {% endif %}
-                    {% endraw %}
+                          ---
+                          # HACS updates:
+                          {% if states('sensor.hacs') != "0" %}
+                            {% for repo in state_attr('sensor.hacs', 'repositories') %}
+                            - **{{ repo.display_name }}** _{{ repo["installed_version"] }}_ -> _{{ repo["available_version"] }}_
+                            {% endfor %}
+                          {% else %}
+                            - No updates
+                          {% endif %}
+                        {% endraw %}
                   {% else %}
                     type: markdown
                     content: "**Card type not defined**"
