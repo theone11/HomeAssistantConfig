@@ -1,89 +1,92 @@
 - alias: HA Update Available Notification
   trigger:
-  - platform: state
-    entity_id: binary_sensor.updater
-    from: 'off'
-    to: 'on'
+    - platform: state
+      entity_id: binary_sensor.updater
+      from: "off"
+      to: "on"
   action:
-  - service: notify.email
-    data:
-      title: Home Assistant
-      message: Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version')
-        }} is available.
+    - service: notify.email
+      data:
+        title: Home Assistant
+        message:
+          Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version')
+          }} is available.
   id: 170bb545f0e24bdd90914949877340a6
 - alias: HACS Update Available Notification
   trigger:
     platform: state
     entity_id: sensor.hacs
   condition:
-  - condition: template
-    value_template: '{{ has_value(trigger.entity_id) }}'
-  - condition: template
-    value_template: '{{ (states(trigger.entity_id) | float) != 0}}'
+    - condition: template
+      value_template: "{{ has_value(trigger.entity_id) }}"
+    - condition: template
+      value_template: "{{ (states(trigger.entity_id) | float) != 0}}"
   action:
     service: notify.email
     data:
       title: Home Assistant - Updates pending in HACS
-      message: "{% for repo in state_attr(trigger.entity_id, 'repositories') %}\n
+      message:
+        "{% for repo in state_attr(trigger.entity_id, 'repositories') %}\n
         \ **{{ repo.display_name }}** _{{ repo[\"installed_version\"] }}_ -> _{{ repo[\"available_version\"]
         }}_\n{% endfor %}"
   id: f6428fedd66a41d089476fadf4e06e89
 - alias: Roof Lights in sync with Roof Trapdoor OPEN
   trigger:
-  - platform: state
-    entity_id: cover.roof_trap_door
-    to: open
-  - platform: state
-    entity_id: cover.roof_trap_door
-    to: opening
+    - platform: state
+      entity_id: cover.roof_trap_door
+      to: open
+    - platform: state
+      entity_id: cover.roof_trap_door
+      to: opening
   condition: []
   action:
-  - service: light.turn_on
-    entity_id: light.roof_light_bottom
-  - service: light.turn_on
-    entity_id: light.roof_light_top
+    - service: light.turn_on
+      entity_id: light.roof_light_bottom
+    - service: light.turn_on
+      entity_id: light.roof_light_top
   id: 017f60047bb14564b5fb86529ceee472
 - alias: Roof Lights in sync with Roof Trapdoor CLOSE
   trigger:
-  - platform: state
-    entity_id: cover.roof_trap_door
-    to: closed
-  - platform: state
-    entity_id: cover.roof_trap_door
-    to: closing
+    - platform: state
+      entity_id: cover.roof_trap_door
+      to: closed
+    - platform: state
+      entity_id: cover.roof_trap_door
+      to: closing
   condition: []
   action:
-  - service: light.turn_off
-    entity_id: light.roof_light_bottom
-  - service: light.turn_off
-    entity_id: light.roof_light_top
-  - service: switch.turn_off
-    entity_id: switch.roof_right_table_power_relay
+    - service: light.turn_off
+      entity_id: light.roof_light_bottom
+    - service: light.turn_off
+      entity_id: light.roof_light_top
+    - service: switch.turn_off
+      entity_id: switch.roof_right_table_power_relay
   id: b9266f900ff54e1f943713d1a30763fe
 - alias: Refresh all webUI instances
   trigger:
-  - platform: time
-    at: 05:00:00
+    - platform: time
+      at: 05:00:00
   condition: []
   action:
-  - service: browser_mod.refresh
-    data:
-      browser_id:
-      - fc8b96e1-6a34f15b
-      - b994c6fd-fa5e732a
-      - 879d54bd-bbfea94e
-      - 9eced174-13cf35ca
-      - 9a54c5db-b6bde9d8
-      - 1806f035-f31ffdab
-      - 99f1f096-c61e0a50
-      - a24b7fb2-a078b9bb
-      - f6d2de8f-bfd2e5bc
-      - ab392fbe-98d9358d
-      - fd04560b-8bead281
+    - service: browser_mod.refresh
+      data:
+        browser_id:
+          - fc8b96e1-6a34f15b
+          - b994c6fd-fa5e732a
+          - 879d54bd-bbfea94e
+          - 9eced174-13cf35ca
+          - 9a54c5db-b6bde9d8
+          - 1806f035-f31ffdab
+          - 99f1f096-c61e0a50
+          - a24b7fb2-a078b9bb
+          - f6d2de8f-bfd2e5bc
+          - ab392fbe-98d9358d
+          - fd04560b-8bead281
+          - dfec06d4-f896d1df
   id: 4a12282a754a455bb4bcc1c81c89ae23
-- id: '1706889626932'
+- id: "1706889626932"
   alias: Main Bathroom Light NSPanel Configuration
-  description: ''
+  description: ""
   use_blueprint:
     path: Blackymas/nspanel_blueprint.yaml
     input:
@@ -100,7 +103,7 @@
       chip01: binary_sensor.water_boiler_power_pump_controller_status
       relay_1_local_fallback: true
       relay_2_local_fallback: true
-      climate_button08_icon: ''
+      climate_button08_icon: ""
       chip02: binary_sensor.water_boiler_power_wall_switch_status
       chip02_icon: mdi:water-boiler
       chip01_icon: mdi:pump
@@ -113,7 +116,7 @@
       entities_entity02: sensor.water_boiler_temperature_panel_out
       entities_entity03: sensor.water_boiler_temperature_out_to_panel
       entity_page01_label: Water Boiler Temperatures
-      entities_entity01_icon: ''
+      entities_entity01_icon: ""
       entities_entity02_name: Panel out
       entities_entity03_name: Out to panel
       entities_entity01_name: In from panel
@@ -124,10 +127,10 @@
       chip07_inverted: false
       chip07_icon: mdi:lock-open
       chip07_icon_color:
-      - 255
-      - 0
-      - 0
+        - 255
+        - 0
+        - 0
       chip02_icon_color:
-      - 255
-      - 0
-      - 0
+        - 255
+        - 0
+        - 0

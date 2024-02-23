@@ -9,3 +9,14 @@ substitutions:
 packages:
   common: !include zzz_common_files/common.yaml
   family: !include zzz_common_files/common_boilerswitch_ads_161.yaml
+
+time:
+  - platform: sntp
+    # ...
+    on_time:
+      # Every day @ 04:00
+      - seconds: 0
+        minutes: 0
+        hours: 04
+        then:
+          - switch.turn_on: restart_device

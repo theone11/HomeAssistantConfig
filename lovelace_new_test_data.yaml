@@ -348,7 +348,7 @@
 #########################################################
 
 {% macro create_schedulers_icons(entity, left, top) -%}
-{% if (entity == "hvac_upstairs") or (entity == "hvac_downstairs") %}
+{% if (entity == "hvac_upstairs") or (entity == "hvac_downstairs") or (entity == "boiler_switch") %}
 {% set schedulers = ['1', '2', '3', '4'] %}
 {% else %}
 {% set schedulers = ['1', '2'] %}
@@ -1251,7 +1251,7 @@ cards:
             data:
               browser_id: THIS
               style: |
-                --popup-min-width: 30vw;
+                --popup-min-width: 40vw;
                 --popup-max-width: 30vw;
                 --popup-border-color: {{ popup_border_color }};
                 --popup-background-color: {{ popup_background_color }};
