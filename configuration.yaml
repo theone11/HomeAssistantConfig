@@ -144,7 +144,7 @@ sensor:
       update_available:
         icon_template: mdi:cloud-download
         value_template: >
-          {% if (is_state('group.updates', 'on') or (states('sensor.hacs') > "0")) %}
+          {% if (is_state('group.updates', 'on')) %}
             {{ 1 }}
           {% else %}
             {{ 0 }}
@@ -219,15 +219,55 @@ group:
   updates:
     name: "Updates"
     entities:
+      - update.amoled_blue_update
+      - update.atomic_calendar_revive_update
+      - update.browser_control_card_update
+      - update.browser_mod_update
+      - update.button_card_update
+      - update.city_mind_water_meter_update
+      - update.clock_weather_card_update
+      - update.config_template_card_update
+      - update.digital_clock_update
+      - update.esphome_update
+      - update.google_theme_based_on_the_android_light_and_dark_interface_update
+      - update.hacs_update
       - update.home_assistant_core_update
       - update.home_assistant_operating_system_update
       - update.home_assistant_supervisor_update
-      - update.esphome_update
-      - update.check_home_assistant_configuration_update
+      - update.home_assistant_swipe_navigation_update
+      - update.hourly_weather_card_update
+      - update.huawei_mesh_router_update
+      - update.ios_theme_based_on_the_system_wide_light_and_dark_mode_ui_update
+      - update.israel_meteorological_service_sensor_update
+      - update.kiosk_mode_update
+      - update.local_tuya_update
+      - update.lovelace_card_templater_update
+      - update.lovelace_gen_update
+      - update.metrology_metro_fluent_windows_themes_by_mmak_es_update
+      - update.mini_graph_card_update
+      - update.mini_media_player_update
+      - update.multiple_entity_row_update
+      - update.mushroom_update
+      - update.nuki_lock_update
+      - update.openwakeword_update
+      - update.paper_buttons_row_update
+      - update.piper_update
+      - update.plan_coordinates_update
+      - update.plotly_graph_card_update
       - update.samba_backup_update
       - update.samba_share_update
+      - update.scheduler_component_update
+      - update.shutter_card_update
+      - update.simple_thermostat_update
+      - update.slider_entity_row_update
+      - update.smartir_update
       - update.studio_code_server_update
+      - update.tabbed_card_update
       - update.terminal_ssh_update
-      - update.piper_update
+      - update.time_picker_card_update
+      - update.timer_bar_card_update
+      - update.vertical_slider_cover_card_update
+      - update.weather_card_update
       - update.whisper_update
-      - update.openwakeword_update
+      - update.xiaomi_cloud_map_extractor_update
+      - update.xiaomi_vacuum_map_card_update

@@ -261,6 +261,60 @@
                           ("livingroom_corner_sensor_battery", "room", 71.5, 47  ),
                           ("kitchen_sensor_battery"          , "room", 59  , 76  )] %}
 
+#                   entity                                 , category, type
+{% set updates = [("amoled_blue_update"                         , "HACS" , "theme"       ),
+                  ("atomic_calendar_revive_update"              , "HACS" , "plugin"      ),
+                  ("browser_control_card_update"                , "HACS" , "plugin"      ),
+                  ("browser_mod_update"                         , "HACS" , "integration" ),
+                  ("button_card_update"                         , "HACS" , "plugin"      ),
+                  ("city_mind_water_meter_update"               , "HACS" , "integration" ),
+                  ("clock_weather_card_update"                  , "HACS" , "plugin"      ),
+                  ("config_template_card_update"                , "HACS" , "plugin"      ),
+                  ("digital_clock_update"                       , "HACS" , "plugin"      ),
+                  ("esphome_update"                             , "HA"   , "addon"       ),
+                  ("google_theme_based_on_the_android_light_and_dark_interface_update" , "HACS" , "theme" ),
+                  ("hacs_update"                                , "HA"   , "integration" ),
+                  ("home_assistant_core_update"                 , "HA"   , "core" ),
+                  ("home_assistant_operating_system_update"     , "HA"   , "core" ),
+                  ("home_assistant_supervisor_update"           , "HA"   , "core" ),
+                  ("home_assistant_swipe_navigation_update"     , "HACS" , "plugin" ),
+                  ("hourly_weather_card_update"                 , "HACS" , "plugin" ),
+                  ("huawei_mesh_router_update"                  , "HACS" , "integration" ),
+                  ("ios_theme_based_on_the_system_wide_light_and_dark_mode_ui_update", "HACS", "theme" ),
+                  ("israel_meteorological_service_sensor_update", "HACS" , "integration" ),
+                  ("kiosk_mode_update"                          , "HACS" , "plugin" ),
+                  ("local_tuya_update"                          , "HACS" , "integration" ),
+                  ("lovelace_card_templater_update"             , "HACS" , "plugin" ),
+                  ("lovelace_gen_update"                        , "HACS" , "integration" ),
+                  ("metrology_metro_fluent_windows_themes_by_mmak_es_update" , "HACS", "theme" ),
+                  ("mini_graph_card_update"                     , "HACS" , "plugin" ),
+                  ("mini_media_player_update"                   , "HACS" , "plugin" ),
+                  ("multiple_entity_row_update"                 , "HACS" , "plugin" ),
+                  ("mushroom_update"                            , "HACS" , "plugin" ),
+                  ("nuki_lock_update"                           , "HACS" , "integration"),
+                  ("openwakeword_update"                        , "HA"   , "addon" ),
+                  ("paper_buttons_row_update"                   , "HACS" , "plugin" ),
+                  ("piper_update"                               , "HA"   , "addon" ),
+                  ("plan_coordinates_update"                    , "HACS" , "plugin" ),
+                  ("plotly_graph_card_update"                   , "HACS" , "plugin" ),
+                  ("samba_backup_update"                        , "HA"   , "addon" ),
+                  ("samba_share_update"                         , "HA"   , "addon" ),
+                  ("scheduler_component_update"                 , "HACS" , "integration" ),
+                  ("shutter_card_update"                        , "HACS" , "plugin" ),
+                  ("simple_thermostat_update"                   , "HACS" , "plugin" ),
+                  ("slider_entity_row_update"                   , "HACS" , "plugin" ),
+                  ("smartir_update"                             , "HACS" , "integration" ),
+                  ("studio_code_server_update"                  , "HA"   , "addon" ),
+                  ("tabbed_card_update"                         , "HACS" , "plugin" ),
+                  ("terminal_ssh_update"                        , "HA"   , "addon" ),
+                  ("time_picker_card_update"                    , "HACS" , "plugin" ),
+                  ("timer_bar_card_update"                      , "HACS" , "plugin" ),
+                  ("vertical_slider_cover_card_update"          , "HACS" , "plugin"),
+                  ("weather_card_update"                        , "HACS" , "plugin"      ),
+                  ("whisper_update"                             , "HA"   , "addon"       ),
+                  ("xiaomi_cloud_map_extractor_update"          , "HACS" , "integration" ),
+                  ("xiaomi_vacuum_map_card_update"              , "HACS" , "plugin"      )] %}
+
 #--------------------------------------------------------------------------------------------------
 # Conditional Entities
 #  - Will only be displayed if condition "state" active
@@ -1821,30 +1875,31 @@ cards:
                     columns: 1
                     square: false
                     cards:
-                      - type: markdown
-                        entity_id: {{ entity }}
-                        {% raw %}
-                        content: |
-                          # Home Assistant updates:
-                          {% if states('group.updates') == "on" %}
-                            {% for updates in state_attr('group.updates', 'entity_id') %}
-                              {% if states(updates) == "on" %}
-                            - <img src="{{ state_attr(updates, 'entity_picture') }}" alt="-" width="15"/> **{{ state_attr(updates, 'title') }}** _{{ state_attr(updates, 'installed_version') }}_ -> _{{ state_attr(updates, 'latest_version') }}_
+                      - type: grid
+                        columns: 3
+                        square: false
+                        cards:
+                          {% for entity, category, type in updates %}
+                          {% if category == "HA" or category == "HACS" %}
+                          - type: conditional
+                            conditions:
+                              - condition: state
+                                entity: update.{{ entity }}
+                                state: 'on'
+                            card:
+                              type: custom:mushroom-update-card
+                              entity: update.{{ entity }}
+                              {% if category == "HA" %}
+                              icon: mdi:home-assistant
+                              {% elif category == "HACS" %}
+                              icon: hacs:hacs
                               {% endif %}
-                            {% endfor %}
-                          {% else %}
-                            - No updates
+                              layout: vertical
+                              secondary_info: state
+                              show_buttons_control: true
+                              collapsible_controls: true
                           {% endif %}
-                          ---
-                          # HACS updates:
-                          {% if states('sensor.hacs') != "0" %}
-                            {% for repo in state_attr('sensor.hacs', 'repositories') %}
-                            - **{{ repo.display_name }}** _{{ repo["installed_version"] }}_ -> _{{ repo["available_version"] }}_
-                            {% endfor %}
-                          {% else %}
-                            - No updates
-                          {% endif %}
-                        {% endraw %}
+                          {% endfor %}
                   {% else %}
                     type: markdown
                     content: "**Card type not defined**"

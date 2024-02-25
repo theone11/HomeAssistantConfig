@@ -12,24 +12,6 @@
           Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version')
           }} is available.
   id: 170bb545f0e24bdd90914949877340a6
-- alias: HACS Update Available Notification
-  trigger:
-    platform: state
-    entity_id: sensor.hacs
-  condition:
-    - condition: template
-      value_template: "{{ has_value(trigger.entity_id) }}"
-    - condition: template
-      value_template: "{{ (states(trigger.entity_id) | float) != 0}}"
-  action:
-    service: notify.email
-    data:
-      title: Home Assistant - Updates pending in HACS
-      message:
-        "{% for repo in state_attr(trigger.entity_id, 'repositories') %}\n
-        \ **{{ repo.display_name }}** _{{ repo[\"installed_version\"] }}_ -> _{{ repo[\"available_version\"]
-        }}_\n{% endfor %}"
-  id: f6428fedd66a41d089476fadf4e06e89
 - alias: Roof Lights in sync with Roof Trapdoor OPEN
   trigger:
     - platform: state
