@@ -162,10 +162,10 @@
 {% set statusbar_left_offset = -1.5 %}
 {% set statusbar_scaleX, statusbar_scaleY = 0.8, 0.8 %}
 
-#                           number,        entity                            , state_t_f, state,      icon,             card_type
-{% set statusbar_entities = [("1", "sensor.update_available"                 , "t", "1",  "mdi:cloud-download", "ha_updates"),
-                             ("2", "sensor.mfc_j470dw_ink_low"               , "f", "0" , "mdi:printer-alert" , "entities"),
-                             ("3", "sensor.water_consumption_limit_exceeded" , "f", "0" , "mdi:water-alert"   , "history-graph")] %}
+#                           number,        entity                            , state_t_f, state,   icon,        , card_type      , popup_title
+{% set statusbar_entities = [("1", "sensor.update_available"                 , "t", "1",  "mdi:cloud-download", "ha_updates"   , "Available Updates" ),
+                             ("2", "sensor.mfc_j470dw_ink_low"               , "f", "0" , "mdi:printer-alert" , "entities"     , "Ink Status"        ),
+                             ("3", "sensor.water_consumption_limit_exceeded" , "f", "0" , "mdi:water-alert"   , "history-graph", "Water Consumption" )] %}
 
 {% set statusbar_details = [("2", "sensor.mfc_j470dw_black_ink_remaining"),
                             ("2", "sensor.mfc_j470dw_cyan_ink_remaining"),
@@ -1824,7 +1824,7 @@ cards:
  ######     ##    ##     ##    ##     #######   ######        ########  ##     ## ##     ## 
 # STATUS BAR
 
-      {% for number, entity, state_t_f, state, icon, card_type in statusbar_entities %}
+      {% for number, entity, state_t_f, state, icon, card_type, popup_title in statusbar_entities %}
       - type: conditional
         conditions:
           - entity: {{ entity }}
@@ -1851,7 +1851,7 @@ cards:
                     --popup-max-width: 50vw;
                     --popup-border-color: {{ popup_border_color }};
                     --popup-background-color: {{ popup_background_color }};
-                  title: Details
+                  title: {{ popup_title }}
                   content:
                   {% if (card_type == "entities") %}
                     type: entities
