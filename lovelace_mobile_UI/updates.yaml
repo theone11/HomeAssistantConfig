@@ -59,27 +59,27 @@ path: updates
 icon: 'mdi:update'
 badges: []
 cards:
-  type: grid
-  columns: 1
-  square: false
-  cards:
-    {% for entity, category, type in updates %}
-    - type: conditional
-      conditions:
-        - condition: state
+  - type: grid
+    columns: 1
+    square: false
+    cards:
+      {% for entity, category, type in updates %}
+      - type: conditional
+        conditions:
+          - condition: state
+            entity: update.{{ entity }}
+            state: 'on'
+        card:
+          type: custom:mushroom-update-card
           entity: update.{{ entity }}
-          state: 'on'
-      card:
-        type: custom:mushroom-update-card
-        entity: update.{{ entity }}
-        {% if category == "HA" %}
-        icon: mdi:home-assistant
-        {% elif category == "HACS" %}
-        icon: hacs:hacs
-        {% endif %}
-        layout: vertical
-        secondary_info: state
-        icon_type: entity-picture
-        show_buttons_control: true
-        collapsible_controls: true
-    {% endfor %}
+          {% if category == "HA" %}
+          icon: mdi:home-assistant
+          {% elif category == "HACS" %}
+          icon: hacs:hacs
+          {% endif %}
+          layout: vertical
+          secondary_info: state
+          icon_type: entity-picture
+          show_buttons_control: true
+          collapsible_controls: true
+      {% endfor %}
