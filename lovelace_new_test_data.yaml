@@ -261,7 +261,7 @@
                           ("livingroom_corner_sensor_battery", "room", 71.5, 47  ),
                           ("kitchen_sensor_battery"          , "room", 59  , 76  )] %}
 
-#                   entity                                 , category, type
+#                   entity                                      , category, type
 {% set updates = [("amoled_blue_update"                         , "HACS" , "theme"       ),
                   ("atomic_calendar_revive_update"              , "HACS" , "plugin"      ),
                   ("browser_control_card_update"                , "HACS" , "plugin"      ),
@@ -1880,7 +1880,6 @@ cards:
                         square: false
                         cards:
                           {% for entity, category, type in updates %}
-                          {% if category == "HA" or category == "HACS" %}
                           - type: conditional
                             conditions:
                               - condition: state
@@ -1896,9 +1895,9 @@ cards:
                               {% endif %}
                               layout: vertical
                               secondary_info: state
+                              icon_type: entity-picture
                               show_buttons_control: true
                               collapsible_controls: true
-                          {% endif %}
                           {% endfor %}
                   {% else %}
                     type: markdown
