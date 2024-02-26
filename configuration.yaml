@@ -141,14 +141,8 @@ sensor:
 
   - platform: template
     sensors:
-      update_available:
-        icon_template: mdi:cloud-download
-        value_template: >
-          {% if (is_state('group.updates', 'on')) %}
-            {{ 1 }}
-          {% else %}
-            {{ 0 }}
-          {% endif %}
+      number_update_available:
+        value_template: "{{ states.update | rejectattr('attributes.device_class','equalto','firmware') | selectattr('state','equalto','on') | list | count }}"
 
 # Text to speech
 tts:

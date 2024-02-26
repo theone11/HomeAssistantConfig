@@ -1,17 +1,3 @@
-- alias: HA Update Available Notification
-  trigger:
-    - platform: state
-      entity_id: binary_sensor.updater
-      from: "off"
-      to: "on"
-  action:
-    - service: notify.email
-      data:
-        title: Home Assistant
-        message:
-          Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version')
-          }} is available.
-  id: 170bb545f0e24bdd90914949877340a6
 - alias: Roof Lights in sync with Roof Trapdoor OPEN
   trigger:
     - platform: state
