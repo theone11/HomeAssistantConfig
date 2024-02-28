@@ -519,7 +519,7 @@
                             {% if (scheduler_type == "S_HVAC") %}
                             - type: thermostat
                               entity: climate.{{ entity }}_virtual{{ s }}
-                              name: Virtual {{ s }}
+                              name: " " #Virtual {{ s }}
                               features:
                                 - type: climate-hvac-modes
                                   style: icons
