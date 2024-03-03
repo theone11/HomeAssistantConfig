@@ -6,6 +6,8 @@ substitutions:
   static_ip: 192.168.1.50
   esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
   hide_restart_switch: "FALSE" # "TRUE" / "FALSE"
+  comment: "DIY modules based on Wemos D1 Mini"
+  area: "Roof"
   
   #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
 

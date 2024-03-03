@@ -13,5 +13,5 @@ api:
 
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+  ssid: !secret WIFI_SSID_1
+  password: !secret WIFI_Password_1

@@ -5,10 +5,13 @@ substitutions:
   friendly_name: "Kitchen Light Klapa"
   static_ip: 192.168.1.48
   esp8266_restore_from_flash: "FALSE" # "TRUE" / "FALSE" !!! Make sure that all switches, lights, fans, globals, etc... are set to ALWAYS_ON/OFF to minimize flash write cycles
-  
+  comment: "DIY modules based on Wemos D1 Mini"
+  area: "Kitchen"
+
   #MQTT_broker_topic_prefix: myhome/test # myhome/<Floor>/<Room>/<Function>/<Location>
 
 packages:
+  platform: !include zzz_common_files/platform_esp8266.yaml
   common: !include zzz_common_files/common.yaml
 
 ##############################################################
@@ -26,9 +29,7 @@ status_led:
     number: GPIO02
     inverted: True
 
-
 binary_sensor:
-
   - platform: gpio
     id: button
     internal: TRUE
@@ -52,17 +53,13 @@ binary_sensor:
     #   then:
     #     - switch.turn_on: restart_device
 
-
 output:
-
   - platform: gpio
     pin: GPIO05
     inverted: false
     id: relay
 
-
 light:
-
   - platform: binary
     id: light_output
     name: "${friendly_name}"
