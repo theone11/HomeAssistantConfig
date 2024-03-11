@@ -2083,6 +2083,73 @@ cards:
                     refresh_interval: 10
         {{ disable_tap_hold_double_ws(0, 1, 1, 4) }}
 
+
+######## ##       ########  ######  ######## ########  ####  ######  #### ######## ##    ## 
+##       ##       ##       ##    ##    ##    ##     ##  ##  ##    ##  ##     ##     ##  ##  
+##       ##       ##       ##          ##    ##     ##  ##  ##        ##     ##      ####   
+######   ##       ######   ##          ##    ########   ##  ##        ##     ##       ##    
+##       ##       ##       ##          ##    ##   ##    ##  ##        ##     ##       ##    
+##       ##       ##       ##    ##    ##    ##    ##   ##  ##    ##  ##     ##       ##    
+######## ######## ########  ######     ##    ##     ## ####  ######  ####    ##       ##    
+# ELECTRICITY
+
+      - type: state-icon
+        entity: sensor.iec_latest_meter_reading
+        icon: mdi:flash
+        style:
+          background-color: {{ background_color }}
+          border-radius: {{ border_radius }}%
+          left: 5.5%
+          top: 86%
+          transform: translate(-50%, -50%) scale({{ group_scaleX }}, {{ group_scaleY }})
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            service: browser_mod.popup
+            data:
+              browser_id: THIS
+              style: |
+                --popup-min-width: 40vw;
+                --popup-max-width: 40vw;
+                --popup-border-color: {{ popup_border_color }};
+                --popup-background-color: {{ popup_background_color }};
+              title: Electricity Consumption
+              content:
+                type: grid
+                columns: 1
+                square: false
+                cards:
+                  - type: grid
+                    columns: 3
+                    square: false
+                    cards:
+                      - type: tile
+                        entity: sensor.iec_kwh_tariff
+                      - type: tile
+                        entity: sensor.iec_yesterday_electric_consumption
+                      - type: tile
+                        entity: sensor.last_iec_bill_date
+                      - type: tile
+                        entity: sensor.last_iec_bill_electric_cost
+                      - type: tile
+                        entity: sensor.last_iec_bill_length_in_days
+                  - type: history-graph
+                    entities:
+                      - entity: sensor.iec_today_electric_consumption
+                      - entity: sensor.next_bill_electric_forecasted_usage
+                    #hours_to_show: 12
+                  - type: history-graph
+                    entities:
+                      - entity: sensor.iec_this_month_electric_consumption
+                      - entity: sensor.iec_latest_meter_reading
+                      - entity: sensor.last_iec_bill_electric_usage_to_date
+                      - entity: sensor.last_iec_bill_meter_reading
+                      - entity: sensor.next_bill_electric_forecasted_cost
+                    #hours_to_show: 12
+                    refresh_interval: 10
+        {{ disable_tap_hold_double_ws(0, 1, 1, 4) }}
+
+
    ###     ######  ######## ####  #######  ##    ##  ######  
   ## ##   ##    ##    ##     ##  ##     ## ###   ## ##    ## 
  ##   ##  ##          ##     ##  ##     ## ####  ## ##       
