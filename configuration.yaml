@@ -232,6 +232,7 @@ group:
       - update.hourly_weather_card_update
       - update.huawei_mesh_router_update
       - update.ios_theme_based_on_the_system_wide_light_and_dark_mode_ui_update
+      - update.israel_electric_corporation_iec_update
       - update.israel_meteorological_service_sensor_update
       - update.kiosk_mode_update
       - update.local_tuya_update

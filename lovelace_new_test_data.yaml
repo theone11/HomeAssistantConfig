@@ -281,6 +281,7 @@
                   ("hourly_weather_card_update"                 , "HACS" , "plugin" ),
                   ("huawei_mesh_router_update"                  , "HACS" , "integration" ),
                   ("ios_theme_based_on_the_system_wide_light_and_dark_mode_ui_update", "HACS", "theme" ),
+                  ("israel_electric_corporation_iec_update"     , "HACS" , "integration" ),
                   ("israel_meteorological_service_sensor_update", "HACS" , "integration" ),
                   ("kiosk_mode_update"                          , "HACS" , "plugin" ),
                   ("local_tuya_update"                          , "HACS" , "integration" ),
@@ -2061,7 +2062,7 @@ cards:
               title: Water Consumption
               content:
                 type: grid
-                columns: 1
+                columns: 2
                 square: false
                 cards:
                   - type: history-graph
@@ -2133,20 +2134,24 @@ cards:
                         entity: sensor.last_iec_bill_electric_cost
                       - type: tile
                         entity: sensor.last_iec_bill_length_in_days
-                  - type: history-graph
-                    entities:
-                      - entity: sensor.iec_today_electric_consumption
-                      - entity: sensor.next_bill_electric_forecasted_usage
-                    #hours_to_show: 12
-                  - type: history-graph
-                    entities:
-                      - entity: sensor.iec_this_month_electric_consumption
-                      - entity: sensor.iec_latest_meter_reading
-                      - entity: sensor.last_iec_bill_electric_usage_to_date
-                      - entity: sensor.last_iec_bill_meter_reading
-                      - entity: sensor.next_bill_electric_forecasted_cost
-                    #hours_to_show: 12
-                    refresh_interval: 10
+                  - type: grid
+                    columns: 2
+                    square: false
+                    cards:
+                      - type: history-graph
+                        entities:
+                          - entity: sensor.iec_today_electric_consumption
+                          - entity: sensor.next_bill_electric_forecasted_usage
+                        #hours_to_show: 12
+                      - type: history-graph
+                        entities:
+                          - entity: sensor.iec_this_month_electric_consumption
+                          - entity: sensor.iec_latest_meter_reading
+                          - entity: sensor.last_iec_bill_electric_usage_to_date
+                          - entity: sensor.last_iec_bill_meter_reading
+                          - entity: sensor.next_bill_electric_forecasted_cost
+                        #hours_to_show: 12
+                        refresh_interval: 10
         {{ disable_tap_hold_double_ws(0, 1, 1, 4) }}
 
 

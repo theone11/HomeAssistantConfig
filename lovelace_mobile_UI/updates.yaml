@@ -20,6 +20,7 @@
                   ("hourly_weather_card_update"                 , "HACS" , "plugin" ),
                   ("huawei_mesh_router_update"                  , "HACS" , "integration" ),
                   ("ios_theme_based_on_the_system_wide_light_and_dark_mode_ui_update", "HACS", "theme" ),
+                  ("israel_electric_corporation_iec_update"     , "HACS" , "integration" ),
                   ("israel_meteorological_service_sensor_update", "HACS" , "integration" ),
                   ("kiosk_mode_update"                          , "HACS" , "plugin" ),
                   ("local_tuya_update"                          , "HACS" , "integration" ),
