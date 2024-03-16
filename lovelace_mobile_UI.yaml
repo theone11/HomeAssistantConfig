@@ -16,4 +16,5 @@ views:
   - !include lovelace_mobile_UI/vacuum.yaml
   - !include lovelace_mobile_UI/waterboiler.yaml
   - !include lovelace_mobile_UI/water_consumption.yaml
+  - !include lovelace_mobile_UI/electricity_consumption.yaml
   - !include lovelace_mobile_UI/updates.yaml

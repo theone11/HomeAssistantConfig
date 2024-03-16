@@ -1059,22 +1059,33 @@ cards:
                       icon: mdi:power
                     card:
                       type: grid
-                      columns: {{ irrigation_valves | count }}
+                      columns: 1
                       square: false
                       cards:
-                        {% for entity in irrigation_valves %}
-                        # - type: button
-                        #   entity: input_boolean.{{ entity[0] }}
-                        #   show_name: true
-                        - type: custom:mushroom-entity-card
-                          entity: switch.{{ entity[0] }}
-                          secondary_info: none
-                          layout: vertical
-                          fill_container: true
-                          tap_action:
-                            action: toggle
-                          {{ disable_tap_hold_double_ws(0, 1, 1, 13) }}
-                        {% endfor %}
+                        - type: grid
+                          columns: {{ irrigation_valves | count }}
+                          square: false
+                          cards:
+                            {% for entity in irrigation_valves %}
+                            # - type: button
+                            #   entity: input_boolean.{{ entity[0] }}
+                            #   show_name: true
+                            - type: custom:mushroom-entity-card
+                              entity: switch.{{ entity[0] }}
+                              secondary_info: none
+                              layout: vertical
+                              fill_container: true
+                              tap_action:
+                                action: toggle
+                              {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
+                            {% endfor %}
+                        - type: history-graph
+                          title: History
+                          hours_to_show: 72
+                          entities:
+                            {% for entity in irrigation_valves %}
+                            - entity: switch.{{ entity[0] }}
+                            {% endfor %}
                   - attributes:
                       label: One Time Cycle Control
                       icon: mdi:power

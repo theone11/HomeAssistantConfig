@@ -1,0 +1,43 @@
+# lovelace_gen
+
+title: Electricity Consumption
+path: electricity_consumption
+icon: 'mdi:flash'
+badges: []
+cards:
+  - type: grid
+    columns: 1
+    square: false
+    cards:
+      - type: grid
+        columns: 3
+        square: false
+        cards:
+          - type: tile
+            entity: sensor.iec_kwh_tariff
+          - type: tile
+            entity: sensor.iec_yesterday_electric_consumption
+          - type: tile
+            entity: sensor.last_iec_bill_date
+          - type: tile
+            entity: sensor.last_iec_bill_electric_cost
+          - type: tile
+            entity: sensor.last_iec_bill_length_in_days
+      - type: grid
+        columns: 2
+        square: false
+        cards:
+          - type: history-graph
+            entities:
+              - entity: sensor.iec_today_electric_consumption
+              - entity: sensor.next_bill_electric_forecasted_usage
+            #hours_to_show: 12
+          - type: history-graph
+            entities:
+              - entity: sensor.iec_this_month_electric_consumption
+              - entity: sensor.iec_latest_meter_reading
+              - entity: sensor.last_iec_bill_electric_usage_to_date
+              - entity: sensor.last_iec_bill_meter_reading
+              - entity: sensor.next_bill_electric_forecasted_cost
+            #hours_to_show: 12
+            refresh_interval: 10
