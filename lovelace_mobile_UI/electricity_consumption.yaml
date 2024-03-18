@@ -23,6 +23,8 @@ cards:
             entity: sensor.last_iec_bill_electric_cost
           - type: tile
             entity: sensor.last_iec_bill_length_in_days
+          - type: tile
+            entity: sensor.next_bill_electric_forecasted_cost
       - type: grid
         columns: 2
         square: false
@@ -38,6 +40,5 @@ cards:
               - entity: sensor.iec_latest_meter_reading
               - entity: sensor.last_iec_bill_electric_usage_to_date
               - entity: sensor.last_iec_bill_meter_reading
-              - entity: sensor.next_bill_electric_forecasted_cost
             #hours_to_show: 12
             refresh_interval: 10

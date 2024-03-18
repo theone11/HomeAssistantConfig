@@ -30,28 +30,28 @@
     - service: switch.turn_off
       entity_id: switch.roof_right_table_power_relay
   id: b9266f900ff54e1f943713d1a30763fe
-- alias: Refresh all webUI instances
-  trigger:
-    - platform: time
-      at: 05:00:00
-  condition: []
-  action:
-    - service: browser_mod.refresh
-      data:
-        browser_id:
-          - fc8b96e1-6a34f15b
-          - b994c6fd-fa5e732a
-          - 879d54bd-bbfea94e
-          - 9eced174-13cf35ca
-          - 9a54c5db-b6bde9d8
-          - 1806f035-f31ffdab
-          - 99f1f096-c61e0a50
-          - a24b7fb2-a078b9bb
-          - f6d2de8f-bfd2e5bc
-          - ab392fbe-98d9358d
-          - fd04560b-8bead281
-          - dfec06d4-f896d1df
-  id: 4a12282a754a455bb4bcc1c81c89ae23
+# - alias: Refresh all webUI instances
+#   trigger:
+#     - platform: time
+#       at: 05:00:00
+#   condition: []
+#   action:
+#     - service: browser_mod.refresh
+#       data:
+#         browser_id:
+#           - fc8b96e1-6a34f15b
+#           - b994c6fd-fa5e732a
+#           - 879d54bd-bbfea94e
+#           - 9eced174-13cf35ca
+#           - 9a54c5db-b6bde9d8
+#           - 1806f035-f31ffdab
+#           - 99f1f096-c61e0a50
+#           - a24b7fb2-a078b9bb
+#           - f6d2de8f-bfd2e5bc
+#           - ab392fbe-98d9358d
+#           - fd04560b-8bead281
+#           - dfec06d4-f896d1df
+#   id: 4a12282a754a455bb4bcc1c81c89ae23
 - id: "1706889626932"
   alias: Main Bathroom Light NSPanel Configuration
   description: ""
