@@ -17,6 +17,12 @@ homeassistant:
 
 default_config: # includes several integrations by default
                 # https://www.home-assistant.io/integrations/default_config/
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 192.168.1.104
+
 recorder:
   exclude:
     domains:
@@ -105,28 +111,6 @@ ffmpeg:
 
 stream:
 
-panel_iframe:
-  squeezebox:
-    title: SqueezeBox
-    icon: mdi:music
-    url: !secret squeezebox_url
-    require_admin: false
-  # unraid:
-  #   title: unRAID
-  #   icon: mdi:server
-  #   url: !secret unraid_url
-  #   require_admin: true
-  # unraid_dhcpserver:
-  #   title: DHCP Server
-  #   icon: mdi:server-network
-  #   url: !secret dhcp_url
-  #   require_admin: true
-  # octoprint:
-  #   title: OctoPrint Ender3v2
-  #   icon: mdi:printer-3d
-  #   url: !secret octoprint_url
-  #   require_admin: true
-  
 sensor:
 
 # Time & Date

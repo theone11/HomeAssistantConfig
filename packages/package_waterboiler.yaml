@@ -14,6 +14,14 @@ sensor:
             {{ 1 }}
           {% endif %}
 
+  - platform: statistics
+    name: "Water Boiler Temperature Out To Panel Maximum"
+    entity_id: sensor.water_boiler_temperature_out_to_panel
+    state_characteristic: value_max
+    #unique_id: sensor.water_boiler_temperature_out_to_panel_max
+    max_age:
+      hours: 8
+
 input_number:
   boiler_switch_duration:
     name: Duration

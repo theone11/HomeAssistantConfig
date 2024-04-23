@@ -454,89 +454,89 @@
 #        DS      - Day Start
 #        S_HVAC  - Start HVAC
 
-{% macro create_schedulers_tab(entity, scheduler_type) -%}
-                      {% if (scheduler_type == "S_HVAC") or (scheduler_type == "S_BOILER") %}
-                      {% set num_schedulers = 4 %}
-                      {% set schedulers = ['1', '2', '3', '4'] %}
-                      {% else %}
-                      {% set num_schedulers = 2 %}
-                      {% set schedulers = ['1', '2'] %}
-                      {% endif %}
-                      type: grid
-                      {% if (scheduler_type == "S_BOILER") %}
-                      columns: {{ num_schedulers/2 }}
-                      {% else %}
-                      columns: {{ num_schedulers }}
-                      {% endif %}
-                      square: false
-                      cards:
-                        {% for s in schedulers %}
-                        - type: grid
-                          columns: 1
-                          square: false
-                          title: Scheduler {{ s }}
-                          cards:
-                            - type: custom:mushroom-entity-card
-                              entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
-                              secondary_info: none
-                              fill_container: true
-                              tap_action:
-                                action: toggle
-                              {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
-                            {% if (scheduler_type == "DSD") or (scheduler_type == "DS") or (scheduler_type == "S_BOILER") %}
-                            - type: grid
-                              columns: 7
-                              square: false
-                              cards:
-                                {% for day, number, name, name_he in days %}
-                                - type: custom:mushroom-entity-card
-                                  entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
-                                  primary_info: none
-                                  secondary_info: none
-                                  name: {{ name_he }}
-                                  icon: mdi:numeric-{{ number }}-box-outline
-                                  layout: vertical
-                                  fill_container: true
-                                  tap_action:
-                                    action: toggle
-                                  {{ disable_tap_hold_double_ws(0, 1, 1, 17) }}
-                                {% endfor %}
-                            {% endif %}
-                            - type: 'custom:time-picker-card'
-                              entity: input_datetime.{{ entity }}_start_time{{ s }}
-                              {{ disable_tap_hold_double_ws(1, 1, 1, 15) }}
-                              layout:
-                                embedded: true
-                                name: inside
-                                align_controls: right
-                            {% if (scheduler_type == "DSD") or (scheduler_type == "S_BOILER") %}
-                            - type: custom:mushroom-number-card
-                              entity: input_number.{{ entity }}_timer_duration{{ s }}
-                              icon: 'mdi:timer-outline'
-                              fill_container: true
-                              layout: horizontal
-                              {{ disable_tap_hold_double_ws(1, 1, 1, 15) }}
-                            {% endif %}
-                            {% if (scheduler_type == "S_HVAC") %}
-                            - type: thermostat
-                              entity: climate.{{ entity }}_virtual{{ s }}
-                              name: " " #Virtual {{ s }}
-                              features:
-                                - type: climate-hvac-modes
-                                  style: icons
-                                  hvac_modes:
-                                    - 'off'
-                                    - cool
-                                    - heat
-                                    - auto
-                                - type: climate-fan-modes
-                                  style: icons
-                                  fan_modes:
-                                    - low
-                                    - high
-                                    - mid
-                            {% endif %}
-                        {% endfor %}
+{% macro create_schedulers_tab(entity, scheduler_type, ws) -%}
+{{"  "*ws}}{% if (scheduler_type == "S_HVAC") or (scheduler_type == "S_BOILER") %}
+{{"  "*ws}}{% set num_schedulers = 4 %}
+{{"  "*ws}}{% set schedulers = ['1', '2', '3', '4'] %}
+{{"  "*ws}}{% else %}
+{{"  "*ws}}{% set num_schedulers = 2 %}
+{{"  "*ws}}{% set schedulers = ['1', '2'] %}
+{{"  "*ws}}{% endif %}
+{{"  "*ws}}type: grid
+{{"  "*ws}}{% if (scheduler_type == "S_BOILER") %}
+{{"  "*ws}}columns: {{ num_schedulers/2 }}
+{{"  "*ws}}{% else %}
+{{"  "*ws}}columns: {{ num_schedulers }}
+{{"  "*ws}}{% endif %}
+{{"  "*ws}}square: false
+{{"  "*ws}}cards:
+{{"  "*ws}}  {% for s in schedulers %}
+{{"  "*ws}}  - type: grid
+{{"  "*ws}}    columns: 1
+{{"  "*ws}}    square: false
+{{"  "*ws}}    title: Scheduler {{ s }}
+{{"  "*ws}}    cards:
+{{"  "*ws}}      - type: custom:mushroom-entity-card
+{{"  "*ws}}        entity: input_boolean.{{ entity }}_scheduler_enable{{ s }}
+{{"  "*ws}}        secondary_info: none
+{{"  "*ws}}        fill_container: true
+{{"  "*ws}}        tap_action:
+{{"  "*ws}}          action: toggle
+{{"  "*ws}}        {{ disable_tap_hold_double_ws(0, 1, 1, 15) }}
+{{"  "*ws}}      {% if (scheduler_type == "DSD") or (scheduler_type == "DS") or (scheduler_type == "S_BOILER") %}
+{{"  "*ws}}      - type: grid
+{{"  "*ws}}        columns: 7
+{{"  "*ws}}        square: false
+{{"  "*ws}}        cards:
+{{"  "*ws}}          {% for day, number, name, name_he in days %}
+{{"  "*ws}}          - type: custom:mushroom-entity-card
+{{"  "*ws}}            entity: input_boolean.{{ entity }}_day_{{ day }}{{ s }}
+{{"  "*ws}}            primary_info: none
+{{"  "*ws}}            secondary_info: none
+{{"  "*ws}}            name: {{ name_he }}
+{{"  "*ws}}            icon: mdi:numeric-{{ number }}-box-outline
+{{"  "*ws}}            layout: vertical
+{{"  "*ws}}            fill_container: true
+{{"  "*ws}}            tap_action:
+{{"  "*ws}}              action: toggle
+{{"  "*ws}}            {{ disable_tap_hold_double_ws(0, 1, 1, 17) }}
+{{"  "*ws}}          {% endfor %}
+{{"  "*ws}}       {% endif %}
+{{"  "*ws}}      - type: 'custom:time-picker-card'
+{{"  "*ws}}        entity: input_datetime.{{ entity }}_start_time{{ s }}
+{{"  "*ws}}        {{ disable_tap_hold_double_ws(1, 1, 1, 15) }}
+{{"  "*ws}}        layout:
+{{"  "*ws}}          embedded: true
+{{"  "*ws}}          name: inside
+{{"  "*ws}}          align_controls: right
+{{"  "*ws}}      {% if (scheduler_type == "DSD") or (scheduler_type == "S_BOILER") %}
+{{"  "*ws}}      - type: custom:mushroom-number-card
+{{"  "*ws}}        entity: input_number.{{ entity }}_timer_duration{{ s }}
+{{"  "*ws}}        icon: 'mdi:timer-outline'
+{{"  "*ws}}        fill_container: true
+{{"  "*ws}}        layout: horizontal
+{{"  "*ws}}        {{ disable_tap_hold_double_ws(1, 1, 1, 15) }}
+{{"  "*ws}}      {% endif %}
+{{"  "*ws}}      {% if (scheduler_type == "S_HVAC") %}
+{{"  "*ws}}      - type: thermostat
+{{"  "*ws}}        entity: climate.{{ entity }}_virtual{{ s }}
+{{"  "*ws}}        name: " " #Virtual {{ s }}
+{{"  "*ws}}        features:
+{{"  "*ws}}          - type: climate-hvac-modes
+{{"  "*ws}}            style: icons
+{{"  "*ws}}            hvac_modes:
+{{"  "*ws}}              - 'off'
+{{"  "*ws}}              - cool
+{{"  "*ws}}              - heat
+{{"  "*ws}}              - auto
+{{"  "*ws}}          - type: climate-fan-modes
+{{"  "*ws}}            style: icons
+{{"  "*ws}}            fan_modes:
+{{"  "*ws}}              - low
+{{"  "*ws}}              - high
+{{"  "*ws}}              - mid
+{{"  "*ws}}      {% endif %}
+{{"  "*ws}}  {% endfor %}
 {%- endmacro %}
 
  ######  ########    ###    ########  ######## 
@@ -1024,7 +1024,7 @@ cards:
           top: {{ group_irrigation_top + 0.1 }}%
           color: rgb(128, 128, 128)
           transform: translate(0%, 0%) scale({{ group_scaleX * 0.7 }}, {{ group_scaleY * 0.7 }})
-          {{ disable_tap_hold_double_ws(1, 1, 1, 4) }}
+          {{ disable_tap_hold_double_ws(1, 1, 1, 5) }}
 
       - type: state-icon
         entity: group.irrigation
@@ -1180,8 +1180,26 @@ cards:
                       label: {{ display_name }}
                       icon: mdi:calendar
                     card:
-                      {{ create_schedulers_tab(entity, "DSD") }}
+                      {{ create_schedulers_tab(entity, "DSD", 11) }}
                   {% endfor %}
+                  - attributes:
+                      label: Schedulers
+                      icon: mdi:calendar
+                    card:
+                      type: custom:tabbed-card
+                      attributes:
+                        isMinWidthIndicator: true
+                        minWidth: true
+                        stacked: true
+                        isFadingIndicator: false
+                      tabs:
+                        {% for entity, type, left, top, display_name in irrigation_valves %}
+                        - attributes:
+                            label: {{ display_name }}
+                            icon: mdi:calendar
+                          card:
+                            {{ create_schedulers_tab(entity, "DSD", 11) }}
+                        {% endfor %}
         double_tap_action:
           action: more-info
         hold_action:
@@ -1291,7 +1309,7 @@ cards:
           top: {{ top + 0.1 }}%
           color: rgb(128, 128, 128)
           transform: translate(0%, 0%) scale({{ group_scaleX * 0.7 }}, {{ group_scaleY * 0.7 }})
-          {{ disable_tap_hold_double_ws(1, 1, 1, 4) }}
+          {{ disable_tap_hold_double_ws(1, 1, 1, 5) }}
 
       - type: state-icon
         entity: {{ type }}.{{ entity }}
@@ -1389,7 +1407,7 @@ cards:
                       label: Schedulers
                       icon: mdi:calendar
                     card:
-                      {{ create_schedulers_tab(entity, "S_BOILER") }}
+                      {{ create_schedulers_tab(entity, "S_BOILER", 11) }}
                   - attributes:
                       label: Information
                       icon: mdi:information-outline
@@ -1415,6 +1433,7 @@ cards:
                                   - entity: sensor.water_boiler_temperature_panel_out
                                   - entity: sensor.water_boiler_temperature_in_from_panel
                                   - entity: sensor.water_boiler_temperature_out_to_panel
+                                  - entity: sensor.water_boiler_temperature_out_to_panel_maximum
                                   - entity: sensor.water_boiler_temperature_temperature_difference
                                   - entity: switch.water_boiler_temperature_pump_manual
                                     name: Pump Control
@@ -1515,7 +1534,7 @@ cards:
           top: {{ top + 0.1 }}%
           color: rgb(128, 128, 128)
           transform: translate(0%, 0%) scale({{ group_scaleX * 0.7 }}, {{ group_scaleY * 0.7 }})
-          {{ disable_tap_hold_double_ws(1, 1, 1, 4) }}
+          {{ disable_tap_hold_double_ws(1, 1, 1, 5) }}
       
       - type: state-icon
         entity: vacuum.vacuum_{{ entity }}
@@ -1558,7 +1577,7 @@ cards:
                       label: Schedulers
                       icon: mdi:calendar
                     card:
-                      {{ create_schedulers_tab("vacuum_" ~ entity, "DS") }}
+                      {{ create_schedulers_tab("vacuum_" ~ entity, "DS", 11) }}
         double_tap_action:
           action: more-info
         hold_action:
@@ -1641,7 +1660,7 @@ cards:
           top: {{ top + 0.1 }}%
           color: rgb(128, 128, 128)
           transform: translate(0%, 0%) scale({{ group_scaleX * 0.5 }}, {{ group_scaleY * 0.5 }})
-          {{ disable_tap_hold_double_ws(1, 1, 1, 4) }}
+          {{ disable_tap_hold_double_ws(1, 1, 1, 5) }}
 
       - type: state-icon
         entity: climate.hvac_{{ entity }}
@@ -1693,7 +1712,7 @@ cards:
                       label: Schedulers
                       icon: mdi:calendar
                     card:
-                      {{ create_schedulers_tab("hvac_" ~ entity, "S_HVAC") }}
+                      {{ create_schedulers_tab("hvac_" ~ entity, "S_HVAC", 11) }}
         double_tap_action:
           action: more-info
         hold_action:
@@ -2121,8 +2140,8 @@ cards:
             data:
               browser_id: THIS
               style: |
-                --popup-min-width: 40vw;
-                --popup-max-width: 40vw;
+                --popup-min-width: 5  0vw;
+                --popup-max-width: 50vw;
                 --popup-border-color: {{ popup_border_color }};
                 --popup-background-color: {{ popup_background_color }};
               title: Electricity Consumption
