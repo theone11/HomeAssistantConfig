@@ -15,18 +15,18 @@ cards:
       cards:
         - type: history-graph
           entities:
-            - entity: sensor.citymind_16452690_meter_today_s_consumption
+            - entity: sensor.ns_tsyvnh_lvn_4_16452690_today_s_consumption
             - entity: sensor.water_consumption_hourly
           #hours_to_show: 12
           refresh_interval: 10
         - type: history-graph
           entities:
-            - entity: sensor.citymind_16452690_meter_consumption_forecast
-            - entity: sensor.citymind_16452690_meter_monthly_consumption
+            - entity: sensor.ns_tsyvnh_lvn_4_16452690_consumption_forecast
+            - entity: sensor.ns_tsyvnh_lvn_4_16452690_monthly_consumption
           #hours_to_show: 12
           refresh_interval: 10
         - type: history-graph
           entities:
-            - entity: sensor.citymind_16452690_meter_last_read
+            - entity: sensor.ns_tsyvnh_lvn_4_16452690_last_read
           #hours_to_show: 12
           refresh_interval: 10

@@ -241,6 +241,7 @@ cards:
           - entity: sensor.water_boiler_temperature_panel_out
           - entity: sensor.water_boiler_temperature_in_from_panel
           - entity: sensor.water_boiler_temperature_out_to_panel
+          - entity: sensor.water_boiler_temperature_out_to_panel_maximum
           - entity: sensor.water_boiler_temperature_temperature_difference
           - entity: switch.water_boiler_temperature_pump_manual
             name: Pump Control
