@@ -40,8 +40,9 @@ condition:
     entity_id: !input scheduler_enable
     state: "on"
 action:
-  - service: notify.file_debug
+  - service: notify.send_message
     data:
+      entity_id: notify.file_debug
       message: "{{ this.attributes.friendly_name }} - {{ states(scheduler_enable) }} - {{ state_attr(virtual_climate, 'temperature') }}/{{ state_attr(virtual_climate, 'fan_mode') }}/{{ states(virtual_climate) }}"
   - service: climate.set_fan_mode
     data:

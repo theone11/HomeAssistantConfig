@@ -14,6 +14,10 @@ homeassistant:
   customize: !include customize.yaml
   # Packages
   packages: !include_dir_named packages
+  allowlist_external_dirs:  # Needed for debug file notifications
+    - "/config"
+#  external_url: "https://www.example.com"
+#  internal_url: "http://homeassistant.local:8123"
 
 default_config: # includes several integrations by default
                 # https://www.home-assistant.io/integrations/default_config/
@@ -82,11 +86,6 @@ lovelace:
 
 
 notify:
-  - name: file_debug
-    platform: file
-    filename: debug.txt
-    timestamp: true
-  
   - name: email
     platform: smtp
     server: smtp.gmail.com
