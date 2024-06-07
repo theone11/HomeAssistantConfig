@@ -45,8 +45,9 @@ automation:
         to: "on"
     condition: []
     action:
-      - service: notify.file_debug
+      - service: notify.send_message
         data:
+          entity_id: notify.file_debug
           message: "{{ state_attr(trigger.entity_id, 'friendly_name') }}"
       - service: remote.send_command
         data:

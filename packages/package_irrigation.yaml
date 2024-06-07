@@ -188,15 +188,17 @@ automation:
         to: "on"
     condition: []
     action:
-      - service: notify.file_debug
+      - service: notify.send_message
         data:
+          entity_id: notify.file_debug
           message: "Starting Manual Immediate start_irrigation_cycle script"
       - service: script.turn_on
         entity_id: script.start_irrigation_cycle
       - delay: "00:00:01"
       - wait_template: "{{ is_state('script.start_irrigation_cycle', 'off') }}"
-      - service: notify.file_debug
+      - service: notify.send_message
         data:
+          entity_id: notify.file_debug
           message: "Completed Manual Immediate start_irrigation_cycle script"
 
   # Trigger - Turning ON Timer Scheduled Switch
@@ -212,15 +214,17 @@ automation:
       entity_id: input_boolean.irrigation_future
       state: "on"
     action:
-      - service: notify.file_debug
+      - service: notify.send_message
         data:
+          entity_id: notify.file_debug
           message: "Starting Manual Future start_irrigation_cycle script"
       - service: script.turn_on
         entity_id: script.start_irrigation_cycle
       - delay: "00:00:01"
       - wait_template: "{{ is_state('script.start_irrigation_cycle', 'off') }}"
-      - service: notify.file_debug
+      - service: notify.send_message
         data:
+          entity_id: notify.file_debug
           message: "Completed Manual Future start_irrigation_cycle script"
 
   # Trigger - Turning OFF Timer Start/Stop Switch
@@ -238,8 +242,9 @@ automation:
         to: "off"
     condition: []
     action:
-      - service: notify.file_debug
+      - service: notify.send_message
         data:
+          entity_id: notify.file_debug
           message: "stop_irrigation_cycle - Initiated"
       - service: script.turn_off
         entity_id: script.start_irrigation_cycle
@@ -259,8 +264,9 @@ automation:
             - service: switch.turn_off
               target:
                 entity_id: "switch.{{ repeat.item }}"
-      - service: notify.file_debug
+      - service: notify.send_message
         data:
+          entity_id: notify.file_debug
           message: "stop_irrigation_cycle - Completed"
 
 ###################################
@@ -282,8 +288,9 @@ script:
                 - condition: template
                   value_template: "{{ is_state('input_boolean.' ~ repeat.item, 'on') }}"
               then:
-                - service: notify.file_debug
+                - service: notify.send_message
                   data:
+                    entity_id: notify.file_debug
                     message: "Irrigation valve {{ repeat.item }} - Turned ON #"
                 - service: switch.turn_on
                   target:
@@ -297,8 +304,9 @@ script:
                 - service: switch.turn_off
                   target:
                     entity_id: "switch.{{ repeat.item }}"
-                - service: notify.file_debug
+                - service: notify.send_message
                   data:
+                    entity_id: notify.file_debug
                     message: "Irrigation valve {{ repeat.item }} - Turned OFF #"
       - service: input_boolean.turn_off
         entity_id: input_boolean.irrigation_immediate

@@ -100,8 +100,9 @@ automation:
       to: "on"
     condition: []
     action:
-      - service: notify.file_debug
+      - service: notify.send_message
         data:
+          entity_id: notify.file_debug
           message: "{{ trigger.entity_id }} Started"
       - service: timer.start
         data:
@@ -125,8 +126,9 @@ automation:
       entity_id: input_boolean.boiler_switch_future
       state: "on"
     action:
-      - service: notify.file_debug
+      - service: notify.send_message
         data:
+          entity_id: notify.file_debug
           message: "{{ trigger.entity_id }} Started"
       - service: timer.start
         data:
@@ -170,8 +172,9 @@ automation:
         entity_id: input_boolean.boiler_switch_immediate
       - service: input_boolean.turn_off
         entity_id: input_boolean.boiler_switch_future
-      - service: notify.file_debug
+      - service: notify.send_message
         data:
+          entity_id: notify.file_debug
           message: "{{ trigger.entity_id }} Stopped"
 
 ###################################
