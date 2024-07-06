@@ -51,6 +51,7 @@ api:
   reboot_timeout: ${api_reboot_timeout}
 
 ota:
+  - platform: esphome
 
 text_sensor:
   - platform: wifi_info
