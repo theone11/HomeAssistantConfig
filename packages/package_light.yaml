@@ -14,6 +14,10 @@ light:
       - light.ella_light
       - light.tomer_light
       - light.laundryroom_light
+      - light.hallway_light
+      - light.master_bedroom_left_light
+      - light.master_bedroom_right_light
+      - light.stairs_light
 
   - platform: group
     name: Downstairs Lights
@@ -26,6 +30,7 @@ light:
       - light.guest_bathroom_light
       - light.playroom_light
       - light.pantry_light
+      - light.stairs_light
 
   - platform: group
     name: Outside Lights
