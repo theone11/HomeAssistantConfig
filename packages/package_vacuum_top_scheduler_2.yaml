@@ -58,8 +58,8 @@ automation:
           {% set today_name = sensor_names[now().weekday()] %}
           {% set entity_id = 'input_boolean.vacuum_top_day_'+today_name+'2' %}
           {{ is_state(entity_id, 'on') }}
-    action:
-      - service: vacuum.start
+    actions:
+      - action: vacuum.start
         entity_id: vacuum.vacuum_top
 
 ###################################
