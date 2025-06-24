@@ -65,12 +65,6 @@ lovelace_gen:
 lovelace:
   mode: storage
   dashboards:
-    lovelace-yaml-optimized:
-      mode: yaml
-      title: FloorPlan
-      icon: mdi:home
-      show_in_sidebar: true
-      filename: lovelace_new.yaml
     lovelace-yaml-mobile:
       mode: yaml
       title: Mobile
@@ -80,7 +74,7 @@ lovelace:
     lovelace-yaml-optimized-test:
       mode: yaml
       title: FloorPlan Test
-      icon: mdi:bug-outline
+      icon: mdi:home
       show_in_sidebar: true
       filename: lovelace_new_test.yaml
 

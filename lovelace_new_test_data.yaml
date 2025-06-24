@@ -311,6 +311,8 @@
                   ("terminal_ssh"                        , "HA"   , "addon" ),
                   ("time_picker_card"                    , "HACS" , "plugin" ),
                   ("timer_bar_card"                      , "HACS" , "plugin" ),
+                  ("unraid_docker_logitech_media_server_lyrion_music_server", "HA", "integration" ),
+                  ("unraid_docker_logitech_media_server_updated_plugins", "HA", "integration" ),
                   ("vertical_slider_cover_card"          , "HACS" , "plugin"),
                   ("weather_card"                        , "HACS" , "plugin"      ),
                   ("whisper"                             , "HA"   , "addon"       ),
