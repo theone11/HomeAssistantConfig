@@ -2,7 +2,8 @@ substitutions:
   name: m5stack-atom-echo-104a70
   friendly_name: M5Stack Atom Echo 104a70 1
 packages:
-  m5stack.atom-echo-voice-assistant: github://esphome/firmware/voice-assistant/m5stack-atom-echo.yaml@main
+  # m5stack.atom-echo-voice-assistant: github://esphome/firmware/voice-assistant/m5stack-atom-echo.yaml@main
+  m5stack.atom-echo-voice-assistant: github://esphome/wake-word-voice-assistants/m5stack-atom-echo/m5stack-atom-echo.yaml@main
 esphome:
   name: ${name}
   name_add_mac_suffix: false
