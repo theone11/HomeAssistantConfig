@@ -42,10 +42,10 @@ variables:
   scheduler_number: !input scheduler_number
   duration: !input duration
   timer: !input timer
-trigger: 
-  platform: time
-  at: !input start_time
-condition:
+triggers: 
+  - trigger: time
+    at: !input start_time
+conditions:
   - condition: state # Do not start a schedule if the irrigation valve was already turned on manually
     entity_id: !input switch
     state: "off"
@@ -58,18 +58,18 @@ condition:
       {% set today_name = sensor_names[now().weekday()] %}
       {% set entity_id = 'input_boolean.irrigation_drips_day_'+today_name+(scheduler_number|string) %}
       {{ is_state(entity_id, 'on') }}
-action:
-  - service: notify.send_message
+actions:
+  - action: notify.send_message
     data:
       entity_id: notify.file_debug
       message: "{{ this.attributes.friendly_name }} Started - Running for {{ states(duration) | int }} minutes"
-  - service: switch.turn_on
+  - action: switch.turn_on
     entity_id: !input switch
-  - service: timer.start
+  - action: timer.start
     data:
       entity_id: !input timer
       duration:
         minutes: "{{ states(duration) | int }}"
   - wait_template: "{{ is_state(timer, 'idle' ) }}"
-  - service: switch.turn_off
+  - action: switch.turn_off
     entity_id: !input switch

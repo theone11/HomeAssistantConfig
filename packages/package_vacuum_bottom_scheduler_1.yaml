@@ -45,10 +45,10 @@ automation:
   # Actions    - turn on Vacuum Bottom
   - alias: vacuum_bottom_start1
     description: Vacuum Bottom Start 1
-    trigger: 
-      platform: time
-      at: input_datetime.vacuum_bottom_start_time1
-    condition:
+    triggers: 
+      - trigger: time
+        at: input_datetime.vacuum_bottom_start_time1
+    conditions:
       - condition: state
         entity_id: input_boolean.vacuum_bottom_scheduler_enable1
         state: 'on'

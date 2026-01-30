@@ -45,10 +45,10 @@ automation:
   # Actions    - turn on Vacuum top
   - alias: vacuum_top_start2
     description: Vacuum top Start 2
-    trigger: 
-      platform: time
-      at: input_datetime.vacuum_top_start_time2
-    condition:
+    triggers: 
+      - trigger: time
+        at: input_datetime.vacuum_top_start_time2
+    conditions:
       - condition: state
         entity_id: input_boolean.vacuum_top_scheduler_enable2
         state: 'on'

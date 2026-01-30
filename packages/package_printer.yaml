@@ -10,23 +10,22 @@ input_number:
     max: 100
     step: 10
 
-sensor:
-  - platform: template
-    sensors:
-      mfc_j470dw_ink_low:
-        icon_template: mdi:printer-alert
-        value_template: >
-          {% set devices =['sensor.mfc_j470dw_black_ink_remaining',
-                           'sensor.mfc_j470dw_cyan_ink_remaining',
-                           'sensor.mfc_j470dw_magenta_ink_remaining',
-                           'sensor.mfc_j470dw_yellow_ink_remaining'] %}
-          {% set mfc_j470dw_ink_low = namespace(count=0) %}
-          {% for entity_id in devices %}
-            {% if (has_value(entity_id)) and ((states(entity_id) | int) <= (states('input_number.mfc_j470dw_ink_low_limit') | int)) %}
-              {% set mfc_j470dw_ink_low.count = mfc_j470dw_ink_low.count + 1 %}
-            {% endif %}
-          {% endfor %}
-          {{ mfc_j470dw_ink_low.count }}
+template:
+  - sensor:
+    - name: mfc_j470dw_ink_low
+      icon: mdi:printer-alert
+      state: >
+        {% set devices =['sensor.mfc_j470dw_black_ink_remaining',
+                          'sensor.mfc_j470dw_cyan_ink_remaining',
+                          'sensor.mfc_j470dw_magenta_ink_remaining',
+                          'sensor.mfc_j470dw_yellow_ink_remaining'] %}
+        {% set mfc_j470dw_ink_low = namespace(count=0) %}
+        {% for entity_id in devices %}
+          {% if (has_value(entity_id)) and ((states(entity_id) | int) <= (states('input_number.mfc_j470dw_ink_low_limit') | int)) %}
+            {% set mfc_j470dw_ink_low.count = mfc_j470dw_ink_low.count + 1 %}
+          {% endif %}
+        {% endfor %}
+        {{ mfc_j470dw_ink_low.count }}
 
 ###########################################
 ########## A U T O M A T I O N S ##########
@@ -35,13 +34,13 @@ sensor:
 automation:
   - alias: Printer Ink Level Below Limit
     description: Printer Ink Level Below Limit
-    trigger:
-      platform: numeric_state
-      entity_id: sensor.mfc_j470dw_ink_low
-      above: 0
-    condition: "{{ has_value('sensor.mfc_j470dw_ink_low') }}"
-    action:
-      - service: notify.email
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.mfc_j470dw_ink_low
+        above: 0
+    conditions: "{{ has_value('sensor.mfc_j470dw_ink_low') }}"
+    actions:
+      - action: notify.email
         data:
           message: Printer ink level below limit. Black={{ states('sensor.mfc_j470dw_black_ink_remaining') }}%, Cyan={{ states('sensor.mfc_j470dw_cyan_ink_remaining') }}%, Magenta={{ states('sensor.mfc_j470dw_magenta_ink_remaining') }}%, Yellow={{ states('sensor.mfc_j470dw_yellow_ink_remaining') }}%
 

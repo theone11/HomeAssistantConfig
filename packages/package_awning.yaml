@@ -26,30 +26,30 @@ automation:
   # Actions    -
   - alias: Backyard Awning
     description: "Open/Close Backyard Awning"
-    trigger:
-      - entity_id: input_boolean.backyard_awning_open_full
+    triggers:
+      - trigger: state
+        entity_id: input_boolean.backyard_awning_open_full
         from: "off"
-        platform: state
         to: "on"
-      - entity_id: input_boolean.backyard_awning_open_half
+      - trigger: state
+        entity_id: input_boolean.backyard_awning_open_half
         from: "off"
-        platform: state
         to: "on"
-      - entity_id: input_boolean.backyard_awning_close_full
+      - trigger: state
+        entity_id: input_boolean.backyard_awning_close_full
         from: "off"
-        platform: state
         to: "on"
-      - entity_id: input_boolean.backyard_awning_close_half
+      - trigger: state
+        entity_id: input_boolean.backyard_awning_close_half
         from: "off"
-        platform: state
         to: "on"
-    condition: []
-    action:
-      - service: notify.send_message
+    conditions: []
+    actions:
+      - action: notify.send_message
         data:
           entity_id: notify.file_debug
           message: "{{ state_attr(trigger.entity_id, 'friendly_name') }}"
-      - service: remote.send_command
+      - action: remote.send_command
         data:
           entity_id: remote.hallway
           device: backyard_awning
@@ -65,7 +65,7 @@ automation:
             {% endif %}
       - delay:
           milliseconds: 250
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         data:
           entity_id: "{{ trigger.entity_id }}"
 

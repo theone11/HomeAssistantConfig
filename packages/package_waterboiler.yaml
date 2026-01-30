@@ -2,18 +2,18 @@
 ########## E N T I T I E S ##########
 #####################################
 
-sensor:
-  - platform: template
-    sensors:
-      boiler_switch_problem:
-        icon_template: mdi:water-boiler-off
-        value_template: >
-          {% if (has_value('switch.boiler_switch')) %}
-            {{ 0 }}
-          {% else %}
-            {{ 1 }}
-          {% endif %}
+template:
+  - sensor:
+    - name: boiler_switch_problem
+      icon: mdi:water-boiler-off
+      state: >
+        {% if (has_value('switch.boiler_switch')) %}
+          {{ 0 }}
+        {% else %}
+          {{ 1 }}
+        {% endif %}
 
+sensor:
   - platform: statistics
     name: "Water Boiler Temperature Out To Panel Maximum"
     entity_id: sensor.water_boiler_temperature_out_to_panel
@@ -67,13 +67,14 @@ automation:
   # Actions    - Turn off water boiler (in case HA restarts during a heating cycle)
   - alias: Irrigataion Initialization
     description: Update enitity values upon HA start
-    trigger:
-      event: start
-      platform: homeassistant
-    condition: []
-    action:
-      - entity_id: switch.boiler_switch
-        service: switch.turn_off
+    triggers:
+      - trigger: homeassistant
+        event: start
+    conditions: []
+    actions:
+      - action: switch.turn_off
+        entity_id: switch.boiler_switch
+        
 
   # Trigger    - Directly turn ON Water Boiler
   # Conditions - No timer running
@@ -94,22 +95,22 @@ automation:
   #            - Turn ON Boiler Switch
   - alias: Boiler Start Immediate Cycle
     description: BLA BLA BLA
-    trigger:
-      platform: state
-      entity_id: input_boolean.boiler_switch_immediate
-      to: "on"
-    condition: []
-    action:
-      - service: notify.send_message
+    triggers:
+      - trigger: state
+        entity_id: input_boolean.boiler_switch_immediate
+        to: "on"
+    conditions: []
+    actions:
+      - action: notify.send_message
         data:
           entity_id: notify.file_debug
           message: "{{ trigger.entity_id }} Started"
-      - service: timer.start
+      - action: timer.start
         data:
           entity_id: timer.boiler_switch
           duration:
             minutes: "{{ states('input_number.boiler_switch_duration') | int }}"
-      - service: switch.turn_on
+      - action: switch.turn_on
         entity_id: switch.boiler_switch
 
   # Trigger    - Future start time
@@ -118,24 +119,24 @@ automation:
   #            - Turn ON Boiler Switch
   - alias: Boiler Start Future Cycle
     description: BLA BLA BLA
-    trigger:
-      platform: time
-      at: input_datetime.boiler_switch_start_time
-    condition:
+    triggers:
+      - trigger: time
+        at: input_datetime.boiler_switch_start_time
+    conditions:
       condition: state
       entity_id: input_boolean.boiler_switch_future
       state: "on"
     action:
-      - service: notify.send_message
+      - action: notify.send_message
         data:
           entity_id: notify.file_debug
           message: "{{ trigger.entity_id }} Started"
-      - service: timer.start
+      - action: timer.start
         data:
           entity_id: timer.boiler_switch
           duration:
             minutes: "{{ states('input_number.boiler_switch_duration') | int }}"
-      - service: switch.turn_on
+      - action: switch.turn_on
         entity_id: switch.boiler_switch
 
   # Trigger    - Manual turn OFF Water Boiler Button
@@ -147,32 +148,32 @@ automation:
   #            - Turn OFF Water Boiler Button
   - alias: Boiler Stop Manual Cycle
     description: BLA BLA BLA
-    trigger:
-      - platform: state
+    triggers:
+      - trigger: state
         entity_id: timer.boiler_switch
         to: "idle"
-      - platform: state
+      - trigger: state
         entity_id: switch.boiler_switch
         from: "on"
         to: "off"
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.boiler_switch_immediate
         to: "off"
-      - platform: state
+      - trigger: state
         entity_id: input_boolean.boiler_switch_future
         to: "off"
-    condition: []
-    action:
-      - service: timer.finish
+    conditions: []
+    actions:
+      - action: timer.finish
         data:
           entity_id: timer.boiler_switch
-      - service: switch.turn_off
+      - action: switch.turn_off
         entity_id: switch.boiler_switch
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         entity_id: input_boolean.boiler_switch_immediate
-      - service: input_boolean.turn_off
+      - action: input_boolean.turn_off
         entity_id: input_boolean.boiler_switch_future
-      - service: notify.send_message
+      - action: notify.send_message
         data:
           entity_id: notify.file_debug
           message: "{{ trigger.entity_id }} Stopped"

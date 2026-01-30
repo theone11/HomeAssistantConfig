@@ -47,17 +47,17 @@ input_number:
 ###########################################
 
 automation:
-  description: "Irrigation Sprinkler North Scheduler 2"
-  alias: irrigation_sprinkler_north_scheduler2
-  use_blueprint:
-    path: blueprint_irrigation_scheduler.yaml
-    input:
-      start_time: input_datetime.irrigation_sprinkler_north_start_time2
-      scheduler_enable: input_boolean.irrigation_sprinkler_north_scheduler_enable2
-      switch: switch.irrigation_sprinkler_north
-      timer: timer.irrigation_sprinkler_north
-      duration: input_number.irrigation_sprinkler_north_timer_duration2
-      scheduler_number: 2
+  - alias: irrigation_sprinkler_north_scheduler2
+    description: "Irrigation Sprinkler North Scheduler 2"
+    use_blueprint:
+      path: blueprint_irrigation_scheduler.yaml
+      input:
+        start_time: input_datetime.irrigation_sprinkler_north_start_time2
+        scheduler_enable: input_boolean.irrigation_sprinkler_north_scheduler_enable2
+        switch: switch.irrigation_sprinkler_north
+        timer: timer.irrigation_sprinkler_north
+        duration: input_number.irrigation_sprinkler_north_timer_duration2
+        scheduler_number: 2
 
 ###################################
 ########## S C R I P T S ##########

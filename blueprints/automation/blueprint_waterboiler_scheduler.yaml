@@ -41,10 +41,10 @@ max_exceeded: silent
 variables:
   scheduler_number: !input scheduler_number
   duration: !input duration
-trigger: 
-  platform: time
-  at: !input start_time
-condition:
+triggers: 
+  - trigger: time
+    at: !input start_time
+conditions:
   - condition: state # Do not start a schedule if the boiler was already turned on manually
     entity_id: !input switch
     state: "off"
@@ -60,14 +60,14 @@ condition:
   - condition: numeric_state
     entity_id: sensor.water_boiler_temperature_out_to_panel_maximum
     below: input_number.boiler_disable_schedulers_temperature
-action:
-  - service: notify.send_message
+actions:
+  - action: notify.send_message
     data:
       entity_id: notify.file_debug
       message: "{{ this.attributes.friendly_name }} Started - Running for {{ states(duration) | int }} minutes"
-  - service: switch.turn_on
+  - action: switch.turn_on
     entity_id: !input switch
-  - service: timer.start
+  - action: timer.start
     data:
       entity_id: !input timer
       duration:

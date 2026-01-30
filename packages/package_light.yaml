@@ -47,53 +47,52 @@ light:
     - light.roof_light_top
     - light.roof_light_bottom
 
-sensor:
-  - platform: template
-    sensors:
-      upstairs_lights_problem:
-        icon_template: mdi:lightbulb-off
-        value_template: >
-          {% set devices = state_attr('light.upstairs_lights', 'entity_id') %}
-          {% set upstairs_lights_problem = namespace(count=0) %}
-          {% for entity_id in devices -%}
-            {% if (not has_value(entity_id)) %}
-              {% set upstairs_lights_problem.count = upstairs_lights_problem.count + 1 %}
-            {% endif %}
-          {% endfor %}
-          {{ upstairs_lights_problem.count }}
-      downstairs_lights_problem:
-        icon_template: mdi:lightbulb-off
-        value_template: >
-          {% set devices = state_attr('light.downstairs_lights', 'entity_id') %}
-          {% set downstairs_lights_problem = namespace(count=0) %}
-          {% for entity_id in devices -%}
-            {% if (not has_value(entity_id)) %}
-              {% set downstairs_lights_problem.count = downstairs_lights_problem.count + 1 %}
-            {% endif %}
-          {% endfor %}
-          {{ downstairs_lights_problem.count }}
-      outside_lights_problem:
-        icon_template: mdi:lightbulb-off
-        value_template: >
-          {% set devices = state_attr('light.outside_lights', 'entity_id') %}
-          {% set outside_lights_problem = namespace(count=0) %}
-          {% for entity_id in devices -%}
-            {% if (not has_value(entity_id)) %}
-              {% set outside_lights_problem.count = outside_lights_problem.count + 1 %}
-            {% endif %}
-          {% endfor %}
-          {{ outside_lights_problem.count }}
-      roof_lights_problem:
-        icon_template: mdi:lightbulb-off
-        value_template: >
-          {% set devices = state_attr('light.roof_lights', 'entity_id') %}
-          {% set roof_lights_problem = namespace(count=0) %}
-          {% for entity_id in devices -%}
-            {% if (not has_value(entity_id)) %}
-              {% set roof_lights_problem.count = roof_lights_problem.count + 1 %}
-            {% endif %}
-          {% endfor %}
-          {{ roof_lights_problem.count }}
+template:
+  - sensor:
+    - name: upstairs_lights_problem
+      icon: mdi:lightbulb-off
+      state: >
+        {% set devices = state_attr('light.upstairs_lights', 'entity_id') %}
+        {% set upstairs_lights_problem = namespace(count=0) %}
+        {% for entity_id in devices -%}
+          {% if (not has_value(entity_id)) %}
+            {% set upstairs_lights_problem.count = upstairs_lights_problem.count + 1 %}
+          {% endif %}
+        {% endfor %}
+        {{ upstairs_lights_problem.count }}
+    - name: downstairs_lights_problem
+      icon: mdi:lightbulb-off
+      state: >
+        {% set devices = state_attr('light.downstairs_lights', 'entity_id') %}
+        {% set downstairs_lights_problem = namespace(count=0) %}
+        {% for entity_id in devices -%}
+          {% if (not has_value(entity_id)) %}
+            {% set downstairs_lights_problem.count = downstairs_lights_problem.count + 1 %}
+          {% endif %}
+        {% endfor %}
+        {{ downstairs_lights_problem.count }}
+    - name: outside_lights_problem
+      icon: mdi:lightbulb-off
+      state: >
+        {% set devices = state_attr('light.outside_lights', 'entity_id') %}
+        {% set outside_lights_problem = namespace(count=0) %}
+        {% for entity_id in devices -%}
+          {% if (not has_value(entity_id)) %}
+            {% set outside_lights_problem.count = outside_lights_problem.count + 1 %}
+          {% endif %}
+        {% endfor %}
+        {{ outside_lights_problem.count }}
+    - name: roof_lights_problem
+      icon: mdi:lightbulb-off
+      state: >
+        {% set devices = state_attr('light.roof_lights', 'entity_id') %}
+        {% set roof_lights_problem = namespace(count=0) %}
+        {% for entity_id in devices -%}
+          {% if (not has_value(entity_id)) %}
+            {% set roof_lights_problem.count = roof_lights_problem.count + 1 %}
+          {% endif %}
+        {% endfor %}
+        {{ roof_lights_problem.count }}
 
 ###########################################
 ########## A U T O M A T I O N S ##########

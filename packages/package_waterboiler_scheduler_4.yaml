@@ -47,17 +47,17 @@ input_number:
 ###########################################
 
 automation:
-  description: "Water Boiler Scheduler 4"
-  alias: water_boiler_scheduler4
-  use_blueprint:
-    path: blueprint_waterboiler_scheduler.yaml
-    input:
-      start_time: input_datetime.boiler_switch_start_time4
-      scheduler_enable: input_boolean.boiler_switch_scheduler_enable4
-      switch: switch.boiler_switch
-      timer: timer.boiler_switch
-      duration: input_number.boiler_switch_timer_duration4
-      scheduler_number: 4
+  - alias: water_boiler_scheduler4
+    description: "Water Boiler Scheduler 4"
+    use_blueprint:
+      path: blueprint_waterboiler_scheduler.yaml
+      input:
+        start_time: input_datetime.boiler_switch_start_time4
+        scheduler_enable: input_boolean.boiler_switch_scheduler_enable4
+        switch: switch.boiler_switch
+        timer: timer.boiler_switch
+        duration: input_number.boiler_switch_timer_duration4
+        scheduler_number: 4
 
 ###################################
 ########## S C R I P T S ##########

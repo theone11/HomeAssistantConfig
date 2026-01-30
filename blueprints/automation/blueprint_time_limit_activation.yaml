@@ -26,21 +26,21 @@ max_exceeded: silent
 variables:
   timer: !input timer
   max_limit: !input max_limit
-trigger: 
-  platform: state
-  entity_id: !input switch
-  to: "on"
-condition:
+triggers: 
+  - trigger: state
+    entity_id: !input switch
+    to: "on"
+conditions:
   - not:
       - condition: state # Do not start a schedule if the boiler was already turned on manually
         entity_id: !input timer
         state: "active"
-action:
-  - service: timer.start
+actions:
+  - action: timer.start
     data:
       entity_id: !input timer
       duration:
         minutes: "{{ states(max_limit) | int }}"
   - wait_template: "{{ is_state(timer, 'idle' ) }}"
-  - service: switch.turn_off
+  - action: switch.turn_off
     entity_id: !input switch

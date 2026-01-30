@@ -2,26 +2,26 @@
 ########## E N T I T I E S ##########
 #####################################
 
-sensor:
-  - platform: template
-    sensors:
-      hvac_downstairs_problem:
-        icon_template: mdi:air-conditioner
-        value_template: >
-          {% if (has_value('sensor.livingroom_temperature')) %}
-            {{ 0 }}
-          {% else %}
-            {{ 1 }}
-          {% endif %}
-      hvac_upstairs_problem:
-        icon_template: mdi:air-conditioner
-        value_template: >
-          {% if (has_value('sensor.hallway_temperature')) %}
-            {{ 0 }}
-          {% else %}
-            {{ 1 }}
-          {% endif %}
+template:
+  - sensor:
+    - name: hvac_downstairs_problem
+      icon: mdi:air-conditioner
+      state: >
+        {% if (has_value('sensor.livingroom_temperature')) %}
+          {{ 0 }}
+        {% else %}
+          {{ 1 }}
+        {% endif %}
+    - name: hvac_upstairs_problem
+      icon: mdi:air-conditioner
+      state: >
+        {% if (has_value('sensor.hallway_temperature')) %}
+          {{ 0 }}
+        {% else %}
+          {{ 1 }}
+        {% endif %}
 
+sensor:
   - platform: min_max
     name: upstairs_average_temperature
     type: mean

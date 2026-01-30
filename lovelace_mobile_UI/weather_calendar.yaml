@@ -10,7 +10,7 @@ cards:
     square: false
     cards:
     - type: custom:weather-card
-      entity: weather.accuweather
+      entity: weather.openweathermap
       icons: "/local/icons/weather_icons/static/"
       current: true
       details: true # true false

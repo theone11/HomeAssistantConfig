@@ -27,15 +27,15 @@ climate:
 ###########################################
 
 automation:
-  description: "HVAC Downstairs Scheduler 2"
-  alias: hvac_downstairs_scheduler2
-  use_blueprint:
-    path: blueprint_hvac_scheduler.yaml
-    input:
-      start_time: input_datetime.hvac_downstairs_start_time2
-      scheduler_enable: input_boolean.hvac_downstairs_scheduler_enable2
-      virtual_climate: climate.hvac_downstairs_virtual2
-      target_climate: climate.hvac_downstairs
+  - alias: hvac_downstairs_scheduler2
+    description: "HVAC Downstairs Scheduler 2"
+    use_blueprint:
+      path: blueprint_hvac_scheduler.yaml
+      input:
+        start_time: input_datetime.hvac_downstairs_start_time2
+        scheduler_enable: input_boolean.hvac_downstairs_scheduler_enable2
+        virtual_climate: climate.hvac_downstairs_virtual2
+        target_climate: climate.hvac_downstairs
 
 ###################################
 ########## S C R I P T S ##########

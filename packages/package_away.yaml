@@ -18,14 +18,14 @@ automation:
   # Actions    - Run script.away
   - alias: leave home
     description: Leave Home
-    trigger:
-    - entity_id: input_boolean.away
-      platform: state
+    triggers:
+    - trigger: state
+      entity_id: input_boolean.away
       from: 'off'
       to: 'on'
-    condition: []
-    action:
-    - service: script.turn_on
+    conditions: []
+    actions:
+    - action: script.turn_on
       entity_id: script.away
 
   # Trigger    - Sunset
@@ -33,15 +33,15 @@ automation:
   # Actions    - Set away lights ON
   - alias: away sunset
     description: Turn away lights ON if away and SUNSET
-    trigger:
-    - platform: sun
+    triggers:
+    - trigger: sun
       event: sunset
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.away
         state: 'on'
-    action:
-    - service: light.turn_on
+    actions:
+    - action: light.turn_on
       data:
         entity_id: light.kitchen_table_light
         brightness: 127
@@ -51,15 +51,15 @@ automation:
   # Actions    - Set away lights OFF
   - alias: away sunrise
     description: Turn away lights OFF if away and SUNRISE
-    trigger:
-    - platform: sun
+    triggers:
+    - trigger: sun
       event: sunrise
-    condition:
+    conditions:
       - condition: state
         entity_id: input_boolean.away
         state: 'on'
-    action:
-    - service: light.turn_off
+    actions:
+    - action: light.turn_off
       entity_id: light.kitchen_table_light
 
   # Trigger    - Away Button ON -> OFF (input_boolean.away)
@@ -67,18 +67,18 @@ automation:
   # Actions    - Turn ON kitchen lights
   - alias: arrive home
     description: Arrive Home
-    trigger:
-    - entity_id: input_boolean.away
-      platform: state
+    triggers:
+    - trigger: state
+      entity_id: input_boolean.away
       from: 'on'
       to: 'off'
-    condition: []
-    action:
-    - service: light.turn_on
+    conditions: []
+    actions:
+    - action: light.turn_on
       data:
         entity_id: light.kitchen_table_light
         brightness: 255
-    - service: light.turn_on
+    - action: light.turn_on
       entity_id: light.kitchen_light_ceiling
 
 ###################################
@@ -89,23 +89,23 @@ script:
   away:
     sequence:
       # Turn OFF all light
-      - service: light.turn_off
+      - action: light.turn_off
         entity_id: all
 
       # Turn OFF all heaters
-      - service: switch.turn_off
+      - action: switch.turn_off
         entity_id: switch.main_bathroom_heater
-      - service: switch.turn_off
+      - action: switch.turn_off
         entity_id: switch.master_bathroom_heater
 
       # Close all covers !!! EXCEPT !!! roof trapdoor - can be damaged if ladder open
-      - service: cover.close_cover
+      - action: cover.close_cover
         entity_id: cover.downstairs_shutters
-      - service: cover.close_cover
+      - action: cover.close_cover
         entity_id: cover.upstairs_shutters
 
       # Turn OFF all HVACs
-      - service: climate.turn_off
+      - action: climate.turn_off
         entity_id: all
 
       # Turn ON night light if leaving during DARK hours (>sunset, <sunrise,)
@@ -117,7 +117,7 @@ script:
           - condition: sun
             before: sunrise
 
-      - service: light.turn_on
+      - action: light.turn_on
         data:
           entity_id: light.kitchen_table_light
           brightness: 127

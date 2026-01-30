@@ -73,7 +73,7 @@ lovelace:
       filename: lovelace_mobile_UI.yaml
     lovelace-yaml-optimized-test:
       mode: yaml
-      title: FloorPlan Test
+      title: FloorPlan
       icon: mdi:home
       show_in_sidebar: true
       filename: lovelace_new_test.yaml

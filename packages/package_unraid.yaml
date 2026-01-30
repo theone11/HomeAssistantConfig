@@ -9,17 +9,16 @@
 #    count: 2
 #    scan_interval: 600
 
-sensor:
-  - platform: template
-    sensors:
-      unraid_problem:
-        icon_template: mdi:server
-        value_template: >
-          {% if has_value('binary_sensor.unraid') %}
-            {{ 0 }}
-          {% else %}
-            {{ 1 }}
-          {% endif %}
+template:
+  - sensor:
+    - name: unraid_problem
+      icon: mdi:server
+      state: >
+        {% if has_value('binary_sensor.unraid') %}
+          {{ 0 }}
+        {% else %}
+          {{ 1 }}
+        {% endif %}
 
 ###########################################
 ########## A U T O M A T I O N S ##########

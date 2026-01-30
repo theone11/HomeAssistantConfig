@@ -176,9 +176,12 @@
                             ("3", "sensor.water_consumption_monthly_limit_exceeded"),
                             ("3", "sensor.water_consumption_monthly_forecast_limit_exceeded"),
                             ("3", "sensor.water_consumption_hourly"),
+                            ("3", "sensor.ns_tsyvnh_lvn_4_16452690_yesterday_s_consumption"),
                             ("3", "sensor.ns_tsyvnh_lvn_4_16452690_today_s_consumption"),
                             ("3", "sensor.ns_tsyvnh_lvn_4_16452690_monthly_consumption"),
-                            ("3", "sensor.ns_tsyvnh_lvn_4_16452690_consumption_predication")] %}
+                            ("3", "sensor.ns_tsyvnh_lvn_4_16452690_low_rate_consumption"),
+                            ("3", "sensor.ns_tsyvnh_lvn_4_16452690_high_rate_consumption"),
+                            ("3", "sensor.ns_tsyvnh_lvn_4_16452690_consumption_forecast")] %}
 
 #--------------------------------------------------------------------------------------------------
 # Settings
@@ -619,7 +622,7 @@ cards:
           #     transform: 'translate(50%, 50%) scale(1.5, 1.5)'
 
           - type: custom:weather-card
-            entity: weather.accuweather
+            entity: weather.openweathermap
             icons: "/local/icons/weather_icons/static/"
             current: true
             details: true # true false

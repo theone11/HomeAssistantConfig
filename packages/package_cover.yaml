@@ -18,31 +18,30 @@ cover:
       - cover.livingroom_door_shutter
       - cover.playroom_window_shutter
 
-sensor:
-  - platform: template
-    sensors:
-      upstairs_shutters_problem:
-        icon_template: mdi:window-shutter-alert
-        value_template: >
-          {% set devices = state_attr('cover.upstairs_shutters', 'entity_id') %}
-          {% set upstairs_shutters_problem = namespace(count=0) %}
-          {% for entity_id in devices -%}
-            {% if (not has_value(entity_id)) %}
-              {% set upstairs_shutters_problem.count = upstairs_shutters_problem.count + 1 %}
-            {% endif %}
-          {% endfor %}
-          {{ upstairs_shutters_problem.count }}
-      downstairs_shutters_problem:
-        icon_template: mdi:window-shutter-alert
-        value_template: >
-          {% set devices = state_attr('cover.downstairs_shutters', 'entity_id') %}
-          {% set downstairs_shutters_problem = namespace(count=0) %}
-          {% for entity_id in devices -%}
-            {% if (not has_value(entity_id)) %}
-              {% set downstairs_shutters_problem.count = downstairs_shutters_problem.count + 1 %}
-            {% endif %}
-          {% endfor %}
-          {{ downstairs_shutters_problem.count }}
+template:
+  - sensor:
+    - name: upstairs_shutters_problem
+      icon: mdi:window-shutter-alert
+      state: >
+        {% set devices = state_attr('cover.upstairs_shutters', 'entity_id') %}
+        {% set upstairs_shutters_problem = namespace(count=0) %}
+        {% for entity_id in devices -%}
+          {% if (not has_value(entity_id)) %}
+            {% set upstairs_shutters_problem.count = upstairs_shutters_problem.count + 1 %}
+          {% endif %}
+        {% endfor %}
+        {{ upstairs_shutters_problem.count }}
+    - name: downstairs_shutters_problem
+      icon: mdi:window-shutter-alert
+      state: >
+        {% set devices = state_attr('cover.downstairs_shutters', 'entity_id') %}
+        {% set downstairs_shutters_problem = namespace(count=0) %}
+        {% for entity_id in devices -%}
+          {% if (not has_value(entity_id)) %}
+            {% set downstairs_shutters_problem.count = downstairs_shutters_problem.count + 1 %}
+          {% endif %}
+        {% endfor %}
+        {{ downstairs_shutters_problem.count }}
 
 ###########################################
 ########## A U T O M A T I O N S ##########

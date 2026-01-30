@@ -29,25 +29,24 @@ camera:
     scan_interval:
       seconds: 60
 
-sensor:
-  - platform: template
-    sensors:
-      vacuum_bottom_problem:
-        icon_template: mdi:robot-vacuum
-        value_template: >
-          {% if has_value('vacuum.vacuum_bottom') %}
-            {{ 0 }}
-          {% else %}
-            {{ 1 }}
-          {% endif %}
-      vacuum_top_problem:
-        icon_template: mdi:robot-vacuum
-        value_template: >
-          {% if has_value('vacuum.vacuum_top') %}
-            {{ 0 }}
-          {% else %}
-            {{ 1 }}
-          {% endif %}
+template:
+  - sensor:
+    - name: vacuum_bottom_problem
+      icon: mdi:robot-vacuum
+      state: >
+        {% if has_value('vacuum.vacuum_bottom') %}
+          {{ 0 }}
+        {% else %}
+          {{ 1 }}
+        {% endif %}
+    - name: vacuum_top_problem
+      icon: mdi:robot-vacuum
+      state: >
+        {% if has_value('vacuum.vacuum_top') %}
+          {{ 0 }}
+        {% else %}
+          {{ 1 }}
+        {% endif %}
 
 ###########################################
 ########## A U T O M A T I O N S ##########
