@@ -22,10 +22,10 @@ homeassistant:
 default_config: # includes several integrations by default
                 # https://www.home-assistant.io/integrations/default_config/
 
-http:
-  use_x_forwarded_for: true
-  trusted_proxies:
-    - 192.168.1.104
+#http:                        DEPRECATED - MOVED TO UI
+#  use_x_forwarded_for: true
+#  trusted_proxies:
+#    - 192.168.1.104
 
 recorder:
   exclude:
@@ -79,19 +79,19 @@ lovelace:
       filename: lovelace_new_test.yaml
 
 
-notify:
-  - name: email
-    platform: smtp
-    server: smtp.gmail.com
-    port: 587
-    timeout: 15
-    sender: !secret email_username
-    encryption: starttls
-    username: !secret email_username
-    password: !secret email_password
-    recipient:
-      - !secret email_recipient
-    sender_name: My Home Assistant
+#notify:                      DEPRECATED SMTP - MOVED TO UI
+#  - name: email
+#    platform: smtp
+#    server: smtp.gmail.com
+#    port: 587
+#    timeout: 15
+#    sender: !secret email_username
+#    encryption: starttls
+#    username: !secret email_username
+#    password: !secret email_password
+#    recipient:
+#      - !secret email_recipient
+#    sender_name: My Home Assistant
 
 
 frontend:
@@ -116,8 +116,8 @@ sensor:
 #     - 'time_utc'
 #     - 'beat'
 
-  - platform: template
-    sensors:
+template:
+  - sensor:
       number_update_available:
         value_template: "{{ states.update | rejectattr('attributes.device_class','equalto','firmware') | selectattr('state','equalto','on') | list | count }}"
 

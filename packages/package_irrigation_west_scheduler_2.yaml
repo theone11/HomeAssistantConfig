@@ -52,6 +52,7 @@ automation:
     use_blueprint:
       path: blueprint_irrigation_scheduler.yaml
       input:
+        entity_name: irrigation_sprinkler_west
         start_time: input_datetime.irrigation_sprinkler_west_start_time2
         scheduler_enable: input_boolean.irrigation_sprinkler_west_scheduler_enable2
         switch: switch.irrigation_sprinkler_west
