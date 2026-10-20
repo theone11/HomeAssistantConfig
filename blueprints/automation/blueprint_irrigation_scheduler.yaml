@@ -45,6 +45,7 @@ blueprint:
 mode: restart
 max_exceeded: silent
 variables:
+  entity_name: !input entity_name
   scheduler_number: !input scheduler_number
   duration: !input duration
   timer: !input timer
@@ -62,13 +63,14 @@ conditions:
     value_template: >
       {% set sensor_names = [ 'monday', 'tuesday', 'wednesday','thursday','friday','saturday','sunday'] %}
       {% set today_name = sensor_names[now().weekday()] %}
-      {% set entity_id = 'input_boolean.'+entity_name+'_day_'+today_name+(scheduler_number|string) %}
+      {% set entity_id = 'input_boolean.'+(entity_name|string)+'_day_'+today_name+(scheduler_number|string) %}
       {{ is_state(entity_id, 'on') }}
 actions:
   - action: notify.send_message
     data:
       entity_id: notify.file_debug
-      message: "{{ this.attributes.friendly_name }} Started {{ entity_name }} on {{ today_name }} - Running for {{ states(duration) | int }} minutes"
+      message: "{{ this.attributes.friendly_name }} Started {{ entity_name }} - Running for {{ states(duration) | int }} minutes"
+      #message: "{{ this.attributes.friendly_name }} Started {{ entity_name }} / {{ entity_id }} on {{ today_name }} - Running for {{ states(duration) | int }} minutes"
   - action: switch.turn_on
     entity_id: !input switch
   - action: timer.start
